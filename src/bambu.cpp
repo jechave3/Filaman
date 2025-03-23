@@ -17,7 +17,7 @@ PubSubClient client(sslClient);
 
 TaskHandle_t BambuMqttTask;
 
-String report_topic = "";
+String topic = "";
 //String request_topic = "";
 const char* bambu_username = "bblp";
 const char* bambu_ip = nullptr;
@@ -91,7 +91,7 @@ bool loadBambuCredentials() {
         bambu_accesscode = g_bambu_accesscode.c_str();
         bambu_serialnr = g_bambu_serialnr.c_str();
 
-        report_topic = "device/" + String(bambu_serialnr) + "/report";
+        topic = "device/" + String(bambu_serialnr);
         //request_topic = "device/" + String(bambu_serialnr) + "/request";
         return true;
     }
@@ -199,7 +199,7 @@ FilamentResult findFilamentIdx(String brand, String type) {
 bool sendMqttMessage(const String& payload) {
     Serial.println("Sending MQTT message");
     Serial.println(payload);
-    if (client.publish(report_topic.c_str(), payload.c_str())) 
+    if (client.publish((String(topic) + "/request").c_str(), payload.c_str())) 
     {
         return true;
     }
@@ -557,7 +557,7 @@ void reconnect() {
         if (client.connect(clientId.c_str(), bambu_username, bambu_accesscode)) {
             Serial.println("MQTT re/connected");
 
-            client.subscribe(report_topic.c_str());
+            client.subscribe((String(topic) + "/report").c_str());
             bambu_connected = true;
             oledShowTopRow();
         } else {
@@ -625,7 +625,7 @@ bool setupMqtt() {
         {
             client.setCallback(mqtt_callback);
             client.setBufferSize(5120);
-            client.subscribe(report_topic.c_str());
+            client.subscribe((String(topic) + "/report").c_str());
             //client.subscribe(request_topic.c_str());
             Serial.println("MQTT-Client initialisiert");
 
