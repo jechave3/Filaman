@@ -553,7 +553,8 @@ void reconnect() {
         oledShowTopRow();
 
         // Attempt to connect
-        if (client.connect(bambu_serialnr, bambu_username, bambu_accesscode)) {
+        String clientId = String(bambu_serialnr) + "_" + String(random(0, 100));
+        if (client.connect(clientId.c_str(), bambu_username, bambu_accesscode)) {
             Serial.println("MQTT re/connected");
 
             client.subscribe(report_topic.c_str());
@@ -619,7 +620,8 @@ bool setupMqtt() {
 
         // Verbinden mit dem MQTT-Server
         bool connected = true;
-        if (client.connect(bambu_serialnr, bambu_username, bambu_accesscode)) 
+        String clientId = String(bambu_serialnr) + "_" + String(random(0, 100));
+        if (client.connect(clientId.c_str(), bambu_username, bambu_accesscode)) 
         {
             client.setCallback(mqtt_callback);
             client.setBufferSize(5120);
