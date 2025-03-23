@@ -634,7 +634,7 @@ bool setupMqtt() {
             xTaskCreatePinnedToCore(
                 mqtt_loop, /* Function to implement the task */
                 "BambuMqtt", /* Name of the task */
-                8192,  /* Stack size in words */
+                10240,  /* Stack size in words */
                 NULL,  /* Task input parameter */
                 mqttTaskPrio,  /* Priority of the task */
                 &BambuMqttTask,  /* Task handle. */
