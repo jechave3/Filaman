@@ -147,6 +147,13 @@ function updateFilamentDropdown(selectedSmId = null) {
 
     if (vendorId) {
         const filteredFilaments = spoolsData.filter(spool => {
+            if (!spool?.filament?.vendor?.id) {
+                console.log('Problem aufgetreten bei: ', spool?.filament?.vendor);
+                console.log('Problematische Spulen:', 
+                    spoolsData.filter(spool => !spool?.filament?.vendor?.id));
+                return false;
+            }
+
             const hasValidNfcId = spool.extra && 
                                  spool.extra.nfc_id && 
                                  spool.extra.nfc_id !== '""' && 
@@ -239,18 +246,6 @@ async function fetchSpoolData() {
         return [];
     }
 }
-
-/*
-// Exportiere Funktionen
-window.getSpoolData = () => spoolsData;
-window.reloadSpoolData = initSpoolman;
-window.populateVendorDropdown = populateVendorDropdown;
-window.updateFilamentDropdown = updateFilamentDropdown;
-window.toggleFilamentDropdown = () => {
-    const content = document.getElementById("filament-dropdown-content");
-    content.classList.toggle("show");
-};
-*/
 
 // Event Listener
 document.addEventListener('DOMContentLoaded', () => {
