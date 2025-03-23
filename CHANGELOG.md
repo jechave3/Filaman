@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.3] - 2025-03-23
+### Changed
+- update platformio.ini for version v1.4.3
+
+
 ## [1.4.2] - 2025-03-23
 ### Added
 - add WiFi connection check and restart Bambu if not connected
