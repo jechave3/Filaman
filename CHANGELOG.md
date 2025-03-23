@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.4.2] - 2025-03-23
+### Added
+- add WiFi connection check and restart Bambu if not connected
+
+### Changed
+- update platformio.ini for version v1.4.2
+- increase stack size for BambuMqtt task
+- update Discord Link
+- update Discord Link
+- remove commented-out subscription topic in MQTT setup
+
+### Fixed
+- use unique client ID for MQTT connection to avoid conflicts
+- reload page after firmware update completion
+- increase WiFi connection timeout from 5 to 10 seconds
+- ensure valid URL format and remove trailing slash in setupWebserver
+
+
 ## [1.4.1] - 2025-03-10
 ### Added
 - added new .step, now with correct individual parts
