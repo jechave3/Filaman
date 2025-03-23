@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.4] - 2025-03-23
+### Added
+- add error handling for missing vendor IDs in filament data
+
+### Changed
+- update platformio.ini for version v1.4.4
+
+### Fixed
+- adjust weight threshold for tare check to allow negative values
+
+
 ## [1.4.3] - 2025-03-23
 ### Changed
 - update platformio.ini for version v1.4.3
