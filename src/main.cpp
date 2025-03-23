@@ -159,7 +159,7 @@ void loop() {
     lastWeightReadTime = currentMillis;
 
     // Prüfen ob die Waage korrekt genullt ist
-    if ((weight > 0 && weight < 5) || weight < 0)
+    if ((weight > 0 && weight < 5) || weight < -1)
     {
       if(scaleTareCounter < 5)
       {
