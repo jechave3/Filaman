@@ -624,7 +624,7 @@ bool setupMqtt() {
         if (client.connect(clientId.c_str(), bambu_username, bambu_accesscode)) 
         {
             client.setCallback(mqtt_callback);
-            client.setBufferSize(5120);
+            client.setBufferSize(15488);
             client.subscribe((String(topic) + "/report").c_str());
             //client.subscribe(request_topic.c_str());
             Serial.println("MQTT-Client initialisiert");
