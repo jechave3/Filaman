@@ -626,7 +626,6 @@ bool setupMqtt() {
             client.setCallback(mqtt_callback);
             client.setBufferSize(15488);
             client.subscribe((String(topic) + "/report").c_str());
-            //client.subscribe(request_topic.c_str());
             Serial.println("MQTT-Client initialisiert");
 
             oledShowMessage("Bambu Connected");
@@ -636,7 +635,7 @@ bool setupMqtt() {
             xTaskCreatePinnedToCore(
                 mqtt_loop, /* Function to implement the task */
                 "BambuMqtt", /* Name of the task */
-                10240,  /* Stack size in words */
+                8192,  /* Stack size in words */
                 NULL,  /* Task input parameter */
                 mqttTaskPrio,  /* Priority of the task */
                 &BambuMqttTask,  /* Task handle. */
