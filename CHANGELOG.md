@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.5] - 2025-03-25
+### Changed
+- update platformio.ini for version v1.4.5
+- Merge branch 'testing'
+- remove unused request_topic subscription and reduce MQTT task stack size
+- Merge pull request #26 from tugsi/main
+- rename report_topic to topic and update MQTT subscription logic, switched publish topic to request
+
+### Fixed
+- increase MQTT buffer size and adjust task stack size
+- Fix BufferSize for larger JSONs from X-Series
+
+
 ## [1.4.4] - 2025-03-23
 ### Added
 - add error handling for missing vendor IDs in filament data
