@@ -286,6 +286,14 @@ void setupWebserver(AsyncWebServer &server) {
         }
 
         String url = request->getParam("url")->value();
+        if (url.indexOf("http://") == -1 && url.indexOf("https://") == -1) {
+            url = "http://" + url;
+        }
+        // Remove trailing slash if exists
+        if (url.length() > 0 && url.charAt(url.length()-1) == '/') {
+            url = url.substring(0, url.length()-1);
+        }
+        
         bool octoEnabled = (request->getParam("octoEnabled")->value() == "true") ? true : false;
         String octoUrl = request->getParam("octoUrl")->value();
         String octoToken = (request->getParam("octoToken")->value() != "") ? request->getParam("octoToken")->value() : "";
@@ -300,7 +308,7 @@ void setupWebserver(AsyncWebServer &server) {
         request->send(200, "application/json", jsonResponse);
     });
 
-    // Route für das Überprüfen der Spoolman-Instanz
+    // Route für das Überprüfen der Bambu-Instanz
     server.on("/api/bambu", HTTP_GET, [](AsyncWebServerRequest *request){
         if (!request->hasParam("bambu_ip") || !request->hasParam("bambu_serialnr") || !request->hasParam("bambu_accesscode")) {
             request->send(400, "application/json", "{\"success\": false, \"error\": \"Missing parameter\"}");

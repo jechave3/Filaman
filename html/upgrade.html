@@ -129,6 +129,7 @@
                             if (data.status === 'success' || lastReceivedProgress >= 98) {
                                 clearTimeout(wsReconnectTimer);
                                 setTimeout(() => {
+                                    window.location.reload(true);
                                     window.location.href = '/';
                                 }, 30000);
                             }
@@ -148,6 +149,7 @@
                         status.style.display = 'block';
                         clearTimeout(wsReconnectTimer);
                         setTimeout(() => {
+                            window.location.reload(true);
                             window.location.href = '/';
                         }, 30000);
                     } else {
