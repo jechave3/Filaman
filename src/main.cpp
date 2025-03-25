@@ -92,12 +92,19 @@ void loop() {
   unsigned long currentMillis = millis();
 
   // Überprüfe regelmäßig die WLAN-Verbindung
-  if (intervalElapsed(currentMillis, lastWifiCheckTime, wifiCheckInterval)) {
+  if (intervalElapsed(currentMillis, lastWifiCheckTime, wifiCheckInterval)) 
+  {
     checkWiFiConnection();
   }
 
   // Wenn Bambu auto set Spool aktiv
-  if (autoSendToBambu && autoSetToBambuSpoolId > 0) {
+  if (autoSendToBambu && autoSetToBambuSpoolId > 0) 
+  {
+    if (!bambu_connected) 
+    {
+      bambu_restart();
+    }
+
     if (intervalElapsed(currentMillis, lastAutoSetBambuAmsTime, autoSetBambuAmsInterval)) 
     {
       if (hasReadRfidTag == 0)
@@ -152,7 +159,7 @@ void loop() {
     lastWeightReadTime = currentMillis;
 
     // Prüfen ob die Waage korrekt genullt ist
-    if ((weight > 0 && weight < 5) || weight < 0)
+    if ((weight > 0 && weight < 5) || weight < -1)
     {
       if(scaleTareCounter < 5)
       {

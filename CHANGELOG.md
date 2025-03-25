@@ -1,5 +1,89 @@
 # Changelog
 
+## [1.4.4] - 2025-03-23
+### Added
+- add error handling for missing vendor IDs in filament data
+
+### Changed
+- update platformio.ini for version v1.4.4
+
+### Fixed
+- adjust weight threshold for tare check to allow negative values
+
+
+## [1.4.3] - 2025-03-23
+### Changed
+- update platformio.ini for version v1.4.3
+
+
+## [1.4.2] - 2025-03-23
+### Added
+- add WiFi connection check and restart Bambu if not connected
+
+### Changed
+- update platformio.ini for version v1.4.2
+- increase stack size for BambuMqtt task
+- update Discord Link
+- update Discord Link
+- remove commented-out subscription topic in MQTT setup
+
+### Fixed
+- use unique client ID for MQTT connection to avoid conflicts
+- reload page after firmware update completion
+- increase WiFi connection timeout from 5 to 10 seconds
+- ensure valid URL format and remove trailing slash in setupWebserver
+
+
+## [1.4.1] - 2025-03-10
+### Added
+- added new .step, now with correct individual parts
+- added changelog
+- Add files via upload
+- added .stp files of modifications
+- added merged picture
+- added pictures of components bought from AliE
+- Add files via upload
+- added pictures for heat insert location
+- added pictures showing heat insert location
+- remove unnecessary delay in MQTT setup and add delay before restart
+- add new 3D print file for Filaman scale
+- added Discord Server
+
+### Changed
+- update platformio.ini for version v1.4.1
+- refactor length calculation to convert total length to meters before formatting
+- Merge pull request #16 from spitzbirne32/main
+- improved housing to show display better
+- removed CAD, as they were all duplicates
+- typo in AliE link
+- Delete usermod/spitzbirne32/STL/README.md
+- Update README.md
+- moved pictures of parts into dedicated folders
+- Update README.md
+- Update README.md
+- Update README.md
+- Delete usermod/spitzbirne32/STL/ScaleTop_Heatinsert_Location_usermod_spitzbirne32_.png
+- Delete usermod/spitzbirne32/STL/Housing_Heatinsert_Location_usermod_spitzbirne32_.png
+- created folders
+- Update README.md
+- Update README.md
+- Create README.md
+- Update README.md
+- Update README.md
+- Create README.md
+- Merge pull request #15 from ManuelW77/main
+- Merge pull request #14 from janecker/scale-calibration-rework
+- Reworks the scale calibration handling
+- remove redundant scale calibration checks and enhance task management
+- enhance AMS data handling and streamline spool auto-setting logic
+- adjust stack size and improve scale calibration logic
+- update labels and input types for better clarity and functionality
+- update documentation for clarity and accuracy
+
+### Fixed
+- correct typo in console log for total length
+
+
 ## [1.4.0] - 2025-03-01
 ### Added
 - add support for Spoolman Octoprint Plugin in README files

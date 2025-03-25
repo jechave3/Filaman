@@ -17,7 +17,7 @@ PubSubClient client(sslClient);
 
 TaskHandle_t BambuMqttTask;
 
-String report_topic = "";
+String topic = "";
 //String request_topic = "";
 const char* bambu_username = "bblp";
 const char* bambu_ip = nullptr;
@@ -91,7 +91,7 @@ bool loadBambuCredentials() {
         bambu_accesscode = g_bambu_accesscode.c_str();
         bambu_serialnr = g_bambu_serialnr.c_str();
 
-        report_topic = "device/" + String(bambu_serialnr) + "/report";
+        topic = "device/" + String(bambu_serialnr);
         //request_topic = "device/" + String(bambu_serialnr) + "/request";
         return true;
     }
@@ -199,7 +199,7 @@ FilamentResult findFilamentIdx(String brand, String type) {
 bool sendMqttMessage(const String& payload) {
     Serial.println("Sending MQTT message");
     Serial.println(payload);
-    if (client.publish(report_topic.c_str(), payload.c_str())) 
+    if (client.publish((String(topic) + "/request").c_str(), payload.c_str())) 
     {
         return true;
     }
@@ -553,10 +553,11 @@ void reconnect() {
         oledShowTopRow();
 
         // Attempt to connect
-        if (client.connect(bambu_serialnr, bambu_username, bambu_accesscode)) {
+        String clientId = String(bambu_serialnr) + "_" + String(random(0, 100));
+        if (client.connect(clientId.c_str(), bambu_username, bambu_accesscode)) {
             Serial.println("MQTT re/connected");
 
-            client.subscribe(report_topic.c_str());
+            client.subscribe((String(topic) + "/report").c_str());
             bambu_connected = true;
             oledShowTopRow();
         } else {
@@ -619,12 +620,12 @@ bool setupMqtt() {
 
         // Verbinden mit dem MQTT-Server
         bool connected = true;
-        if (client.connect(bambu_serialnr, bambu_username, bambu_accesscode)) 
+        String clientId = String(bambu_serialnr) + "_" + String(random(0, 100));
+        if (client.connect(clientId.c_str(), bambu_username, bambu_accesscode)) 
         {
             client.setCallback(mqtt_callback);
-            client.setBufferSize(5120);
-            // Optional: Topic abonnieren
-            client.subscribe(report_topic.c_str());
+            client.setBufferSize(15488);
+            client.subscribe((String(topic) + "/report").c_str());
             //client.subscribe(request_topic.c_str());
             Serial.println("MQTT-Client initialisiert");
 
@@ -635,7 +636,7 @@ bool setupMqtt() {
             xTaskCreatePinnedToCore(
                 mqtt_loop, /* Function to implement the task */
                 "BambuMqtt", /* Name of the task */
-                8192,  /* Stack size in words */
+                10240,  /* Stack size in words */
                 NULL,  /* Task input parameter */
                 mqttTaskPrio,  /* Priority of the task */
                 &BambuMqttTask,  /* Task handle. */
