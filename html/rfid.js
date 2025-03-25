@@ -11,7 +11,7 @@ let reconnectTimer = null;
 // WebSocket Funktionen
 function startHeartbeat() {
     if (heartbeatTimer) clearInterval(heartbeatTimer);
-    
+
     heartbeatTimer = setInterval(() => {
         // Prüfe ob zu lange keine Antwort kam
         if (Date.now() - lastHeartbeatResponse > HEARTBEAT_TIMEOUT) {
@@ -29,7 +29,7 @@ function startHeartbeat() {
             updateConnectionStatus();
             return;
         }
-        
+
         try {
             // Sende Heartbeat
             socket.send(JSON.stringify({ type: 'heartbeat' }));
@@ -83,7 +83,7 @@ function initWebSocket() {
             isConnected = false;
             updateConnectionStatus();
             if (heartbeatTimer) clearInterval(heartbeatTimer);
-            
+
             // Bei Fehler Verbindung schließen und neu aufbauen
             if (socket) {
                 socket.close();
@@ -109,7 +109,7 @@ function initWebSocket() {
                 const bambuDot = document.getElementById('bambuDot');
                 const spoolmanDot = document.getElementById('spoolmanDot');
                 const ramStatus = document.getElementById('ramStatus');
-                
+
                 if (bambuDot) {
                     bambuDot.className = 'status-dot ' + (data.bambu_connected ? 'online' : 'offline');
                     // Add click handler only when offline
@@ -208,7 +208,7 @@ document.addEventListener('spoolmanError', function(event) {
     showNotification(`Spoolman Error: ${event.detail.message}`, false);
 });
 
-document.addEventListener('filamentSelected', function(event) {
+document.addEventListener('filamentSelected', function (event) {
     updateNfcInfo();
     // Zeige Spool-Buttons wenn ein Filament ausgewählt wurde
     const selectedText = document.getElementById("selected-filament").textContent;
@@ -490,7 +490,7 @@ function handleSpoolIn(amsId, trayId) {
             nozzle_temp_max: parseInt(maxTemp),
             type: selectedSpool.filament.material,
             brand: selectedSpool.filament.vendor.name,
-            tray_info_idx: selectedSpool.filament.extra.bambu_idx.replace(/['"]+/g, '').trim(),
+            tray_info_idx: selectedSpool.filament.extra.bambu_idx?.replace(/['"]+/g, '').trim() || '',
             cali_idx: "-1"  // Default-Wert setzen
         }
     };
