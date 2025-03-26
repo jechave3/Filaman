@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.6] - 2025-03-26
+### Changed
+- update platformio.ini for version v1.4.6
+
+### Fixed
+- handle potential undefined value for tray_info_idx in handleSpoolIn function, by @tugsi
+
+
 ## [1.4.5] - 2025-03-25
 ### Changed
 - update platformio.ini for version v1.4.5
