@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.4.7] - 2025-03-27
+### Added
+- add forced cache refresh after removing and saving Bambu credentials
+- add functionality to remove Bambu credentials and update API handling
+- add rfid_bambu.html and update bambu connection handling
+
+### Changed
+- update platformio.ini for version v1.4.7
+- Merge branch 'testing'
+- update remove button for Bambu credentials with red background
+- Merge pull request #28 from tugsi/main
+
+### Fixed
+- handle Bambu connection state by introducing bambuDisabled flag
+- Fix rfid.js-Failure with X1-Series, if you wanna send a Spool to AMS:  - Uncaught TypeError: Cannot read properties of undefined (reading 'replace')     at handleSpoolIn (rfid.js:493:67)     at HTMLButtonElement.onclick ((Index):1:1) handleSpoolIn	@	rfid.js:493 onclick	@	(Index):1
+
+
 ## [1.4.6] - 2025-03-26
 ### Changed
 - update platformio.ini for version v1.4.6
