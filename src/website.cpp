@@ -29,7 +29,7 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
     if (type == WS_EVT_CONNECT) {
         Serial.println("Neuer Client verbunden!");
         // Sende die AMS-Daten an den neuen Client
-        sendAmsData(client);
+        if (!bambuDisabled) sendAmsData(client);
         sendNfcData(client);
         foundNfcTag(client, 0);
         sendWriteResult(client, 3);
@@ -213,7 +213,10 @@ void setupWebserver(AsyncWebServer &server) {
     // Route für RFID
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
         Serial.println("Anfrage für /rfid erhalten");
-        AsyncWebServerResponse *response = request->beginResponse(LittleFS, "/rfid.html.gz", "text/html");
+        
+        String page = (bambuDisabled) ? "/rfid.html.gz" : "/rfid_bambu.html.gz";
+        AsyncWebServerResponse *response = request->beginResponse(LittleFS, page, "text/html");
+        
         response->addHeader("Content-Encoding", "gzip");
         response->addHeader("Cache-Control", CACHE_CONTROL);
         request->send(response);
