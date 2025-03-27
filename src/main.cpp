@@ -100,7 +100,7 @@ void loop() {
   // Wenn Bambu auto set Spool aktiv
   if (autoSendToBambu && autoSetToBambuSpoolId > 0) 
   {
-    if (!bambu_connected) 
+    if (!bambuDisabled && !bambu_connected) 
     {
       bambu_restart();
     }
