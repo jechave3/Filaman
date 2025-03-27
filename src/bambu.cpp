@@ -27,6 +27,7 @@ const char* bambu_serialnr = nullptr;
 String g_bambu_ip = "";
 String g_bambu_accesscode = "";
 String g_bambu_serialnr = "";
+bool bambuDisabled = false;
 
 bool bambu_connected = false;
 bool autoSendToBambu = false;
@@ -654,10 +655,7 @@ bool setupMqtt() {
     } 
     else 
     {
-        Serial.println("Fehler: Keine MQTT-Daten vorhanden");
-        oledShowMessage("Bambu Credentials Missing");
-        oledShowTopRow();
-        vTaskDelay(2000 / portTICK_PERIOD_MS);
+        bambuDisabled = true;
         return false;
     }
     return true;
