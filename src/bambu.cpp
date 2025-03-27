@@ -27,6 +27,7 @@ const char* bambu_serialnr = nullptr;
 String g_bambu_ip = "";
 String g_bambu_accesscode = "";
 String g_bambu_serialnr = "";
+bool bambuDisabled = false;
 
 bool bambu_connected = false;
 bool autoSendToBambu = false;
@@ -36,6 +37,32 @@ int autoSetToBambuSpoolId = 0;
 int ams_count = 0;
 String amsJsonData;  // Speichert das fertige JSON für WebSocket-Clients
 AMSData ams_data[MAX_AMS];  // Definition des Arrays;
+
+bool removeBambuCredentials() {
+    if (BambuMqttTask) {
+        vTaskDelete(BambuMqttTask);
+    }
+    
+    if (!removeJsonValue("/bambu_credentials.json")) {
+        Serial.println("Fehler beim Löschen der Bambu-Credentials.");
+        return false;
+    }
+    // Löschen der globalen Variablen
+    g_bambu_ip = "";
+    g_bambu_accesscode = "";
+    g_bambu_serialnr = "";
+    bambu_ip = nullptr;
+    bambu_accesscode = nullptr;
+    bambu_serialnr = nullptr;
+    autoSendToBambu = false;
+    autoSetToBambuSpoolId = 0;
+    ams_count = 0;
+    amsJsonData = "";
+
+    bambuDisabled = true;
+
+    return true;
+}
 
 bool saveBambuCredentials(const String& ip, const String& serialnr, const String& accesscode, bool autoSend, const String& autoSendTime) {
     if (BambuMqttTask) {
@@ -606,14 +633,13 @@ bool setupMqtt() {
     bool success = loadBambuCredentials();
 
     if (!success) {
-        Serial.println("Failed to load Bambu credentials");
-        oledShowMessage("Bambu Credentials Missing");
-        vTaskDelay(2000 / portTICK_PERIOD_MS);
+        bambuDisabled = true;
         return false;
     }
 
     if (success && bambu_ip != "" && bambu_accesscode != "" && bambu_serialnr != "") 
     {
+        bambuDisabled = false;
         sslClient.setCACert(root_ca);
         sslClient.setInsecure();
         client.setServer(bambu_ip, 8883);
@@ -654,10 +680,7 @@ bool setupMqtt() {
     } 
     else 
     {
-        Serial.println("Fehler: Keine MQTT-Daten vorhanden");
-        oledShowMessage("Bambu Credentials Missing");
-        oledShowTopRow();
-        vTaskDelay(2000 / portTICK_PERIOD_MS);
+        bambuDisabled = true;
         return false;
     }
     return true;
