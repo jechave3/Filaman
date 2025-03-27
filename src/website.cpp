@@ -313,6 +313,15 @@ void setupWebserver(AsyncWebServer &server) {
 
     // Route für das Überprüfen der Bambu-Instanz
     server.on("/api/bambu", HTTP_GET, [](AsyncWebServerRequest *request){
+        if (request->hasParam("remove")) {
+            if (removeBambuCredentials()) {
+                request->send(200, "application/json", "{\"success\": true}");
+            } else {
+                request->send(500, "application/json", "{\"success\": false, \"error\": \"Fehler beim Löschen der Bambu-Credentials\"}");
+            }
+            return;
+        }
+
         if (!request->hasParam("bambu_ip") || !request->hasParam("bambu_serialnr") || !request->hasParam("bambu_accesscode")) {
             request->send(400, "application/json", "{\"success\": false, \"error\": \"Missing parameter\"}");
             return;

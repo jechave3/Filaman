@@ -38,6 +38,32 @@ int ams_count = 0;
 String amsJsonData;  // Speichert das fertige JSON für WebSocket-Clients
 AMSData ams_data[MAX_AMS];  // Definition des Arrays;
 
+bool removeBambuCredentials() {
+    if (BambuMqttTask) {
+        vTaskDelete(BambuMqttTask);
+    }
+    
+    if (!removeJsonValue("/bambu_credentials.json")) {
+        Serial.println("Fehler beim Löschen der Bambu-Credentials.");
+        return false;
+    }
+    // Löschen der globalen Variablen
+    g_bambu_ip = "";
+    g_bambu_accesscode = "";
+    g_bambu_serialnr = "";
+    bambu_ip = nullptr;
+    bambu_accesscode = nullptr;
+    bambu_serialnr = nullptr;
+    autoSendToBambu = false;
+    autoSetToBambuSpoolId = 0;
+    ams_count = 0;
+    amsJsonData = "";
+
+    bambuDisabled = true;
+
+    return true;
+}
+
 bool saveBambuCredentials(const String& ip, const String& serialnr, const String& accesscode, bool autoSend, const String& autoSendTime) {
     if (BambuMqttTask) {
         vTaskDelete(BambuMqttTask);

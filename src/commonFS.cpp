@@ -1,6 +1,20 @@
 #include "commonFS.h"
 #include <LittleFS.h>
 
+bool removeJsonValue(const char* filename) {
+    File file = LittleFS.open(filename, "r");
+    if (!file) {
+        return true;
+    }
+    file.close();
+    if (!LittleFS.remove(filename)) {
+        Serial.print("Fehler beim Löschen der Datei: ");
+        Serial.println(filename);
+        return false;
+    }
+    return true;
+}
+
 bool saveJsonValue(const char* filename, const JsonDocument& doc) {
     File file = LittleFS.open(filename, "w");
     if (!file) {
