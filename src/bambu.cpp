@@ -607,14 +607,13 @@ bool setupMqtt() {
     bool success = loadBambuCredentials();
 
     if (!success) {
-        Serial.println("Failed to load Bambu credentials");
-        oledShowMessage("Bambu Credentials Missing");
-        vTaskDelay(2000 / portTICK_PERIOD_MS);
+        bambuDisabled = true;
         return false;
     }
 
     if (success && bambu_ip != "" && bambu_accesscode != "" && bambu_serialnr != "") 
     {
+        bambuDisabled = false;
         sslClient.setCACert(root_ca);
         sslClient.setInsecure();
         client.setServer(bambu_ip, 8883);
