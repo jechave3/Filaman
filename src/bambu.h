@@ -32,6 +32,7 @@ extern bool autoSendToBambu;
 extern int autoSetToBambuSpoolId;
 extern bool bambuDisabled;
 
+bool removeBambuCredentials();
 bool loadBambuCredentials();
 bool saveBambuCredentials(const String& bambu_ip, const String& bambu_serialnr, const String& bambu_accesscode, const bool autoSend, const String& autoSendTime);
 bool setupMqtt();

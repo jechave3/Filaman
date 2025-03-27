@@ -57,6 +57,26 @@
             toggleOctoFields();
         };
 
+        function removeBambuCredentials() {
+            fetch('/api/bambu?remove=true')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('bambuIp').value = '';
+                        document.getElementById('bambuSerial').value = '';
+                        document.getElementById('bambuCode').value = '';
+                        document.getElementById('autoSend').checked = false;
+                        document.getElementById('autoSendTime').value = '';
+                        document.getElementById('bambuStatusMessage').innerText = 'Bambu Credentials removed!';
+                    } else {
+                        document.getElementById('bambuStatusMessage').innerText = 'Error while removing Bambu Credentials.';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('bambuStatusMessage').innerText = 'Error while removing: ' + error.message;
+                });
+        }
+
         function checkSpoolmanInstance() {
             const url = document.getElementById('spoolmanUrl').value;
             const spoolmanOctoEnabled = document.getElementById('spoolmanOctoEnabled').checked;
@@ -162,6 +182,7 @@
                     </div>
 
                     <button style="margin: 0;" onclick="saveBambuCredentials()">Save Bambu Credentials</button>
+                    <button style="margin: 0;" onclick="removeBambuCredentials()">Remove Bambu Credentials</button>
                     <p id="bambuStatusMessage"></p>
                 </div>
             </div>
