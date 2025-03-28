@@ -94,6 +94,7 @@ void sendToApi(void *parameter) {
     String octoToken = params->octoToken;    
 
     HTTPClient http;
+    http.setReuse(false);
     http.begin(spoolsUrl);
     http.addHeader("Content-Type", "application/json");
     if (octoEnabled && octoToken != "") http.addHeader("X-Api-Key", octoToken);
