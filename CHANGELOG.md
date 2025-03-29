@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.8] - 2025-03-29
+### Changed
+- update platformio.ini for version v1.4.8
+- Merge pull request #30 from janecker/main
+- Merge branch 'testing' into main
+
+### Fixed
+- improve HTTP client configuration and clear update documents after API calls
+- Fixes memory leak in HTTPClient by disabling connection reuse
+- update reload logic after removing and saving Bambu credentials for better cache handling
+
+
 ## [1.4.7] - 2025-03-27
 ### Added
 - add forced cache refresh after removing and saving Bambu credentials
