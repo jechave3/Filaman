@@ -107,7 +107,7 @@ void loop() {
 
     if (intervalElapsed(currentMillis, lastAutoSetBambuAmsTime, autoSetBambuAmsInterval)) 
     {
-      if (nfcReaderState == IDLE)
+      if (nfcReaderState == NFC_IDLE)
       {
         lastAutoSetBambuAmsTime = currentMillis;
         oledShowMessage("Auto Set         " + String(autoSetBambuAmsCounter - autoAmsCounter) + "s");
@@ -141,7 +141,7 @@ void loop() {
   // Ausgabe der Waage auf Display
   if(pauseMainTask == 0)
   {
-    if (mainTaskWasPaused || (weight != lastWeight && nfcReaderState == IDLE && (!autoSendToBambu || autoSetToBambuSpoolId == 0)))
+    if (mainTaskWasPaused || (weight != lastWeight && nfcReaderState == NFC_IDLE && (!autoSendToBambu || autoSetToBambuSpoolId == 0)))
     {
       (weight < 2) ? ((weight < -2) ? oledShowMessage("!! -0") : oledShowWeight(0)) : oledShowWeight(weight);
     }
@@ -154,7 +154,7 @@ void loop() {
 
 
   // Wenn Timer abgelaufen und nicht gerade ein RFID-Tag geschrieben wird
-  if (currentMillis - lastWeightReadTime >= weightReadInterval && nfcReaderState < WRITING)
+  if (currentMillis - lastWeightReadTime >= weightReadInterval && nfcReaderState < NFC_WRITING)
   {
     lastWeightReadTime = currentMillis;
 
@@ -191,7 +191,7 @@ void loop() {
 
   // reset weight counter after writing tag
   // TBD: what exactly is the logic behind this?
-  if (currentMillis - lastWeightReadTime >= weightReadInterval && nfcReaderState != IDLE && nfcReaderState != READ_SUCCESS)
+  if (currentMillis - lastWeightReadTime >= weightReadInterval && nfcReaderState != NFC_IDLE && nfcReaderState != NFC_READ_SUCCESS)
   {
     weigthCouterToApi = 0;
   }
@@ -199,7 +199,7 @@ void loop() {
   lastWeight = weight;
 
   // Wenn ein Tag mit SM id erkannte wurde und der Waage Counter anspricht an SM Senden
-  if (spoolId != "" && weigthCouterToApi > 3 && weightSend == 0 && nfcReaderState == READ_SUCCESS) {
+  if (spoolId != "" && weigthCouterToApi > 3 && weightSend == 0 && nfcReaderState == NFC_READ_SUCCESS) {
     oledShowIcon("loading");
     if (updateSpoolWeight(spoolId, weight)) 
     {

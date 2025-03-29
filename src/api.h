@@ -6,7 +6,13 @@
 #include "website.h"
 #include "display.h"
 #include <ArduinoJson.h>
+typedef enum {
+    API_INIT,
+    API_IDLE,
+    API_TRANSMITTING
+} spoolmanApiStateType;
 
+extern volatile spoolmanApiStateType spoolmanApiState;
 extern bool spoolman_connected;
 extern String spoolmanUrl;
 extern bool octoEnabled;

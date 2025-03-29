@@ -177,7 +177,7 @@ void oledShowTopRow() {
         display.drawBitmap(50, 0, bitmap_off , 16, 16, WHITE);
     }
 
-    if (spoolman_connected == 1) {
+    if (spoolmanApiState != API_INIT) {
         display.drawBitmap(80, 0, bitmap_spoolman_on , 16, 16, WHITE);
     } else {
         display.drawBitmap(80, 0, bitmap_off , 16, 16, WHITE);

@@ -4,13 +4,13 @@
 #include <Arduino.h>
 
 typedef enum{
-    IDLE,
-    READING,
-    READ_SUCCESS,
-    READ_ERROR,
-    WRITING,
-    WRITE_SUCCESS,
-    WRITE_ERROR
+    NFC_IDLE,
+    NFC_READING,
+    NFC_READ_SUCCESS,
+    NFC_READ_ERROR,
+    NFC_WRITING,
+    NFC_WRITE_SUCCESS,
+    NFC_WRITE_ERROR
 } nfcReaderStateType;
 
 void startNfc();
