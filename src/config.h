@@ -11,6 +11,8 @@ extern const uint8_t LOADCELL_SCK_PIN;
 extern const uint8_t calVal_eepromAdress;
 extern const uint16_t SCALE_LEVEL_WEIGHT;
 
+extern const uint8_t TTP223_PIN;
+
 extern const int8_t OLED_RESET;
 extern const uint8_t SCREEN_ADDRESS;
 extern const uint8_t SCREEN_WIDTH;
