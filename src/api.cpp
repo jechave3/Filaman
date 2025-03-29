@@ -95,7 +95,6 @@ void sendToApi(void *parameter) {
 
     HTTPClient http;
     http.setReuse(false);
-    http.setTimeout(10000);
 
     http.begin(spoolsUrl);
     http.addHeader("Content-Type", "application/json");
