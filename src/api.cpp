@@ -3,7 +3,8 @@
 #include <ArduinoJson.h>
 #include "commonFS.h"
 
-bool spoolman_connected = false;
+volatile spoolmanApiStateType spoolmanApiState = API_INIT;
+//bool spoolman_connected = false;
 String spoolmanUrl = "";
 bool octoEnabled = false;
 String octoUrl = "";
@@ -85,6 +86,7 @@ JsonDocument fetchSingleSpoolInfo(int spoolId) {
 }
 
 void sendToApi(void *parameter) {
+    spoolmanApiState = API_TRANSMITTING;
     SendToApiParams* params = (SendToApiParams*)parameter;
 
     // Extrahiere die Werte
@@ -119,6 +121,7 @@ void sendToApi(void *parameter) {
     // Speicher freigeben
     delete params;
     vTaskDelete(NULL);
+    spoolmanApiState = API_IDLE;
 }
 
 bool updateSpoolTagId(String uidString, const char* payload) {
@@ -479,7 +482,8 @@ bool checkSpoolmanInstance(const String& url) {
                     return false;
                 }
 
-                spoolman_connected = true;
+                spoolmanApiState = API_IDLE;
+                oledShowTopRow();
                 return strcmp(status, "healthy") == 0;
             }
         }
