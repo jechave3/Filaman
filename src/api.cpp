@@ -95,6 +95,7 @@ void sendToApi(void *parameter) {
 
     HTTPClient http;
     http.setReuse(false);
+
     http.begin(spoolsUrl);
     http.addHeader("Content-Type", "application/json");
     if (octoEnabled && octoToken != "") http.addHeader("X-Api-Key", octoToken);
@@ -112,6 +113,7 @@ void sendToApi(void *parameter) {
     }
 
     http.end();
+    vTaskDelay(50 / portTICK_PERIOD_MS);
 
     // Speicher freigeben
     delete params;
@@ -166,6 +168,8 @@ bool updateSpoolTagId(String uidString, const char* payload) {
         NULL                      // Task-Handle (nicht benötigt)
     );
 
+    updateDoc.clear();
+
     return true;
 }
 
@@ -201,6 +205,8 @@ uint8_t updateSpoolWeight(String spoolId, uint16_t weight) {
         0,                        // Priorität
         NULL                      // Task-Handle (nicht benötigt)
     );
+
+    updateDoc.clear();
 
     return 1;
 }
@@ -238,6 +244,8 @@ bool updateSpoolOcto(int spoolId) {
         0,                        // Priorität
         NULL                      // Task-Handle (nicht benötigt)
     );
+
+    updateDoc.clear();
 
     return true;
 }

@@ -70,8 +70,8 @@
                         document.getElementById('bambuStatusMessage').innerText = 'Bambu Credentials removed!';
                         // Reload with forced cache refresh after short delay
                         setTimeout(() => {
-                            window.location.replace('/');
-                            location.reload(true);
+                            window.location.reload(true);
+                            window.location.href = '/';
                         }, 1500);
                     } else {
                         document.getElementById('bambuStatusMessage').innerText = 'Error while removing Bambu Credentials.';
@@ -116,8 +116,8 @@
                         document.getElementById('bambuStatusMessage').innerText = 'Bambu Credentials saved!';
                         // Reload with forced cache refresh after short delay
                         setTimeout(() => {
-                            window.location.replace('/');
-                            location.reload(true);
+                            window.location.reload(true);
+                            window.location.href = '/';
                         }, 1500);
                     } else {
                         document.getElementById('bambuStatusMessage').innerText = 'Error while saving Bambu Credentials.';
