@@ -87,17 +87,23 @@ uint8_t autoAmsCounter = 0;
 uint8_t weightSend = 0;
 int16_t lastWeight = 0;
 
+// WIFI check variables
 unsigned long lastWifiCheckTime = 0;
 const unsigned long wifiCheckInterval = 60000; // Überprüfe alle 60 Sekunden (60000 ms)
+
+// Button debounce variables
+unsigned long lastButtonPress = 0;
+const unsigned long debounceDelay = 500; // 500 ms debounce delay
 
 // ##### PROGRAM START #####
 void loop() {
   unsigned long currentMillis = millis();
 
   // Überprüfe den Status des Touch Sensors
-  if (digitalRead(TTP223_PIN) == LOW) 
+  if (digitalRead(TTP223_PIN) == LOW && currentMillis - lastButtonPress > debounceDelay) 
   {
-    tareScale();
+    lastButtonPress = currentMillis;
+    scaleTareRequest = true;
   }
 
   // Überprüfe regelmäßig die WLAN-Verbindung
