@@ -100,9 +100,10 @@ void sendToApi(void *parameter) {
     http.addHeader("Content-Type", "application/json");
     if (octoEnabled && octoToken != "") http.addHeader("X-Api-Key", octoToken);
 
-    int httpCode = http.PUT(updatePayload);
+    int httpCode;
     if (httpType == "PATCH") httpCode = http.PATCH(updatePayload);
-    if (httpType == "POST") httpCode = http.POST(updatePayload);
+    else if (httpType == "POST") httpCode = http.POST(updatePayload);
+    else httpCode = http.PUT(updatePayload);
 
     if (httpCode == HTTP_CODE_OK) {
         Serial.println("Spoolman erfolgreich aktualisiert");
