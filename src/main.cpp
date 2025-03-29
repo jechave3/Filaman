@@ -39,7 +39,6 @@ void setup() {
   setupWebserver(server);
 
   // Spoolman API
-  // api.cpp
   initSpoolman();
 
   // Bambu MQTT
@@ -48,6 +47,7 @@ void setup() {
   // NFC Reader
   startNfc();
 
+  // Scale
   start_scale();
 
   // WDT initialisieren mit 10 Sekunden Timeout
@@ -56,6 +56,9 @@ void setup() {
 
   // Aktuellen Task (loopTask) zum Watchdog hinzufügen
   esp_task_wdt_add(NULL);
+
+  // Touch Sensor
+  pinMode(TTP223_PIN, INPUT_PULLUP);
 }
 
 
@@ -90,6 +93,12 @@ const unsigned long wifiCheckInterval = 60000; // Überprüfe alle 60 Sekunden (
 // ##### PROGRAM START #####
 void loop() {
   unsigned long currentMillis = millis();
+
+  // Überprüfe den Status des Touch Sensors
+  if (digitalRead(TTP223_PIN) == LOW) 
+  {
+    tareScale();
+  }
 
   // Überprüfe regelmäßig die WLAN-Verbindung
   if (intervalElapsed(currentMillis, lastWifiCheckTime, wifiCheckInterval)) 
@@ -157,25 +166,6 @@ void loop() {
   if (currentMillis - lastWeightReadTime >= weightReadInterval && hasReadRfidTag < 3)
   {
     lastWeightReadTime = currentMillis;
-
-    // Prüfen ob die Waage korrekt genullt ist
-    if ((weight > 0 && weight < 5) || weight < -1)
-    {
-      if(scaleTareCounter < 5)
-      {
-        scaleTareCounter++;
-      }
-      else
-      {
-        scaleTareRequest = true;
-        scaleTareCounter = 0;
-      }
-      
-    }
-    else
-    {
-      scaleTareCounter = 0;
-    }
 
     // Prüfen ob das Gewicht gleich bleibt und dann senden
     if (weight == lastWeight && weight > 5)

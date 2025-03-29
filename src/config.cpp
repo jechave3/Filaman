@@ -19,6 +19,12 @@ const uint16_t SCALE_LEVEL_WEIGHT = 500;
 uint16_t defaultScaleCalibrationValue = 430;
 // ***** HX711
 
+// ***** TTP223 (Touch Sensor)
+// TTP223 circuit wiring
+const uint8_t TTP223_PIN = 15;
+// ***** TTP223
+
+
 // ***** Display
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 // On an ESP32:   21(SDA),  22(SCL)
