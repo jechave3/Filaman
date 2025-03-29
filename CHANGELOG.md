@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.9] - 2025-03-29
+### Changed
+- update platformio.ini for version v1.4.9
+
+### Fixed
+- enhance HTTP method handling in sendToApi function
+
+
 ## [1.4.8] - 2025-03-29
 ### Changed
 - update platformio.ini for version v1.4.8
