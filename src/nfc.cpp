@@ -18,7 +18,7 @@ String spoolId = "";
 String nfcJsonData = "";
 volatile bool pauseBambuMqttTask = false;
 
-volatile nfcReaderStateType nfcReaderState = IDLE;
+volatile nfcReaderStateType nfcReaderState = NFC_IDLE;
 // 0 = nicht gelesen
 // 1 = erfolgreich gelesen
 // 2 = fehler beim Lesen
@@ -242,7 +242,7 @@ void writeJsonToTag(void *parameter) {
   Serial.println("Erstelle NDEF-Message...");
   Serial.println(payload);
 
-  nfcReaderState = WRITING;
+  nfcReaderState = NFC_WRITING;
   vTaskSuspend(RfidReaderTask);
   vTaskDelay(50 / portTICK_PERIOD_MS);
 
@@ -288,7 +288,7 @@ void writeJsonToTag(void *parameter) {
         //oledShowMessage("NFC-Tag written");
         oledShowIcon("success");
         vTaskDelay(1000 / portTICK_PERIOD_MS);
-        nfcReaderState = WRITE_SUCCESS;
+        nfcReaderState = NFC_WRITE_SUCCESS;
         // aktualisieren der Website wenn sich der Status ändert
         sendNfcData(nullptr);
         pauseBambuMqttTask = false;
@@ -310,7 +310,7 @@ void writeJsonToTag(void *parameter) {
         Serial.println("Fehler beim Schreiben der NDEF-Message auf den Tag");
         oledShowIcon("failed");
         vTaskDelay(2000 / portTICK_PERIOD_MS);
-        nfcReaderState = WRITE_ERROR;
+        nfcReaderState = NFC_WRITE_ERROR;
     }
   }
   else
@@ -318,7 +318,7 @@ void writeJsonToTag(void *parameter) {
     Serial.println("Fehler: Kein Tag zu schreiben gefunden.");
     oledShowMessage("No NFC-Tag found");
     vTaskDelay(2000 / portTICK_PERIOD_MS);
-    nfcReaderState = IDLE;
+    nfcReaderState = NFC_IDLE;
   }
   
   sendWriteResult(nullptr, success);
@@ -334,7 +334,7 @@ void startWriteJsonToTag(const char* payload) {
   char* payloadCopy = strdup(payload);
   
   // Task nicht mehrfach starten
-  if (nfcReaderState != WRITING) {
+  if (nfcReaderState != NFC_WRITING) {
     // Erstelle die Task
     xTaskCreate(
         writeJsonToTag,        // Task-Funktion
@@ -351,7 +351,7 @@ void scanRfidTask(void * parameter) {
   Serial.println("RFID Task gestartet");
   for(;;) {
     // Wenn geschrieben wird Schleife aussetzen
-    if (nfcReaderState != WRITING)
+    if (nfcReaderState != NFC_WRITING)
     {
       yield();
 
@@ -363,12 +363,12 @@ void scanRfidTask(void * parameter) {
 
       foundNfcTag(nullptr, success);
       
-      if (success && nfcReaderState != READ_SUCCESS)
+      if (success && nfcReaderState != NFC_READ_SUCCESS)
       {
         // Display some basic information about the card
         Serial.println("Found an ISO14443A card");
 
-        nfcReaderState = READING;
+        nfcReaderState = NFC_READING;
 
         oledShowIcon("transfer");
         vTaskDelay(500 / portTICK_PERIOD_MS);
@@ -406,11 +406,11 @@ void scanRfidTask(void * parameter) {
             {
               oledShowMessage("NFC-Tag unknown");
               vTaskDelay(2000 / portTICK_PERIOD_MS);
-              nfcReaderState = READ_ERROR;
+              nfcReaderState = NFC_READ_ERROR;
             }
             else 
             {
-              nfcReaderState = READ_SUCCESS;
+              nfcReaderState = NFC_READ_SUCCESS;
             }
 
             free(data);
@@ -418,7 +418,7 @@ void scanRfidTask(void * parameter) {
           else
           {
             oledShowMessage("NFC-Tag read error");
-            nfcReaderState = READ_ERROR;
+            nfcReaderState = NFC_READ_ERROR;
           }
         }
         else
@@ -427,9 +427,9 @@ void scanRfidTask(void * parameter) {
         }
       }
 
-      if (!success && nfcReaderState != IDLE)
+      if (!success && nfcReaderState != NFC_IDLE)
       {
-        nfcReaderState = IDLE;
+        nfcReaderState = NFC_IDLE;
         //uidString = "";
         nfcJsonData = "";
         Serial.println("Tag entfernt");

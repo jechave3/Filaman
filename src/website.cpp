@@ -22,7 +22,7 @@ AsyncWebServer server(webserverPort);
 AsyncWebSocket ws("/ws");
 
 uint8_t lastSuccess = 0;
-nfcReaderStateType lastnfcReaderState = IDLE;
+nfcReaderStateType lastnfcReaderState = NFC_IDLE;
 
 
 void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
@@ -44,13 +44,15 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
         JsonDocument doc;
         deserializeJson(doc, message);
 
+        bool spoolmanConnected = (spoolmanApiState != API_INIT);
+
         if (doc["type"] == "heartbeat") {
             // Sende Heartbeat-Antwort
             ws.text(client->id(), "{"
                 "\"type\":\"heartbeat\","
                 "\"freeHeap\":" + String(ESP.getFreeHeap()/1024) + ","
                 "\"bambu_connected\":" + String(bambu_connected) + ","
-                "\"spoolman_connected\":" + String(spoolman_connected) + ""
+                "\"spoolman_connected\":" + String(spoolmanConnected) + ""
                 "}");
         }
 
@@ -142,22 +144,22 @@ void sendNfcData(AsyncWebSocketClient *client) {
     if (lastnfcReaderState == nfcReaderState) return;
     // TBD: Why is there no status for reading the tag?
     switch(nfcReaderState){
-        case IDLE:
+        case NFC_IDLE:
             ws.textAll("{\"type\":\"nfcData\", \"payload\":{}}");
             break;
-        case READ_SUCCESS:
+        case NFC_READ_SUCCESS:
             ws.textAll("{\"type\":\"nfcData\", \"payload\":" + nfcJsonData + "}");
             break;
-        case READ_ERROR:
+        case NFC_READ_ERROR:
             ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"error\":\"Empty Tag or Data not readable\"}}");
             break;
-        case WRITING:
+        case NFC_WRITING:
             ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"info\":\"Schreibe Tag...\"}}");
             break;
-        case WRITE_SUCCESS:
+        case NFC_WRITE_SUCCESS:
             ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"info\":\"Tag erfolgreich geschrieben\"}}");
             break;
-        case WRITE_ERROR:
+        case NFC_WRITE_ERROR:
             ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"error\":\"Error writing to Tag\"}}");
             break;
         case DEFAULT:
