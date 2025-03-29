@@ -38,11 +38,15 @@ void scale_loop(void * parameter) {
   for(;;) {
     if (scale.is_ready()) 
     {
-      // Waage nochmal Taren, wenn zu lange Abweichung
+      // Waage manuell Taren
       if (scaleTareRequest == true) 
       {
         Serial.println("Re-Tare scale");
+        oledShowMessage("TARE Scale");
+        vTaskDelay(pdMS_TO_TICKS(1000));
         scale.tare();
+        vTaskDelay(pdMS_TO_TICKS(1000));
+        oledShowWeight(0);
         scaleTareRequest = false;
       }
 
