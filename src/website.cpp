@@ -22,7 +22,7 @@ AsyncWebServer server(webserverPort);
 AsyncWebSocket ws("/ws");
 
 uint8_t lastSuccess = 0;
-uint8_t lastHasReadRfidTag = 0;
+nfcReaderStateType lastnfcReaderState = IDLE;
 
 
 void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
@@ -139,34 +139,31 @@ void foundNfcTag(AsyncWebSocketClient *client, uint8_t success) {
 }
 
 void sendNfcData(AsyncWebSocketClient *client) {
-    if (lastHasReadRfidTag == hasReadRfidTag) return;
-    if (hasReadRfidTag == 0) {
-        ws.textAll("{\"type\":\"nfcData\", \"payload\":{}}");
+    if (lastnfcReaderState == nfcReaderState) return;
+    // TBD: Why is there no status for reading the tag?
+    switch(nfcReaderState){
+        case IDLE:
+            ws.textAll("{\"type\":\"nfcData\", \"payload\":{}}");
+            break;
+        case READ_SUCCESS:
+            ws.textAll("{\"type\":\"nfcData\", \"payload\":" + nfcJsonData + "}");
+            break;
+        case READ_ERROR:
+            ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"error\":\"Empty Tag or Data not readable\"}}");
+            break;
+        case WRITING:
+            ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"info\":\"Schreibe Tag...\"}}");
+            break;
+        case WRITE_SUCCESS:
+            ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"info\":\"Tag erfolgreich geschrieben\"}}");
+            break;
+        case WRITE_ERROR:
+            ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"error\":\"Error writing to Tag\"}}");
+            break;
+        case DEFAULT:
+            ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"error\":\"Something went wrong\"}}");
     }
-    else if (hasReadRfidTag == 1) {
-        ws.textAll("{\"type\":\"nfcData\", \"payload\":" + nfcJsonData + "}");
-    }
-    else if (hasReadRfidTag == 2)
-    {
-        ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"error\":\"Empty Tag or Data not readable\"}}");
-    }
-    else if (hasReadRfidTag == 3)
-    {
-        ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"info\":\"Schreibe Tag...\"}}");
-    }
-    else if (hasReadRfidTag == 4)
-    {
-        ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"error\":\"Error writing to Tag\"}}");
-    }
-    else if (hasReadRfidTag == 5)
-    {
-        ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"info\":\"Tag erfolgreich geschrieben\"}}");
-    }
-    else 
-    {
-        ws.textAll("{\"type\":\"nfcData\", \"payload\":{\"error\":\"Something went wrong\"}}");
-    }
-    lastHasReadRfidTag = hasReadRfidTag;
+    lastnfcReaderState = nfcReaderState;
 }
 
 void sendAmsData(AsyncWebSocketClient *client) {
