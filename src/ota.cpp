@@ -1,6 +1,10 @@
 #include <Arduino.h>
 #include <website.h>
 #include <commonFS.h>
+#include "scale.h"
+#include "bambu.h"
+#include "nfc.h"
+
 
 // Globale Variablen für Config Backups hinzufügen
 String bambuCredentialsBackup;
@@ -151,6 +155,25 @@ void handleUpdate(AsyncWebServer &server) {
 
     updateHandler->onUpload([](AsyncWebServerRequest *request, String filename,
                              size_t index, uint8_t *data, size_t len, bool final) {
+
+        // Disable all Tasks
+        if (BambuMqttTask != NULL) 
+        {
+            Serial.println("Delete BambuMqttTask");
+            vTaskDelete(BambuMqttTask);
+            BambuMqttTask = NULL;
+        }
+        if (ScaleTask) {
+            Serial.println("Delete ScaleTask");
+            vTaskDelete(ScaleTask);
+            ScaleTask = NULL;
+        }
+        if (RfidReaderTask) {
+            Serial.println("Delete RfidReaderTask");
+            vTaskDelete(RfidReaderTask);
+            RfidReaderTask = NULL;
+        }
+
         if (!index) {
             updateTotalSize = request->contentLength();
             updateWritten = 0;
@@ -159,9 +182,9 @@ void handleUpdate(AsyncWebServer &server) {
             if (isSpiffsUpdate) {
                 // Backup vor dem Update
                 sendUpdateProgress(0, "backup", "Backing up configurations...");
-                delay(200);
+                vTaskDelay(200 / portTICK_PERIOD_MS);
                 backupJsonConfigs();
-                delay(200);
+                vTaskDelay(200 / portTICK_PERIOD_MS);
                 
                 const esp_partition_t *partition = esp_partition_find_first(ESP_PARTITION_TYPE_DATA, ESP_PARTITION_SUBTYPE_DATA_SPIFFS, NULL);
                 if (!partition || !Update.begin(partition->size, U_SPIFFS)) {
@@ -169,14 +192,14 @@ void handleUpdate(AsyncWebServer &server) {
                     return;
                 }
                 sendUpdateProgress(5, "starting", "Starting SPIFFS update...");
-                delay(200);
+                vTaskDelay(200 / portTICK_PERIOD_MS);
             } else {
                 if (!Update.begin(updateTotalSize)) {
                     request->send(400, "application/json", "{\"success\":false,\"message\":\"Update initialization failed\"}");
                     return;
                 }
                 sendUpdateProgress(0, "starting", "Starting firmware update...");
-                delay(200);
+                vTaskDelay(200 / portTICK_PERIOD_MS);
             }
         }
 
@@ -202,7 +225,7 @@ void handleUpdate(AsyncWebServer &server) {
             if (currentProgress != lastProgress && (currentProgress % 10 == 0 || final)) {
                 sendUpdateProgress(currentProgress, "uploading");
                 oledShowMessage("Update: " + String(currentProgress) + "%");
-                delay(50);
+                vTaskDelay(50 / portTICK_PERIOD_MS);
                 lastProgress = currentProgress;
             }
         }
