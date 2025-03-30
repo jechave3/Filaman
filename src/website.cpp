@@ -75,6 +75,10 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
                 success = calibrate_scale();
             }
 
+            if (doc["payload"] == "setAutoTare") {
+                success = setAutoTare(doc["enabled"].as<bool>());
+            }
+
             if (success) {
                 ws.textAll("{\"type\":\"scale\",\"payload\":\"success\"}");
             } else {
@@ -203,10 +207,14 @@ void setupWebserver(AsyncWebServer &server) {
     // Route für Waage
     server.on("/waage", HTTP_GET, [](AsyncWebServerRequest *request){
         Serial.println("Anfrage für /waage erhalten");
-        AsyncWebServerResponse *response = request->beginResponse(LittleFS, "/waage.html.gz", "text/html");
-        response->addHeader("Content-Encoding", "gzip");
-        response->addHeader("Cache-Control", CACHE_CONTROL);
-        request->send(response);
+        //AsyncWebServerResponse *response = request->beginResponse(LittleFS, "/waage.html.gz", "text/html");
+        //response->addHeader("Content-Encoding", "gzip");
+        //response->addHeader("Cache-Control", CACHE_CONTROL);
+
+        String html = loadHtmlWithHeader("/waage.html");
+        html.replace("{{autoTare}}", (autoTare) ? "checked" : "");
+
+        request->send(200, "text/html", html);
     });
 
     // Route für RFID
