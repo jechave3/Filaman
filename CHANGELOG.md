@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.5.1] - 2025-03-30
+### Changed
+- update version to 1.5.1 and improve OTA update handling with task management
+
+
 ## [1.4.14] - 2025-03-30
 ### Added
 - add auto-tare functionality and update scale handling based on touch sensor connection
