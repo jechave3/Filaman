@@ -55,19 +55,22 @@ Discord Server: [https://discord.gg/my7Gvaxj2v](https://discord.gg/my7Gvaxj2v)
 ## Hardware-Anforderungen
 
 ### Komponenten
-- **ESP32 Entwicklungsboard:** Jede ESP32-Variante.
-[Amazon Link](https://amzn.eu/d/aXThslf)
-- **HX711 5kg Wägezellen-Verstärker:** Für Gewichtsmessung.
-[Amazon Link](https://amzn.eu/d/06A0DLb)
-- **OLED 0.96 Zoll I2C weiß/gelb Display:** 128x64 SSD1306.
-[Amazon Link](https://amzn.eu/d/0AuBp2c)
-- **PN532 NFC NXP RFID-Modul V3:** Für NFC-Tag-Operationen.
-[Amazon Link](https://amzn.eu/d/jfIuQXb)
-- **NFC Tags NTAG213 NTA215:** RFID Tag
-[Amazon Link](https://amzn.eu/d/9Z6mXc1)
+- **ESP32 Development Board:** Any ESP32 variant.
+[Amazon Link](https://amzn.to/3FHea6D)
+- **HX711 5kg Load Cell Amplifier:** For weight measurement.
+[Amazon Link](https://amzn.to/4ja1KTe)
+- **OLED 0.96 Zoll I2C white/yellow Display:** 128x64 SSD1306.
+[Amazon Link](https://amzn.to/445aaa9)
+- **PN532 NFC NXP RFID-Modul V3:** For NFC tag operations.
+[Amazon Link](https://amzn.to/4iO6CO4)
+- **NFC Tags NTAG213 NTAG215:** RFID Tag
+[Amazon Link](https://amzn.to/3E071xO)
+- **TTP223 Touch Sensor (optional):** For reTARE per Button/Touch
+[Amazon Link](https://amzn.to/4hTChMK)
 
-### Pin-Konfiguration
-| Komponente        | ESP32 Pin |
+
+### Pin Konfiguration
+| Component          | ESP32 Pin |
 |-------------------|-----------|
 | HX711 DOUT        | 16        |
 | HX711 SCK         | 17        |
@@ -77,8 +80,10 @@ Discord Server: [https://discord.gg/my7Gvaxj2v](https://discord.gg/my7Gvaxj2v)
 | PN532 RESET       | 33        |
 | PN532 SDA         | 21        |
 | PN532 SCL         | 22        |
+| TTP223 I/O        | 25        |
 
-**Achte darauf, dass am PN532 die DIP-Schalter auf I2C gestellt sind**
+**!! Achte darauf, dass am PN532 die DIP-Schalter auf I2C gestellt sind**
+**Nutze den 3V Pin vom ESP für den Touch Sensor**
 
 ![Wiring](./img/Schaltplan.png)
 

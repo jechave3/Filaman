@@ -100,7 +100,7 @@ void loop() {
   unsigned long currentMillis = millis();
 
   // Überprüfe den Status des Touch Sensors
-  if (digitalRead(TTP223_PIN) == LOW && currentMillis - lastButtonPress > debounceDelay) 
+  if (digitalRead(TTP223_PIN) == HIGH && currentMillis - lastButtonPress > debounceDelay) 
   {
     lastButtonPress = currentMillis;
     scaleTareRequest = true;
