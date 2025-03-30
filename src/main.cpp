@@ -60,15 +60,10 @@ void setup() {
 
   // Touch Sensor
   pinMode(TTP223_PIN, INPUT_PULLUP);
-  if (digitalRead(TTP223_PIN) == HIGH) 
-  {
-    Serial.println("Touch Sensor is not connected");
-    touchSensorConnected = false;
-  } 
-  else 
+  if (digitalRead(TTP223_PIN) == LOW) 
   {
     Serial.println("Touch Sensor is connected");
-    touchSensorConnected
+    touchSensorConnected = true;
   }
 }
 
