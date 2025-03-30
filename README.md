@@ -86,7 +86,7 @@ Discord Server: [https://discord.gg/my7Gvaxj2v](https://discord.gg/my7Gvaxj2v)
 | PN532 SCL         | 22        |
 | TTP223 I/O        | 25        |
 
-**!! Make sure that the DIP switches on the PN532 are set to I2C**
+**!! Make sure that the DIP switches on the PN532 are set to I2C**  
 **Use the 3V pin from the ESP for the touch sensor**
 
 ![Wiring](./img/Schaltplan.png)
