@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.12] - 2025-03-30
+### Added
+- add touch sensor connection check and update logic
+
+### Changed
+- update platformio.ini for version v1.4.12
+- update README files to clarify PN532 DIP switch settings
+
+
 ## [1.4.11] - 2025-03-30
 ### Added
 - Renamed states of NFC state machine and introduced new state machine for spoolman API
