@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.10] - 2025-03-30
+### Added
+- add manual tare functionality for scale
+- add debounce handling for TTP223 touch sensor
+- add TTP223 touch sensor support and wiring configuration
+
+### Changed
+- update platformio.ini for version v1.4.10
+
+### Fixed
+- update TTP223 pin configuration and adjust touch sensor logic
+
+
 ## [1.4.9] - 2025-03-29
 ### Changed
 - update platformio.ini for version v1.4.9
