@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.14] - 2025-03-30
+### Added
+- add auto-tare functionality and update scale handling based on touch sensor connection
+
+### Changed
+- update platformio.ini for version v1.4.14
+
+
 ## [1.4.13] - 2025-03-30
 ### Changed
 - update platformio.ini for version v1.4.13
