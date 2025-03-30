@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.13] - 2025-03-30
+### Changed
+- update platformio.ini for version v1.4.13
+
+### Fixed
+- update touch sensor connection logic to correctly identify connection status
+
+
 ## [1.4.12] - 2025-03-30
 ### Added
 - add touch sensor connection check and update logic
