@@ -21,7 +21,7 @@ uint16_t defaultScaleCalibrationValue = 430;
 
 // ***** TTP223 (Touch Sensor)
 // TTP223 circuit wiring
-const uint8_t TTP223_PIN = 15;
+const uint8_t TTP223_PIN = 25;
 // ***** TTP223
 
 
