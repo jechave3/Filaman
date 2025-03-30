@@ -48,16 +48,6 @@ void setup() {
   // NFC Reader
   startNfc();
 
-  // Scale
-  start_scale();
-
-  // WDT initialisieren mit 10 Sekunden Timeout
-  bool panic = true; // Wenn true, löst ein WDT-Timeout einen System-Panik aus
-  esp_task_wdt_init(10, panic);
-
-  // Aktuellen Task (loopTask) zum Watchdog hinzufügen
-  esp_task_wdt_add(NULL);
-
   // Touch Sensor
   pinMode(TTP223_PIN, INPUT_PULLUP);
   if (digitalRead(TTP223_PIN) == LOW) 
@@ -65,6 +55,16 @@ void setup() {
     Serial.println("Touch Sensor is connected");
     touchSensorConnected = true;
   }
+
+  // Scale
+  start_scale(touchSensorConnected);
+
+  // WDT initialisieren mit 10 Sekunden Timeout
+  bool panic = true; // Wenn true, löst ein WDT-Timeout einen System-Panik aus
+  esp_task_wdt_init(10, panic);
+
+  // Aktuellen Task (loopTask) zum Watchdog hinzufügen
+  esp_task_wdt_add(NULL);
 }
 
 
@@ -178,6 +178,16 @@ void loop() {
   if (currentMillis - lastWeightReadTime >= weightReadInterval && nfcReaderState < NFC_WRITING)
   {
     lastWeightReadTime = currentMillis;
+
+    // Prüfen ob die Waage korrekt genullt ist
+    if (autoTare && (weight > 0 && weight < 5) || weight < 0)
+    {
+      scale_tare_counter++;
+    }
+    else
+    {
+      scale_tare_counter = 0;
+    }
 
     // Prüfen ob das Gewicht gleich bleibt und dann senden
     if (weight == lastWeight && weight > 5)

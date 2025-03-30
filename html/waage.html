@@ -55,6 +55,7 @@
                 <h5 class="card-title">Sacle Calibration</h5>
                 <button id="calibrateBtn" class="btn btn-primary">Calibrate Scale</button>
                 <button id="tareBtn" class="btn btn-secondary">Tare Scale</button>
+                &nbsp;&nbsp;&nbsp;Enable Auto-TARE <input type="checkbox" id="autoTareCheckbox" onchange="setAutoTare(this.checked);" {{autoTare}}>
                 <div id="statusMessage" class="mt-3"></div>
             </div>
         </div>
@@ -139,6 +140,15 @@
                 payload: 'tare'
             }));
         });
+
+        // Add auto-tare function
+        function setAutoTare(enabled) {
+            ws.send(JSON.stringify({
+                type: 'scale',
+                payload: 'setAutoTare',
+                enabled: enabled
+            }));
+        }
 
         // WebSocket-Verbindung beim Laden der Seite initiieren
         connectWebSocket();
