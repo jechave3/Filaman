@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.11] - 2025-03-30
+### Added
+- Renamed states of NFC state machine and introduced new state machine for spoolman API
+
+### Changed
+- update platformio.ini for version v1.4.11
+- Merge branch 'main' of github.com:ManuelW77/Filaman
+- Merge pull request #31 from janecker/nfc_rework
+- Introducing enum for handling the NFC state to improve code readability
+
+
 ## [1.4.10] - 2025-03-30
 ### Added
 - add manual tare functionality for scale
