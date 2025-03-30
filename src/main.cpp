@@ -15,6 +15,7 @@
 
 bool mainTaskWasPaused = 0;
 uint8_t scaleTareCounter = 0;
+bool touchSensorConnected = false;
 
 // ##### SETUP #####
 void setup() {
@@ -59,6 +60,16 @@ void setup() {
 
   // Touch Sensor
   pinMode(TTP223_PIN, INPUT_PULLUP);
+  if (digitalRead(TTP223_PIN) == HIGH) 
+  {
+    Serial.println("Touch Sensor is not connected");
+    touchSensorConnected = false;
+  } 
+  else 
+  {
+    Serial.println("Touch Sensor is connected");
+    touchSensorConnected
+  }
 }
 
 
@@ -100,7 +111,7 @@ void loop() {
   unsigned long currentMillis = millis();
 
   // Überprüfe den Status des Touch Sensors
-  if (digitalRead(TTP223_PIN) == HIGH && currentMillis - lastButtonPress > debounceDelay) 
+  if (touchSensorConnected && digitalRead(TTP223_PIN) == HIGH && currentMillis - lastButtonPress > debounceDelay) 
   {
     lastButtonPress = currentMillis;
     scaleTareRequest = true;
