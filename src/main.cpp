@@ -180,7 +180,8 @@ void loop() {
     lastWeightReadTime = currentMillis;
 
     // Prüfen ob die Waage korrekt genullt ist
-    if (autoTare && (weight > 0 && weight < 5) || weight < 0)
+    // Abweichung von 2g ignorieren
+    if (autoTare && (weight > 2 && weight < 7) || weight < -2)
     {
       scale_tare_counter++;
     }
