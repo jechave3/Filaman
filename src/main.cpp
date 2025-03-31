@@ -190,7 +190,7 @@ void loop() {
     }
 
     // Prüfen ob das Gewicht gleich bleibt und dann senden
-    if (weight == lastWeight && weight > 5)
+    if (abs(weight - lastWeight) <= 2 && weight > 5)
     {
       weigthCouterToApi++;
     } 
