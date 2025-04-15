@@ -166,7 +166,7 @@ bool updateSpoolTagId(String uidString, const char* payload) {
     BaseType_t result = xTaskCreate(
         sendToApi,                // Task-Funktion
         "SendToApiTask",          // Task-Name
-        4096,                     // Stackgröße in Bytes
+        6144,                     // Stackgröße in Bytes
         (void*)params,            // Parameter
         0,                        // Priorität
         NULL                      // Task-Handle (nicht benötigt)
@@ -204,7 +204,7 @@ uint8_t updateSpoolWeight(String spoolId, uint16_t weight) {
     BaseType_t result = xTaskCreate(
         sendToApi,                // Task-Funktion
         "SendToApiTask",          // Task-Name
-        4096,                     // Stackgröße in Bytes
+        6144,                     // Stackgröße in Bytes
         (void*)params,            // Parameter
         0,                        // Priorität
         NULL                      // Task-Handle (nicht benötigt)
@@ -243,7 +243,7 @@ bool updateSpoolOcto(int spoolId) {
     BaseType_t result = xTaskCreate(
         sendToApi,                // Task-Funktion
         "SendToApiTask",          // Task-Name
-        4096,                     // Stackgröße in Bytes
+        6144,                     // Stackgröße in Bytes
         (void*)params,            // Parameter
         0,                        // Priorität
         NULL                      // Task-Handle (nicht benötigt)
@@ -291,7 +291,7 @@ bool updateSpoolBambuData(String payload) {
     BaseType_t result = xTaskCreate(
         sendToApi,                // Task-Funktion
         "SendToApiTask",          // Task-Name
-        4096,                     // Stackgröße in Bytes
+        6144,                     // Stackgröße in Bytes
         (void*)params,            // Parameter
         0,                        // Priorität
         NULL                      // Task-Handle (nicht benötigt)
