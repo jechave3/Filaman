@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.5.2] - 2025-04-23
+### Added
+- implement multi-color filament display and styles for dropdown options
+- add remaining weight logging for PUT requests and improve error reporting in sendToApi function
+- add remaining weight logging and display after successful spool update
+- add weight field to update payload in updateSpoolTagId function
+
+### Changed
+- update platformio.ini for version v1.5.2
+
+### Fixed
+- update weight field in update payload to only include values greater than 10
+- increase stack size for sendToApi task to improve stability
+- adjust tare weight tolerance to ignore deviations of 2g
+- improve weight stability check before sending to API
+
+
 ## [1.5.1] - 2025-03-30
 ### Changed
 - update version to 1.5.1 and improve OTA update handling with task management
