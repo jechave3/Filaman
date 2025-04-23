@@ -109,6 +109,24 @@ void sendToApi(void *parameter) {
 
     if (httpCode == HTTP_CODE_OK) {
         Serial.println("Spoolman erfolgreich aktualisiert");
+
+        // Restgewicht der Spule auslesen
+        String payload = http.getString();
+        JsonDocument doc;
+        DeserializationError error = deserializeJson(doc, payload);
+        if (error) {
+            Serial.print("Fehler beim Parsen der JSON-Antwort: ");
+            Serial.println(error.c_str());
+        } else {
+            float remaining_weight = doc["remaining_weight"].as<float>();
+            Serial.print("Aktuelles Gewicht: ");
+            Serial.println(remaining_weight);
+
+            oledShowMessage("Remaining: " + String(remaining_weight) + "g");
+            vTaskDelay(2000 / portTICK_PERIOD_MS);
+            doc.clear();
+        }
+
     } else {
         Serial.println("Fehler beim Senden an Spoolman!");
         oledShowMessage("Spoolman update failed");
