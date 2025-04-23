@@ -674,6 +674,7 @@ bool setupMqtt() {
             vTaskDelay(2000 / portTICK_PERIOD_MS);
             connected = false;
             oledShowTopRow();
+            autoSetToBambuSpoolId = 0;
         }
 
         if (!connected) return false;
@@ -687,6 +688,8 @@ bool setupMqtt() {
 }
 
 void bambu_restart() {
+    Serial.println("Bambu restart");
+
     if (BambuMqttTask) {
         vTaskDelete(BambuMqttTask);
         delay(10);
