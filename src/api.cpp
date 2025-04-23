@@ -118,17 +118,19 @@ void sendToApi(void *parameter) {
             Serial.print("Fehler beim Parsen der JSON-Antwort: ");
             Serial.println(error.c_str());
         } else {
-            float remaining_weight = doc["remaining_weight"].as<float>();
-            Serial.print("Aktuelles Gewicht: ");
-            Serial.println(remaining_weight);
-
-            oledShowMessage("Remaining: " + String(remaining_weight) + "g");
-            vTaskDelay(2000 / portTICK_PERIOD_MS);
+            if (httpType == "PUT") {
+                uint16_t remaining_weight = doc["remaining_weight"].as<float>();
+                Serial.print("Aktuelles Gewicht: ");
+                Serial.println(remaining_weight);
+                oledShowMessage("Remaining: " + String(remaining_weight) + "g");
+            }
+            
+            vTaskDelay(3000 / portTICK_PERIOD_MS);
             doc.clear();
         }
 
     } else {
-        Serial.println("Fehler beim Senden an Spoolman!");
+        Serial.println("Fehler beim Senden an Spoolman! HTTP Code: " + String(httpCode));
         oledShowMessage("Spoolman update failed");
         vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
