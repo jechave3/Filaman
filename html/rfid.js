@@ -215,20 +215,6 @@ document.addEventListener('filamentSelected', function (event) {
     updateSpoolButtons(selectedText !== "Please choose...");
 });
 
-// Hilfsfunktion für kontrastreiche Textfarbe
-function getContrastColor(hexcolor) {
-    // Konvertiere Hex zu RGB
-    const r = parseInt(hexcolor.substr(0,2),16);
-    const g = parseInt(hexcolor.substr(2,2),16);
-    const b = parseInt(hexcolor.substr(4,2),16);
-    
-    // Berechne Helligkeit (YIQ Formel)
-    const yiq = ((r*299)+(g*587)+(b*114))/1000;
-    
-    // Return schwarz oder weiß basierend auf Helligkeit
-    return (yiq >= 128) ? '#000000' : '#FFFFFF';
-}
-
 function updateNfcInfo() {
     const selectedText = document.getElementById("selected-filament").textContent;
     const nfcInfo = document.getElementById("nfcInfo");

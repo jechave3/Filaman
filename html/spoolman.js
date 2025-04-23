@@ -169,9 +169,32 @@ function updateFilamentDropdown(selectedSmId = null) {
             option.setAttribute("data-value", spool.filament.id);
             option.setAttribute("data-nfc-id", spool.extra.nfc_id || "");
             
-            const colorHex = spool.filament.color_hex || 'FFFFFF';
+
+            // Generate color representation based on filament type (single or multi color)
+            let colorHTML = '';
+            
+            // Check if this is a multicolor filament
+            if (spool.filament.multi_color_hexes) {
+                // Parse multi color hexes from comma-separated string
+                const colors = spool.filament.multi_color_hexes.replace(/#/g, '').split(',');
+                
+                // Determine the display style based on direction
+                const direction = spool.filament.multi_color_direction || 'coaxial';
+                
+                // Generate color circles for each color
+                colorHTML = '<div class="option-colors">';
+                colors.forEach(color => {
+                    colorHTML += `<div class="option-color multi-color ${direction}" style="background-color: #${color}"></div>`;
+                });
+                colorHTML += '</div>';
+            } else {
+                // Single color filament
+                const colorHex = spool.filament.color_hex || 'FFFFFF';
+                colorHTML = `<div class="option-color" style="background-color: #${colorHex}"></div>`;
+            }
+            
             option.innerHTML = `
-                <div class="option-color" style="background-color: #${colorHex}"></div>
+                ${colorHTML}
                 <span>${spool.id} | ${spool.filament.name} (${spool.filament.material})</span>
             `;
             
@@ -190,7 +213,29 @@ function selectFilament(spool) {
     const selectedText = document.getElementById("selected-filament");
     const dropdownContent = document.getElementById("filament-dropdown-content");
     
-    selectedColor.style.backgroundColor = `#${spool.filament.color_hex || 'FFFFFF'}`;
+    // Update the selected color display
+    if (spool.filament.multi_color_hexes) {
+        // Handle multicolor filament display in the selection header
+        const colors = spool.filament.multi_color_hexes.replace(/#/g, '').split(',');
+        const direction = spool.filament.multi_color_direction || 'coaxial';
+        
+        // Replace the single color div with multiple color divs
+        selectedColor.innerHTML = '';
+        colors.forEach(color => {
+            const colorDiv = document.createElement('div');
+            colorDiv.className = `color-segment multi-color ${direction}`;
+            colorDiv.style.backgroundColor = `#${color}`;
+            selectedColor.appendChild(colorDiv);
+        });
+        // Add multiple color class to the container
+        selectedColor.classList.add('multi-color-container');
+    } else {
+        // Single color filament - reset to default display
+        selectedColor.innerHTML = '';
+        selectedColor.classList.remove('multi-color-container');
+        selectedColor.style.backgroundColor = `#${spool.filament.color_hex || 'FFFFFF'}`;
+    }
+    
     selectedText.textContent = `${spool.id} | ${spool.filament.name} (${spool.filament.material})`;
     dropdownContent.classList.remove("show");
     

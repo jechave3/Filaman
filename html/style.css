@@ -759,6 +759,50 @@ a:hover {
     flex-shrink: 0;
 }
 
+/* Multi-color filament styles */
+.option-colors {
+    display: flex;
+    flex-shrink: 0;
+    gap: 2px;
+}
+
+.multi-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid #333;
+}
+
+/* Coaxial pattern (horizontal stripes) */
+.multi-color.coaxial {
+    border-radius: 50%;
+    position: relative;
+}
+
+/* Longitudinal pattern (vertical stripes) */
+.multi-color.longitudinal {
+    border-radius: 50%;
+    position: relative;
+}
+
+/* Container for multiple colors in selected display */
+.multi-color-container {
+    display: flex !important;
+    background: none !important;
+    border: none !important;
+    gap: 2px;
+    align-items: center;
+    justify-content: flex-start;
+    width: auto !important;
+}
+
+.color-segment {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid #333;
+}
+
 .notification {
     position: fixed;
     top: 20px;
