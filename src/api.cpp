@@ -147,6 +147,7 @@ bool updateSpoolTagId(String uidString, const char* payload) {
     // Update Payload erstellen
     JsonDocument updateDoc;
     updateDoc["extra"]["nfc_id"] = "\""+uidString+"\"";
+    updateDoc["weight"] = weight;
     
     String updatePayload;
     serializeJson(updateDoc, updatePayload);
