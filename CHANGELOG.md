@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.3] - 2025-04-25
+### Changed
+- update platformio.ini for version v1.5.3
+- Affiliate Links
+
+### Fixed
+- update spool weight conditionally based on NFC ID
+
+
 ## [1.5.2] - 2025-04-23
 ### Added
 - implement multi-color filament display and styles for dropdown options
