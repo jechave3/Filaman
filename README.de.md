@@ -54,7 +54,7 @@ Discord Server: [https://discord.gg/my7Gvaxj2v](https://discord.gg/my7Gvaxj2v)
 
 ## Hardware-Anforderungen
 
-### Komponenten
+### Komponenten (Affiliate Links)
 - **ESP32 Development Board:** Any ESP32 variant.
 [Amazon Link](https://amzn.to/3FHea6D)
 - **HX711 5kg Load Cell Amplifier:** For weight measurement.
