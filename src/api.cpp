@@ -167,7 +167,6 @@ bool updateSpoolTagId(String uidString, const char* payload) {
     // Update Payload erstellen
     JsonDocument updateDoc;
     updateDoc["extra"]["nfc_id"] = "\""+uidString+"\"";
-    if (weight > 10) updateDoc["weight"] = weight;
     
     String updatePayload;
     serializeJson(updateDoc, updatePayload);
@@ -194,6 +193,9 @@ bool updateSpoolTagId(String uidString, const char* payload) {
     );
 
     updateDoc.clear();
+
+    // Update Spool weight
+    if (weight > 10) updateSpoolWeight(doc["sm_id"].as<String>(), weight);
 
     return true;
 }
