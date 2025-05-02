@@ -90,6 +90,12 @@ Discord Server: [https://discord.gg/my7Gvaxj2v](https://discord.gg/my7Gvaxj2v)
 ![myWiring](./img/IMG_2589.jpeg)
 ![myWiring](./img/IMG_2590.jpeg)
 
+*Die Wägezelle wird bei den meisten HX711 Modulen folgendermaßen verkabelt:  
+E+ rot  
+E- schwarz  
+A- weiß  
+A+ grün*
+
 ## Software-Abhängigkeiten
 
 ### ESP32-Bibliotheken

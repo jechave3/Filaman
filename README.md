@@ -94,6 +94,12 @@ Discord Server: [https://discord.gg/my7Gvaxj2v](https://discord.gg/my7Gvaxj2v)
 ![myWiring](./img/IMG_2589.jpeg)
 ![myWiring](./img/IMG_2590.jpeg)
 
+*The load cell is connected to most HX711 modules as follows:  
+E+ red  
+E- black  
+A- white  
+A+ green*
+
 ## Software Dependencies
 
 ### ESP32 Libraries
