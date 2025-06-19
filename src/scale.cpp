@@ -74,7 +74,11 @@ void scale_loop(void * parameter) {
         scaleTareRequest = false;
       }
 
-      weight = round(scale.get_units());
+      // Only update weight if median changed more than 1
+      int16_t newWeight = round(scale.get_units());
+      if(abs(weight-newWeight) > 1){
+        weight = newWeight;
+      }
     }
     
     vTaskDelay(pdMS_TO_TICKS(100));
