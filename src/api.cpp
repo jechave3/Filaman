@@ -11,6 +11,7 @@ String octoUrl = "";
 String octoToken = "";
 
 struct SendToApiParams {
+    SpoolmanApiRequestType requestType;
     String httpType;
     String spoolsUrl;
     String updatePayload;
@@ -90,6 +91,7 @@ void sendToApi(void *parameter) {
     SendToApiParams* params = (SendToApiParams*)parameter;
 
     // Extrahiere die Werte
+    SpoolmanApiRequestType requestType = params->requestType;
     String httpType = params->httpType;
     String spoolsUrl = params->spoolsUrl;
     String updatePayload = params->updatePayload;
@@ -118,11 +120,14 @@ void sendToApi(void *parameter) {
             Serial.print("Fehler beim Parsen der JSON-Antwort: ");
             Serial.println(error.c_str());
         } else {
-            if (httpType == "PUT") {
+            if (requestType == API_REQUEST_SPOOL_WEIGHT_UPDATE) {
                 uint16_t remaining_weight = doc["remaining_weight"].as<float>();
                 Serial.print("Aktuelles Gewicht: ");
                 Serial.println(remaining_weight);
                 oledShowMessage("Remaining: " + String(remaining_weight) + "g");
+            }
+            else if ( requestType == API_REQUEST_SPOOL_LOCATION_UPDATE) {
+                oledShowMessage("Location updated!");
             }
             
             vTaskDelay(3000 / portTICK_PERIOD_MS);
@@ -178,6 +183,7 @@ bool updateSpoolTagId(String uidString, const char* payload) {
         Serial.println("Fehler: Kann Speicher für Task-Parameter nicht allokieren.");
         return false;
     }
+    params->requestType = API_REQUEST_SPOOL_TAG_ID_UPDATE;
     params->httpType = "PATCH";
     params->spoolsUrl = spoolsUrl;
     params->updatePayload = updatePayload;
@@ -219,7 +225,47 @@ uint8_t updateSpoolWeight(String spoolId, uint16_t weight) {
         Serial.println("Fehler: Kann Speicher für Task-Parameter nicht allokieren.");
         return 0;
     }
+    params->requestType = API_REQUEST_SPOOL_WEIGHT_UPDATE;
     params->httpType = "PUT";
+    params->spoolsUrl = spoolsUrl;
+    params->updatePayload = updatePayload;
+
+    // Erstelle die Task
+    BaseType_t result = xTaskCreate(
+        sendToApi,                // Task-Funktion
+        "SendToApiTask",          // Task-Name
+        6144,                     // Stackgröße in Bytes
+        (void*)params,            // Parameter
+        0,                        // Priorität
+        NULL                      // Task-Handle (nicht benötigt)
+    );
+
+    updateDoc.clear();
+
+    return 1;
+}
+
+uint8_t updateSpoolLocation(String spoolId, String location){
+    String spoolsUrl = spoolmanUrl + apiUrl + "/spool/" + spoolId;
+    Serial.print("Update Spule mit URL: ");
+    Serial.println(spoolsUrl);
+
+    // Update Payload erstellen
+    JsonDocument updateDoc;
+    updateDoc["location"] = location;
+    
+    String updatePayload;
+    serializeJson(updateDoc, updatePayload);
+    Serial.print("Update Payload: ");
+    Serial.println(updatePayload);
+
+    SendToApiParams* params = new SendToApiParams();
+    if (params == nullptr) {
+        Serial.println("Fehler: Kann Speicher für Task-Parameter nicht allokieren.");
+        return 0;
+    }
+    params->requestType = API_REQUEST_SPOOL_LOCATION_UPDATE;
+    params->httpType = "PATCH";
     params->spoolsUrl = spoolsUrl;
     params->updatePayload = updatePayload;
 
@@ -257,6 +303,7 @@ bool updateSpoolOcto(int spoolId) {
         Serial.println("Fehler: Kann Speicher für Task-Parameter nicht allokieren.");
         return false;
     }
+    params->requestType = API_REQUEST_OCTO_SPOOL_UPDATE;
     params->httpType = "POST";
     params->spoolsUrl = spoolsUrl;
     params->updatePayload = updatePayload;
@@ -306,6 +353,7 @@ bool updateSpoolBambuData(String payload) {
         Serial.println("Fehler: Kann Speicher für Task-Parameter nicht allokieren.");
         return false;
     }
+    params->requestType = API_REQUEST_BAMBU_UPDATE;
     params->httpType = "PATCH";
     params->spoolsUrl = spoolsUrl;
     params->updatePayload = updatePayload;
@@ -510,6 +558,8 @@ bool checkSpoolmanInstance(const String& url) {
                 return strcmp(status, "healthy") == 0;
             }
         }
+    } else {
+        Serial.println("Error contacting spoolman instance! HTTP Code: " + String(httpCode));
     }
     http.end();
     return false;
