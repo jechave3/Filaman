@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.5.5] - 2025-07-22
+### Added
+- Fixes some issues with the new location tags
+
+### Changed
+- update platformio.ini for version v1.5.5
+
+### Fixed
+- Merge pull request #40 from janecker/location_bambu_fix
+
+
 ## [1.5.4] - 2025-07-22
 ### Added
 - Adds new feature to write and read location tags
