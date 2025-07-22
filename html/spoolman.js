@@ -1,6 +1,7 @@
 // Globale Variablen
 let spoolmanUrl = '';
 let spoolsData = [];
+let locationData = [];
 
 // Hilfsfunktionen für Datenmanipulation
 function processSpoolData(data) {
@@ -133,6 +134,26 @@ function populateVendorDropdown(data, selectedSmId = null) {
     }
 }
 
+// Dropdown-Funktionen
+function populateLocationDropdown(data) {
+    const locationSelect = document.getElementById("locationSelect");
+    if (!locationSelect) {
+        console.error('locationSelect Element nicht gefunden');
+        return;
+    }
+
+    locationSelect.innerHTML = '<option value="">Bitte wählen...</option>';
+    // Dropdown mit gefilterten Herstellern befüllen - alphabetisch sortiert
+    Object.entries(data)
+        .sort(([, nameA], [, nameB]) => nameA.localeCompare(nameB)) // Sort vendors alphabetically by name
+        .forEach(([id, name]) => {
+            const option = document.createElement("option");
+            option.value = name;
+            option.textContent = name;
+            locationSelect.appendChild(option);
+        });
+}
+
 function updateFilamentDropdown(selectedSmId = null) {
     const vendorId = document.getElementById("vendorSelect").value;
     const dropdownContentInner = document.getElementById("filament-dropdown-content");
@@ -208,6 +229,13 @@ function updateFilamentDropdown(selectedSmId = null) {
     }
 }
 
+function updateLocationSelect(){
+    const writeLocationNfcButton = document.getElementById('writeLocationNfcButton');
+    if(writeLocationNfcButton){
+        writeLocationNfcButton.classList.remove("hidden");
+    }
+}
+
 function selectFilament(spool) {
     const selectedColor = document.getElementById("selected-color");
     const selectedText = document.getElementById("selected-filament");
@@ -261,10 +289,18 @@ async function initSpoolman() {
         
         const fetchedData = await fetchSpoolData();
         spoolsData = processSpoolData(fetchedData);
-        
+
         document.dispatchEvent(new CustomEvent('spoolDataLoaded', { 
             detail: spoolsData 
         }));
+        
+        locationData = await fetchLocationData();
+        
+        document.dispatchEvent(new CustomEvent('locationDataLoaded', { 
+            detail: locationData 
+        }));
+
+
     } catch (error) {
         console.error('Fehler beim Initialisieren von Spoolman:', error);
         document.dispatchEvent(new CustomEvent('spoolmanError', { 
@@ -292,6 +328,25 @@ async function fetchSpoolData() {
     }
 }
 
+async function fetchLocationData() {
+    try {
+        if (!spoolmanUrl) {
+            throw new Error('Spoolman URL ist nicht initialisiert');
+        }
+        
+        const response = await fetch(`${spoolmanUrl}/api/v1/location`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Location-Daten:', error);
+        return [];
+    }
+}
+
 // Event Listener
 document.addEventListener('DOMContentLoaded', () => {
     initSpoolman();
@@ -299,6 +354,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const vendorSelect = document.getElementById('vendorSelect');
     if (vendorSelect) {
         vendorSelect.addEventListener('change', () => updateFilamentDropdown());
+    }
+
+    const locationSelect = document.getElementById('locationSelect');
+    if (locationSelect) {
+        locationSelect.addEventListener('change', () => updateLocationSelect());
     }
     
     const onlyWithoutSmId = document.getElementById('onlyWithoutSmId');
@@ -311,6 +371,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     document.addEventListener('spoolDataLoaded', (event) => {
         populateVendorDropdown(event.detail);
+    });
+
+    document.addEventListener('locationDataLoaded', (event) => {
+        populateLocationDropdown(event.detail);
     });
     
     window.onclick = function(event) {
@@ -342,6 +406,7 @@ window.getSpoolData = () => spoolsData;
 window.setSpoolData = (data) => { spoolsData = data; };
 window.reloadSpoolData = initSpoolman;
 window.populateVendorDropdown = populateVendorDropdown;
+window.populateLocationDropdown = populateLocationDropdown;
 window.updateFilamentDropdown = updateFilamentDropdown;
 window.toggleFilamentDropdown = () => {
     const content = document.getElementById("filament-dropdown-content");

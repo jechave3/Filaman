@@ -971,29 +971,33 @@ input[type="submit"]:disabled,
 }
 
 /* Schreib-Button */
-#writeNfcButton {
+#writeNfcButton, #writeLocationNfcButton {
     background-color: #007bff;
     color: white;
     transition: background-color 0.3s, color 0.3s;
     width: 160px;
 }
 
-#writeNfcButton.writing {
+#writeNfcButton.writing, #writeLocationNfcButton.writing {
     background-color: #ffc107;
     color: black;
     width: 160px;
 }
 
-#writeNfcButton.success {
+#writeNfcButton.success, #writeLocationNfcButton.success {
     background-color: #28a745;
     color: white;
     width: 160px;
 }
 
-#writeNfcButton.error {
+#writeNfcButton.error, #writeLocationNfcButton.error {
     background-color: #dc3545;
     color: white;
     width: 160px;
+}
+
+#writeLocationNfcButton{
+    width: 250px;
 }
 
 @keyframes dots {
@@ -1003,7 +1007,7 @@ input[type="submit"]:disabled,
     100% { content: "..."; }
 }
 
-#writeNfcButton.writing::after {
+#writeNfcButton.writing::after, #writeLocationNfcButton.writing::after {
     content: "...";
     animation: dots 1s steps(3, end) infinite;
 }
