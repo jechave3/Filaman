@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.4] - 2025-07-22
+### Added
+- Adds new feature to write and read location tags
+- Adds slight debouncing to the scale loop weight logic
+- add loadcell desc.
+
+### Changed
+- update platformio.ini for version v1.5.4
+- Merge branch 'main' of github.com:ManuelW77/Filaman
+- Merge pull request #39 from janecker/location_tags
+- Merge pull request #38 from janecker/scale_debouncing
+
+### Fixed
+- uncomment monitor_port configuration in platformio.ini
+
+
 ## [1.5.3] - 2025-04-25
 ### Changed
 - update platformio.ini for version v1.5.3
