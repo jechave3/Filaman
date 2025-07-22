@@ -626,11 +626,11 @@ function writeNfcTag() {
 
     // Erstelle das NFC-Datenpaket mit korrekten Datentypen
     const nfcData = {
-        color_hex: selectedSpool.filament.color_hex || "FFFFFF",
-        type: selectedSpool.filament.material,
-        min_temp: minTemp,
-        max_temp: maxTemp,
-        brand: selectedSpool.filament.vendor.name,
+        //color_hex: selectedSpool.filament.color_hex || "FFFFFF",
+        //type: selectedSpool.filament.material,
+        //min_temp: minTemp,
+        //max_temp: maxTemp,
+        //brand: selectedSpool.filament.vendor.name,
         sm_id: String(selectedSpool.id) // Konvertiere zu String
     };
 
@@ -647,16 +647,56 @@ function writeNfcTag() {
     }
 }
 
+function writeLocationNfcTag() {
+    const selectedText = document.getElementById("locationSelect").value;
+    if (selectedText === "Please choose...") {
+        alert('Please select a location first.');
+        return;
+    }
+    // Erstelle das NFC-Datenpaket mit korrekten Datentypen
+    const nfcData = {
+        location: String(selectedText)
+    };
+
+    if (socket?.readyState === WebSocket.OPEN) {
+        const writeButton = document.getElementById("writeLocationNfcButton");
+        writeButton.classList.add("writing");
+        writeButton.textContent = "Writing";
+        socket.send(JSON.stringify({
+            type: 'writeNfcTag',
+            payload: nfcData
+        }));
+    } else {
+        alert('Not connected to Server. Please check connection.');
+    }
+}
+
 function handleWriteNfcTagResponse(success) {
     const writeButton = document.getElementById("writeNfcButton");
-    writeButton.classList.remove("writing");
-    writeButton.classList.add(success ? "success" : "error");
-    writeButton.textContent = success ? "Write success" : "Write failed";
+    const writeLocationButton = document.getElementById("writeLocationNfcButton");
+    if(writeButton.classList.contains("writing")){
+        writeButton.classList.remove("writing");
+        writeButton.classList.add(success ? "success" : "error");
+        writeButton.textContent = success ? "Write success" : "Write failed";
 
-    setTimeout(() => {
-        writeButton.classList.remove("success", "error");
-        writeButton.textContent = "Write Tag";
-    }, 5000);
+        setTimeout(() => {
+            writeButton.classList.remove("success", "error");
+            writeButton.textContent = "Write Tag";
+        }, 5000);
+    }
+
+    if(writeLocationButton.classList.contains("writing")){
+        writeLocationButton.classList.remove("writing");
+        writeLocationButton.classList.add(success ? "success" : "error");
+        writeLocationButton.textContent = success ? "Write success" : "Write failed";
+
+        setTimeout(() => {
+            writeLocationButton.classList.remove("success", "error");
+            writeLocationButton.textContent = "Write Location Tag";
+        }, 5000);
+    }
+
+    
 }
 
 function showNotification(message, isSuccess) {
