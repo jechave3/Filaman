@@ -555,7 +555,10 @@ function updateNfcData(data) {
     }
 
     // HTML für die Datenanzeige erstellen
-    let html = `
+    let html = "";
+
+    if(data.sm_id){
+        html = `
         <div class="nfc-card-data" style="margin-top: 10px;">
             <p><strong>Brand:</strong> ${data.brand || 'N/A'}</p>
             <p><strong>Type:</strong> ${data.type || 'N/A'} ${data.color_hex ? `<span style="
@@ -568,10 +571,27 @@ function updateNfcData(data) {
                 border-radius: 3px;
                 margin-left: 5px;
             "></span>` : ''}</p>
-    `;
+        `;
 
-    // Spoolman ID anzeigen
-    html += `<p><strong>Spoolman ID:</strong> ${data.sm_id || 'No Spoolman ID'}</p>`;
+        // Spoolman ID anzeigen
+        html += `<p><strong>Spoolman ID:</strong> ${data.sm_id || 'No Spoolman ID'}</p>`;
+     }
+     else if(data.location)
+     {
+        html = `
+        <div class="nfc-card-data" style="margin-top: 10px;">
+            <p><strong>Location:</strong> ${data.location || 'N/A'}</p>
+        `;
+     }
+     else
+     {
+        html = `
+        <div class="nfc-card-data" style="margin-top: 10px;">
+            <p><strong>Unknown tag</strong></p>
+        `;
+     }
+
+    
 
     // Nur wenn eine sm_id vorhanden ist, aktualisiere die Dropdowns
     if (data.sm_id) {
@@ -626,11 +646,11 @@ function writeNfcTag() {
 
     // Erstelle das NFC-Datenpaket mit korrekten Datentypen
     const nfcData = {
-        //color_hex: selectedSpool.filament.color_hex || "FFFFFF",
-        //type: selectedSpool.filament.material,
-        //min_temp: minTemp,
-        //max_temp: maxTemp,
-        //brand: selectedSpool.filament.vendor.name,
+        color_hex: selectedSpool.filament.color_hex || "FFFFFF",
+        type: selectedSpool.filament.material,
+        min_temp: minTemp,
+        max_temp: maxTemp,
+        brand: selectedSpool.filament.vendor.name,
         sm_id: String(selectedSpool.id) // Konvertiere zu String
     };
 

@@ -139,6 +139,18 @@
                 <p id="nfcInfo" class="nfc-status"></p>
                 <button id="writeNfcButton" class="btn btn-primary hidden" onclick="writeNfcTag()">Write Tag</button>
             </div>
+
+            <div class="feature-box">
+                <h2>Spoolman Locations</h2>
+                <label for="locationSelect">Location:</label>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <select id="locationSelect" class="styled-select">
+                        <option value="">Please choose...</option>
+                    </select>
+                </div>
+                <p id="nfcInfoLocation" class="nfc-status"></p>
+                <button id="writeLocationNfcButton" class="btn btn-primary hidden" onclick="writeLocationNfcTag()">Write Location Tag</button>
+            </div>
         </div>
 
         <!-- Rechte Spalte -->
