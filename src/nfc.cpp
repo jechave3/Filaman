@@ -221,13 +221,13 @@ bool decodeNdefAndReturnJson(const byte* encodedMessage) {
     // Sende die aktualisierten AMS-Daten an alle WebSocket-Clients
     Serial.println("JSON-Dokument erfolgreich verarbeitet");
     Serial.println(doc.as<String>());
-    if (doc.containsKey("sm_id") && doc["sm_id"] != "") 
+    if (doc["sm_id"].is<String>() && doc["sm_id"] != "") 
     {
       Serial.println("SPOOL-ID gefunden: " + doc["sm_id"].as<String>());
       activeSpoolId = doc["sm_id"].as<String>();
       lastSpoolId = activeSpoolId;
     }
-    else if(doc.containsKey("location") && doc["location"] != "")
+    else if(doc["location"].is<String>() && doc["location"] != "")
     {
       Serial.println("Location Tag found!");
       String location = doc["location"].as<String>();
