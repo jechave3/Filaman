@@ -7,6 +7,7 @@
 #include "api.h"
 #include "esp_task_wdt.h"
 #include "scale.h"
+#include "bambu.h"
 
 //Adafruit_PN532 nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS);
 Adafruit_PN532 nfc(PN532_IRQ, PN532_RESET);
@@ -447,7 +448,7 @@ void scanRfidTask(void * parameter) {
         //uidString = "";
         nfcJsonData = "";
         Serial.println("Tag entfernt");
-        if (!autoSendToBambu) oledShowWeight(weight);
+        if (!bambuCredentials.autosend_enable) oledShowWeight(weight);
       }
 
       // aktualisieren der Website wenn sich der Status ändert

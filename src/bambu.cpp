@@ -10,6 +10,7 @@
 #include "esp_task_wdt.h"
 #include "config.h"
 #include "display.h"
+#include <Preferences.h>
 
 WiFiClient espClient;
 SSLClient sslClient(&espClient);
@@ -17,21 +18,12 @@ PubSubClient client(sslClient);
 
 TaskHandle_t BambuMqttTask;
 
-String topic = "";
-//String request_topic = "";
-const char* bambu_username = "bblp";
-const char* bambu_ip = nullptr;
-const char* bambu_accesscode = nullptr;
-const char* bambu_serialnr = nullptr;
-
-String g_bambu_ip = "";
-String g_bambu_accesscode = "";
-String g_bambu_serialnr = "";
 bool bambuDisabled = false;
 
 bool bambu_connected = false;
-bool autoSendToBambu = false;
 int autoSetToBambuSpoolId = 0;
+
+BambuCredentials bambuCredentials;
 
 // Globale Variablen für AMS-Daten
 int ams_count = 0;
@@ -43,18 +35,22 @@ bool removeBambuCredentials() {
         vTaskDelete(BambuMqttTask);
     }
     
-    if (!removeJsonValue("/bambu_credentials.json")) {
-        Serial.println("Fehler beim Löschen der Bambu-Credentials.");
-        return false;
-    }
+    Preferences preferences;
+    preferences.begin(NVS_NAMESPACE_BAMBU, false); // false = readwrite
+    preferences.remove(NVS_KEY_BAMBU_IP);
+    preferences.remove(NVS_KEY_BAMBU_SERIAL);
+    preferences.remove(NVS_KEY_BAMBU_ACCESSCODE);
+    preferences.remove(NVS_KEY_BAMBU_AUTOSEND_ENABLE);
+    preferences.remove(NVS_KEY_BAMBU_AUTOSEND_TIME);
+    preferences.end();
+
     // Löschen der globalen Variablen
-    g_bambu_ip = "";
-    g_bambu_accesscode = "";
-    g_bambu_serialnr = "";
-    bambu_ip = nullptr;
-    bambu_accesscode = nullptr;
-    bambu_serialnr = nullptr;
-    autoSendToBambu = false;
+    bambuCredentials.ip = "";
+    bambuCredentials.serial = "";
+    bambuCredentials.accesscode = "";
+    bambuCredentials.autosend_enable = false;
+    bambuCredentials.autosend_time = BAMBU_DEFAULT_AUTOSEND_TIME;
+
     autoSetToBambuSpoolId = 0;
     ams_count = 0;
     amsJsonData = "";
@@ -68,25 +64,21 @@ bool saveBambuCredentials(const String& ip, const String& serialnr, const String
     if (BambuMqttTask) {
         vTaskDelete(BambuMqttTask);
     }
-    
-    JsonDocument doc;
-    doc["bambu_ip"] = ip;
-    doc["bambu_accesscode"] = accesscode;
-    doc["bambu_serialnr"] = serialnr;
-    doc["autoSendToBambu"] = autoSend;
-    doc["autoSendTime"] = (autoSendTime != "") ? autoSendTime.toInt() : autoSetBambuAmsCounter;
 
-    if (!saveJsonValue("/bambu_credentials.json", doc)) {
-        Serial.println("Fehler beim Speichern der Bambu-Credentials.");
-        return false;
-    }
+    bambuCredentials.ip = ip.c_str();
+    bambuCredentials.serial = serialnr.c_str();
+    bambuCredentials.accesscode = accesscode.c_str();
+    bambuCredentials.autosend_enable = autoSend;
+    bambuCredentials.autosend_time = autoSendTime.toInt();
 
-    // Dynamische Speicherallokation für die globalen Pointer
-    bambu_ip = ip.c_str();
-    bambu_accesscode = accesscode.c_str();
-    bambu_serialnr = serialnr.c_str();
-    autoSendToBambu = autoSend;
-    autoSetBambuAmsCounter = autoSendTime.toInt();
+    Preferences preferences;
+    preferences.begin(NVS_NAMESPACE_BAMBU, false); // false = readwrite
+    preferences.putString(NVS_KEY_BAMBU_IP, bambuCredentials.ip);
+    preferences.putString(NVS_KEY_BAMBU_SERIAL, bambuCredentials.serial);
+    preferences.putString(NVS_KEY_BAMBU_ACCESSCODE, bambuCredentials.accesscode);
+    preferences.putBool(NVS_KEY_BAMBU_AUTOSEND_ENABLE, bambuCredentials.autosend_enable);
+    preferences.putInt(NVS_KEY_BAMBU_AUTOSEND_TIME, bambuCredentials.autosend_time);
+    preferences.end();
 
     vTaskDelay(100 / portTICK_PERIOD_MS);
     if (!setupMqtt()) return false;
@@ -95,35 +87,36 @@ bool saveBambuCredentials(const String& ip, const String& serialnr, const String
 }
 
 bool loadBambuCredentials() {
-    JsonDocument doc;
-    if (loadJsonValue("/bambu_credentials.json", doc) && doc["bambu_ip"].is<String>()) {
-        // Temporäre Strings für die Werte
-        String ip = doc["bambu_ip"].as<String>();
-        String code = doc["bambu_accesscode"].as<String>();
-        String serial = doc["bambu_serialnr"].as<String>();
+    Preferences preferences;
+    preferences.begin(NVS_NAMESPACE_BAMBU, true);
+    String ip = preferences.getString(NVS_KEY_BAMBU_IP, "");
+    String serial = preferences.getString(NVS_KEY_BAMBU_SERIAL, "");
+    String code = preferences.getString(NVS_KEY_BAMBU_ACCESSCODE, "");
+    bool autosendEnable = preferences.getBool(NVS_KEY_BAMBU_AUTOSEND_ENABLE, false);
+    int autosendTime = preferences.getInt(NVS_KEY_BAMBU_AUTOSEND_TIME, BAMBU_DEFAULT_AUTOSEND_TIME);
+    preferences.end();
 
-        g_bambu_ip = ip;
-        g_bambu_accesscode = code;
-        g_bambu_serialnr = serial;
+    if(ip != ""){
+        bambuCredentials.ip = ip.c_str();
+        bambuCredentials.serial = serial.c_str();
+        bambuCredentials.accesscode = code.c_str();
+        bambuCredentials.autosend_enable = autosendEnable;
+        bambuCredentials.autosend_time = autosendTime;
 
-        if (doc["autoSendToBambu"].is<bool>()) autoSendToBambu = doc["autoSendToBambu"].as<bool>();
-        if (doc["autoSendTime"].is<int>()) autoSetBambuAmsCounter = doc["autoSendTime"].as<int>();
+        Serial.println("credentials loaded loadCredentials!");
+        Serial.println(bambuCredentials.ip);
+        Serial.println(bambuCredentials.serial);
+        Serial.println(bambuCredentials.accesscode);
+        Serial.println(String(bambuCredentials.autosend_enable));
+        Serial.println(String(bambuCredentials.autosend_time));
 
-        ip.trim();
-        code.trim();
-        serial.trim();
-
-        // Dynamische Speicherallokation für die globalen Pointer
-        bambu_ip = g_bambu_ip.c_str();
-        bambu_accesscode = g_bambu_accesscode.c_str();
-        bambu_serialnr = g_bambu_serialnr.c_str();
-
-        topic = "device/" + String(bambu_serialnr);
-        //request_topic = "device/" + String(bambu_serialnr) + "/request";
         return true;
     }
-    Serial.println("Keine gültigen Bambu-Credentials gefunden.");
-    return false;
+    else
+    {
+        Serial.println("Keine gültigen Bambu-Credentials gefunden.");
+        return false;
+    }
 }
 
 struct FilamentResult {
@@ -226,7 +219,7 @@ FilamentResult findFilamentIdx(String brand, String type) {
 bool sendMqttMessage(const String& payload) {
     Serial.println("Sending MQTT message");
     Serial.println(payload);
-    if (client.publish((String(topic) + "/request").c_str(), payload.c_str())) 
+    if (client.publish(("device/"+bambuCredentials.serial+"/request").c_str(), payload.c_str())) 
     {
         return true;
     }
@@ -499,7 +492,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
                     trayObj["cali_idx"].as<String>() != ams_data[storedIndex].trays[j].cali_idx) {
                     hasChanges = true;
 
-                    if (autoSendToBambu && autoSetToBambuSpoolId > 0 && hasChanges)
+                    if (bambuCredentials.autosend_enable && autoSetToBambuSpoolId > 0 && hasChanges)
                     {
                         autoSetSpool(autoSetToBambuSpoolId, ams_data[storedIndex].trays[j].id);
                     }
@@ -523,7 +516,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
                         (vtTray["tray_type"].as<String>() != "" && vtTray["cali_idx"].as<String>() != ams_data[i].trays[0].cali_idx)) {
                         hasChanges = true;
 
-                        if (autoSendToBambu && autoSetToBambuSpoolId > 0 && hasChanges)
+                        if (bambuCredentials.autosend_enable && autoSetToBambuSpoolId > 0 && hasChanges)
                         {
                             autoSetSpool(autoSetToBambuSpoolId, 254);
                         }
@@ -580,11 +573,11 @@ void reconnect() {
         oledShowTopRow();
 
         // Attempt to connect
-        String clientId = String(bambu_serialnr) + "_" + String(random(0, 100));
-        if (client.connect(clientId.c_str(), bambu_username, bambu_accesscode)) {
+        String clientId = bambuCredentials.serial + "_" + String(random(0, 100));
+        if (client.connect(clientId.c_str(), BAMBU_USERNAME, bambuCredentials.accesscode.c_str())) {
             Serial.println("MQTT re/connected");
 
-            client.subscribe((String(topic) + "/report").c_str());
+            client.subscribe(("device/"+bambuCredentials.serial+"/report").c_str());
             bambu_connected = true;
             oledShowTopRow();
         } else {
@@ -630,28 +623,23 @@ void mqtt_loop(void * parameter) {
 
 bool setupMqtt() {
     // Wenn Bambu Daten vorhanden
-    bool success = loadBambuCredentials();
+    //bool success = loadBambuCredentials();
 
-    if (!success) {
-        bambuDisabled = true;
-        return false;
-    }
-
-    if (success && bambu_ip != "" && bambu_accesscode != "" && bambu_serialnr != "") 
+    if (bambuCredentials.ip != "" && bambuCredentials.accesscode != "" && bambuCredentials.serial != "") 
     {
         bambuDisabled = false;
         sslClient.setCACert(root_ca);
         sslClient.setInsecure();
-        client.setServer(bambu_ip, 8883);
+        client.setServer(bambuCredentials.ip.c_str(), 8883);
 
         // Verbinden mit dem MQTT-Server
         bool connected = true;
-        String clientId = String(bambu_serialnr) + "_" + String(random(0, 100));
-        if (client.connect(clientId.c_str(), bambu_username, bambu_accesscode)) 
+        String clientId = String(bambuCredentials.serial) + "_" + String(random(0, 100));
+        if (client.connect(bambuCredentials.ip.c_str(), BAMBU_USERNAME, bambuCredentials.accesscode.c_str())) 
         {
             client.setCallback(mqtt_callback);
             client.setBufferSize(15488);
-            client.subscribe((String(topic) + "/report").c_str());
+            client.subscribe(("device/"+bambuCredentials.serial+"/report").c_str());
             Serial.println("MQTT-Client initialisiert");
 
             oledShowMessage("Bambu Connected");
