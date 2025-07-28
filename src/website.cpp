@@ -273,8 +273,6 @@ void setupWebserver(AsyncWebServer &server) {
         html.replace("{{autoSendToBambu}}", bambuCredentials.autosend_enable ? "checked" : "");
         html.replace("{{autoSendTime}}", (bambuCredentials.autosend_time != 0) ? String(bambuCredentials.autosend_time) : String(BAMBU_DEFAULT_AUTOSEND_TIME));
 
-        doc.clear();
-
         request->send(200, "text/html", html);
     });
 
