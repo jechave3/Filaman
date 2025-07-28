@@ -599,8 +599,6 @@ bool saveSpoolmanUrl(const String& url, bool octoOn, const String& octo_url, con
     octoUrl = octo_url;
     octoToken = octoTk;
 
-    doc.clear();
-
     return true;
 }
 
