@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.5.6] - 2025-07-28
+### Added
+- Adds ENABLE_HEAP_DEBUGGING define as comment to the build flags
+- Adds data directory and further .vscode files to to .gitignore
+- Introduces new heap debugging feature and fixes some memory leaks in website feature
+
+### Changed
+- update webpages for version v1.5.6
+- update platformio.ini for version v1.5.6
+- Merge pull request #42 from janecker/configuration_nvs_storage
+- Merge branch 'main' into configuration_nvs_storage
+- Changes configuration storage of spoolman and bambu values
+
+### Fixed
+- Merge pull request #41 from janecker/memory_leak_fixes
+- Fixes compiler warnings in nfc
+- Memory leak fixes in api and nfc, location tag fix
+
+
 ## [1.5.5] - 2025-07-22
 ### Added
 - Fixes some issues with the new location tags
