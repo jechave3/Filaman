@@ -146,20 +146,20 @@
 
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Set URL/IP to your Spoolman-Instanz</h5>
-                <input type="text" id="spoolmanUrl" placeholder="http://ip-or-url-of-your-spoolman-instanz:port">
-                <h5 class="card-title">If you want to enable sending Spool to Spoolman Octoprint Plugin:</h5>
+                <h5 class="card-title">Set URL/IP to your Spoolman instance</h5>
+                <input type="text" id="spoolmanUrl" onkeydown="if(event.keyCode == 13) document.getElementById('btnSaveSpoolmanUrl').click()" placeholder="http://ip-or-url-of-your-spoolman-instance:port">
+                <h5 class="card-title">If you want to enable sending the spool to the Spoolman Octoprint plugin:</h5>
                 <p>
                     <input type="checkbox" id="spoolmanOctoEnabled" {{spoolmanOctoEnabled}} onchange="toggleOctoFields()"> Send to Octo-Plugin
                 </p>
                 <div id="octoFields" style="display: none;">
                     <p>
-                        <input type="text" id="spoolmanOctoUrl" placeholder="http://ip-or-url-of-your-octoprint-instanz:port" value="{{spoolmanOctoUrl}}">
+                        <input type="text" id="spoolmanOctoUrl" placeholder="http://ip-or-url-of-your-octoprint-instance:port" value="{{spoolmanOctoUrl}}">
                         <input type="text" id="spoolmanOctoToken" placeholder="Your Octoprint Token" value="{{spoolmanOctoToken}}">
                     </p>
                 </div>
                 
-                <button onclick="checkSpoolmanInstance()">Save Spoolman URL</button>
+                <button id="btnSaveSpoolmanUrl" onclick="checkSpoolmanInstance()">Save Spoolman URL</button>
                 <p id="statusMessage"></p>
             </div>
         </div>
@@ -169,16 +169,16 @@
                 <h5 class="card-title">Bambu Lab Printer Credentials</h5>
                 <div class="bambu-settings">
                     <div class="input-group">
-                        <label for="bambuIp">Bambu Drucker IP-Adresse:</label>
+                        <label for="bambuIp">Bambu Printer IP Address:</label>
                         <input type="text" id="bambuIp" placeholder="192.168.1.xxx" value="{{bambuIp}}">
                     </div>
                     <div class="input-group">
-                        <label for="bambuSerial">Drucker Seriennummer:</label>
+                        <label for="bambuSerial">Printer Serial Number:</label>
                         <input type="text" id="bambuSerial" placeholder="BBLXXXXXXXX" value="{{bambuSerial}}">
                     </div>
                     <div class="input-group">
                         <label for="bambuCode">Access Code:</label>
-                        <input type="text" id="bambuCode" placeholder="Access Code vom Drucker" value="{{bambuCode}}">
+                        <input type="text" id="bambuCode" placeholder="Access Code of the printer" value="{{bambuCode}}">
                     </div>
                     <hr>
                     <p>If activated, FilaMan will automatically update the next filled tray with the last scanned and weighed spool.</p>

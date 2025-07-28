@@ -16,6 +16,14 @@ struct TrayData {
     String cali_idx;
 };
 
+struct BambuCredentials {
+    String ip;
+    String serial;
+    String accesscode;
+    bool autosend_enable;
+    int autosend_time;
+};
+
 #define MAX_AMS 17  // 16 normale AMS + 1 externe Spule
 extern String amsJsonData;  // Für die vorbereiteten JSON-Daten
 
@@ -28,9 +36,10 @@ extern bool bambu_connected;
 
 extern int ams_count;
 extern AMSData ams_data[MAX_AMS];
-extern bool autoSendToBambu;
+//extern bool autoSendToBambu;
 extern int autoSetToBambuSpoolId;
 extern bool bambuDisabled;
+extern BambuCredentials bambuCredentials;
 
 bool removeBambuCredentials();
 bool loadBambuCredentials();

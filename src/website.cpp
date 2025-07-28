@@ -10,7 +10,9 @@
 #include <Update.h>
 #include "display.h"
 #include "ota.h"
+#include "config.h"
 #include "debug.h"
+
 
 #ifndef VERSION
   #define VERSION "1.1.0"
@@ -203,6 +205,9 @@ void setupWebserver(AsyncWebServer &server) {
     Serial.print("Geladene Spoolman-URL: ");
     Serial.println(spoolmanUrl);
 
+    // Load Bamb credentials:
+    loadBambuCredentials();
+
     // Route für about
     server.on("/about", HTTP_GET, [](AsyncWebServerRequest *request){
         Serial.println("Anfrage für /about erhalten");
@@ -262,31 +267,11 @@ void setupWebserver(AsyncWebServer &server) {
         html.replace("{{spoolmanOctoUrl}}", (octoUrl != "") ? octoUrl : "");
         html.replace("{{spoolmanOctoToken}}", (octoToken != "") ? octoToken : "");
 
-        JsonDocument doc;
-        if (loadJsonValue("/bambu_credentials.json", doc) && doc["bambu_ip"].is<String>()) 
-        {
-            String bambuIp = doc["bambu_ip"].as<String>();
-            String bambuSerial = doc["bambu_serialnr"].as<String>();
-            String bambuCode = doc["bambu_accesscode"].as<String>();
-            autoSendToBambu = doc["autoSendToBambu"].as<bool>();
-            bambuIp.trim();
-            bambuSerial.trim();
-            bambuCode.trim();
-
-            html.replace("{{bambuIp}}", bambuIp ? bambuIp : "");            
-            html.replace("{{bambuSerial}}", bambuSerial ? bambuSerial : "");
-            html.replace("{{bambuCode}}", bambuCode ? bambuCode : "");
-            html.replace("{{autoSendToBambu}}", autoSendToBambu ? "checked" : "");
-            html.replace("{{autoSendTime}}", String(autoSetBambuAmsCounter));
-        }
-        else
-        {
-            html.replace("{{bambuIp}}", "");
-            html.replace("{{bambuSerial}}", "");
-            html.replace("{{bambuCode}}", "");
-            html.replace("{{autoSendToBambu}}", "");
-            html.replace("{{autoSendTime}}", String(autoSetBambuAmsCounter));
-        }
+        html.replace("{{bambuIp}}", bambuCredentials.ip);            
+        html.replace("{{bambuSerial}}", bambuCredentials.serial);
+        html.replace("{{bambuCode}}", bambuCredentials.accesscode ? bambuCredentials.accesscode : "");
+        html.replace("{{autoSendToBambu}}", bambuCredentials.autosend_enable ? "checked" : "");
+        html.replace("{{autoSendTime}}", (bambuCredentials.autosend_time != 0) ? String(bambuCredentials.autosend_time) : String(BAMBU_DEFAULT_AUTOSEND_TIME));
 
         doc.clear();
 

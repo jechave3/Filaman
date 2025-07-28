@@ -18,11 +18,6 @@ uint8_t scale_tare_counter = 0;
 bool scaleTareRequest = false;
 uint8_t pauseMainTask = 0;
 uint8_t scaleCalibrated = 1;
-
-Preferences preferences;
-const char* NVS_NAMESPACE = "scale";
-const char* NVS_KEY_CALIBRATION = "cal_value";
-const char* NVS_KEY_AUTOTARE = "auto_tare";
 bool autoTare = true;
 
 // ##### Funktionen für Waage #####
@@ -32,7 +27,8 @@ uint8_t setAutoTare(bool autoTareValue) {
   autoTare = autoTareValue;
 
   // Speichern mit NVS
-  preferences.begin(NVS_NAMESPACE, false); // false = readwrite
+  Preferences preferences;
+  preferences.begin(NVS_NAMESPACE_SCALE, false); // false = readwrite
   preferences.putBool(NVS_KEY_AUTOTARE, autoTare);
   preferences.end();
 
@@ -90,7 +86,8 @@ void start_scale(bool touchSensorConnected) {
   float calibrationValue;
 
   // NVS lesen
-  preferences.begin(NVS_NAMESPACE, true); // true = readonly
+  Preferences preferences;
+  preferences.begin(NVS_NAMESPACE_SCALE, true); // true = readonly
   calibrationValue = preferences.getFloat(NVS_KEY_CALIBRATION, defaultScaleCalibrationValue);
   
   // auto Tare
@@ -197,12 +194,13 @@ uint8_t calibrate_scale() {
       Serial.println(newCalibrationValue);
 
       // Speichern mit NVS
-      preferences.begin(NVS_NAMESPACE, false); // false = readwrite
+      Preferences preferences;
+      preferences.begin(NVS_NAMESPACE_SCALE, false); // false = readwrite
       preferences.putFloat(NVS_KEY_CALIBRATION, newCalibrationValue);
       preferences.end();
 
       // Verifizieren
-      preferences.begin(NVS_NAMESPACE, true);
+      preferences.begin(NVS_NAMESPACE_SCALE, true);
       float verifyValue = preferences.getFloat(NVS_KEY_CALIBRATION, 0);
       preferences.end();
 

@@ -119,7 +119,7 @@ void loop() {
   }
 
   // Wenn Bambu auto set Spool aktiv
-  if (autoSendToBambu && autoSetToBambuSpoolId > 0) 
+  if (bambuCredentials.autosend_enable && autoSetToBambuSpoolId > 0) 
   {
     if (!bambuDisabled && !bambu_connected) 
     {
@@ -131,10 +131,10 @@ void loop() {
       if (nfcReaderState == NFC_IDLE)
       {
         lastAutoSetBambuAmsTime = currentMillis;
-        oledShowMessage("Auto Set         " + String(autoSetBambuAmsCounter - autoAmsCounter) + "s");
+        oledShowMessage("Auto Set         " + String(bambuCredentials.autosend_time - autoAmsCounter) + "s");
         autoAmsCounter++;
 
-        if (autoAmsCounter >= autoSetBambuAmsCounter) 
+        if (autoAmsCounter >= bambuCredentials.autosend_time) 
         {
           autoSetToBambuSpoolId = 0;
           autoAmsCounter = 0;
@@ -162,7 +162,7 @@ void loop() {
   // Ausgabe der Waage auf Display
   if(pauseMainTask == 0)
   {
-    if (mainTaskWasPaused || (weight != lastWeight && nfcReaderState == NFC_IDLE && (!autoSendToBambu || autoSetToBambuSpoolId == 0)))
+    if (mainTaskWasPaused || (weight != lastWeight && nfcReaderState == NFC_IDLE && (!bambuCredentials.autosend_enable || autoSetToBambuSpoolId == 0)))
     {
       (weight < 2) ? ((weight < -2) ? oledShowMessage("!! -0") : oledShowWeight(0)) : oledShowWeight(weight);
     }
