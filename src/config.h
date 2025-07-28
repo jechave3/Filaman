@@ -3,6 +3,29 @@
 
 #include <Arduino.h>
 
+#define BAMBU_DEFAULT_AUTOSEND_TIME 60
+
+
+#define NVS_NAMESPACE_API "api"
+#define NVS_KEY_SPOOLMAN_URL "spoolmanUrl"
+#define NVS_KEY_OCTOPRINT_ENABLED "octoEnabled"
+#define NVS_KEY_OCTOPRINT_URL "octoUrl"
+#define NVS_KEY_OCTOPRINT_TOKEN "octoToken"
+
+#define NVS_NAMESPACE_BAMBU "bambu"
+#define NVS_KEY_BAMBU_IP "bambuIp"
+#define NVS_KEY_BAMBU_ACCESSCODE "bambuCode"
+#define NVS_KEY_BAMBU_SERIAL "bambuSerial"
+#define NVS_KEY_BAMBU_AUTOSEND_ENABLE "autosendEnable"
+#define NVS_KEY_BAMBU_AUTOSEND_TIME "autosendTime"
+
+#define NVS_NAMESPACE_SCALE "scale"
+#define NVS_KEY_CALIBRATION "cal_value"
+#define NVS_KEY_AUTOTARE "auto_tare"
+
+#define BAMBU_USERNAME "bblp"
+
+
 extern const uint8_t PN532_IRQ;
 extern const uint8_t PN532_RESET;
 
@@ -25,7 +48,7 @@ extern const uint8_t OLED_DATA_END;
 extern const char* apiUrl;
 extern const uint8_t webserverPort;
 
-extern uint8_t autoSetBambuAmsCounter;
+
 
 extern const unsigned char wifi_on[];
 extern const unsigned char wifi_off[];

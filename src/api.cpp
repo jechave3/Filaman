@@ -2,6 +2,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include "commonFS.h"
+#include <Preferences.h>
 #include "debug.h"
 
 volatile spoolmanApiStateType spoolmanApiState = API_INIT;
@@ -583,23 +584,19 @@ bool checkSpoolmanInstance(const String& url) {
     return false;
 }
 
-bool saveSpoolmanUrl(const String& url, bool octoOn, const String& octoWh, const String& octoTk) {
-    if (!checkSpoolmanInstance(url)) return false;
+bool saveSpoolmanUrl(const String& url, bool octoOn, const String& octo_url, const String& octoTk) {
+    Preferences preferences;
+    preferences.begin(NVS_NAMESPACE_API, false); // false = readwrite
+    preferences.putString(NVS_KEY_SPOOLMAN_URL, url);
+    preferences.putBool(NVS_KEY_OCTOPRINT_ENABLED, octoOn);
+    preferences.putString(NVS_KEY_OCTOPRINT_URL, octo_url);
+    preferences.putString(NVS_KEY_OCTOPRINT_TOKEN, octoTk);
+    preferences.end();
 
-    JsonDocument doc;
-    doc["url"] = url;
-    doc["octoEnabled"] = octoOn;
-    doc["octoUrl"] = octoWh;
-    doc["octoToken"] = octoTk;
-    Serial.print("Speichere Spoolman Data in Datei: ");
-    Serial.println(doc.as<String>());
-    if (!saveJsonValue("/spoolman_url.json", doc)) {
-        Serial.println("Fehler beim Speichern der Spoolman-URL.");
-        return false;
-    }
+    //TBD: This could be handled nicer in the future
     spoolmanUrl = url;
     octoEnabled = octoOn;
-    octoUrl = octoWh;
+    octoUrl = octo_url;
     octoToken = octoTk;
 
     doc.clear();
@@ -608,21 +605,17 @@ bool saveSpoolmanUrl(const String& url, bool octoOn, const String& octoWh, const
 }
 
 String loadSpoolmanUrl() {
-    JsonDocument doc;
-    if (loadJsonValue("/spoolman_url.json", doc) && doc["url"].is<String>()) {
-        octoEnabled = (doc["octoEnabled"].is<bool>()) ? doc["octoEnabled"].as<bool>() : false;
-        if (octoEnabled && doc["octoToken"].is<String>() && doc["octoUrl"].is<String>())
-        {
-            octoUrl = doc["octoUrl"].as<String>();
-            octoToken = doc["octoToken"].as<String>();
-        }
-
-        return doc["url"].as<String>();
+    Preferences preferences;
+    preferences.begin(NVS_NAMESPACE_API, true);
+    String spoolmanUrl = preferences.getString(NVS_KEY_SPOOLMAN_URL, "");
+    octoEnabled = preferences.getBool(NVS_KEY_OCTOPRINT_ENABLED, false);
+    if(octoEnabled)
+    {
+        octoUrl = preferences.getString(NVS_KEY_OCTOPRINT_URL, "");
+        octoToken = preferences.getString(NVS_KEY_OCTOPRINT_TOKEN, "");
     }
-    Serial.println("Keine gültige Spoolman-URL gefunden.");
-
-    doc.clear();
-    return "";
+    preferences.end();
+    return spoolmanUrl;
 }
 
 bool initSpoolman() {
