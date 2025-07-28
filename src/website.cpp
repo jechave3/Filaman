@@ -11,6 +11,8 @@
 #include "display.h"
 #include "ota.h"
 #include "config.h"
+#include "debug.h"
+
 
 #ifndef VERSION
   #define VERSION "1.1.0"
@@ -27,6 +29,7 @@ nfcReaderStateType lastnfcReaderState = NFC_IDLE;
 
 
 void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
+    HEAP_DEBUG_MESSAGE("onWsEvent begin");
     if (type == WS_EVT_CONNECT) {
         Serial.println("Neuer Client verbunden!");
         // Sende die AMS-Daten an den neuen Client
@@ -34,6 +37,10 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
         sendNfcData(client);
         foundNfcTag(client, 0);
         sendWriteResult(client, 3);
+
+        // Clean up dead connections
+        (*server).cleanupClients();
+        Serial.println("Currently connected number of clients: " + String((*server).getClients().size()));
     } else if (type == WS_EVT_DISCONNECT) {
         Serial.println("Client getrennt.");
     } else if (type == WS_EVT_ERROR) {
@@ -114,7 +121,9 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
         else {
             Serial.println("Unbekannter WebSocket-Typ: " + doc["type"].as<String>());
         }
+        doc.clear();
     }
+    HEAP_DEBUG_MESSAGE("onWsEvent end");
 }
 
 // Funktion zum Laden und Ersetzen des Headers in einer HTML-Datei
@@ -263,6 +272,8 @@ void setupWebserver(AsyncWebServer &server) {
         html.replace("{{bambuCode}}", bambuCredentials.accesscode ? bambuCredentials.accesscode : "");
         html.replace("{{autoSendToBambu}}", bambuCredentials.autosend_enable ? "checked" : "");
         html.replace("{{autoSendTime}}", (bambuCredentials.autosend_time != 0) ? String(bambuCredentials.autosend_time) : String(BAMBU_DEFAULT_AUTOSEND_TIME));
+
+        doc.clear();
 
         request->send(200, "text/html", html);
     });

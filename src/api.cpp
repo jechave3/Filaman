@@ -3,6 +3,7 @@
 #include <ArduinoJson.h>
 #include "commonFS.h"
 #include <Preferences.h>
+#include "debug.h"
 
 volatile spoolmanApiStateType spoolmanApiState = API_INIT;
 //bool spoolman_connected = false;
@@ -88,6 +89,8 @@ JsonDocument fetchSingleSpoolInfo(int spoolId) {
 }
 
 void sendToApi(void *parameter) {
+    HEAP_DEBUG_MESSAGE("sendToApi begin");
+
     spoolmanApiState = API_TRANSMITTING;
     SendToApiParams* params = (SendToApiParams*)parameter;
 
@@ -132,8 +135,8 @@ void sendToApi(void *parameter) {
             }
             
             vTaskDelay(3000 / portTICK_PERIOD_MS);
-            doc.clear();
         }
+        doc.clear();
 
     } else {
         Serial.println("Fehler beim Senden an Spoolman! HTTP Code: " + String(httpCode));
@@ -146,8 +149,9 @@ void sendToApi(void *parameter) {
 
     // Speicher freigeben
     delete params;
-    vTaskDelete(NULL);
+    HEAP_DEBUG_MESSAGE("sendToApi end");
     spoolmanApiState = API_IDLE;
+    vTaskDelete(NULL);
 }
 
 bool updateSpoolTagId(String uidString, const char* payload) {
@@ -170,6 +174,8 @@ bool updateSpoolTagId(String uidString, const char* payload) {
     Serial.print("Update Spule mit URL: ");
     Serial.println(spoolsUrl);
     
+    doc.clear();
+
     // Update Payload erstellen
     JsonDocument updateDoc;
     updateDoc["extra"]["nfc_id"] = "\""+uidString+"\"";
@@ -208,6 +214,7 @@ bool updateSpoolTagId(String uidString, const char* payload) {
 }
 
 uint8_t updateSpoolWeight(String spoolId, uint16_t weight) {
+    HEAP_DEBUG_MESSAGE("updateSpoolWeight begin");
     String spoolsUrl = spoolmanUrl + apiUrl + "/spool/" + spoolId + "/measure";
     Serial.print("Update Spule mit URL: ");
     Serial.println(spoolsUrl);
@@ -242,11 +249,14 @@ uint8_t updateSpoolWeight(String spoolId, uint16_t weight) {
     );
 
     updateDoc.clear();
+    HEAP_DEBUG_MESSAGE("updateSpoolWeight end");
 
     return 1;
 }
 
 uint8_t updateSpoolLocation(String spoolId, String location){
+    HEAP_DEBUG_MESSAGE("updateSpoolLocation begin");
+
     String spoolsUrl = spoolmanUrl + apiUrl + "/spool/" + spoolId;
     Serial.print("Update Spule mit URL: ");
     Serial.println(spoolsUrl);
@@ -282,6 +292,7 @@ uint8_t updateSpoolLocation(String spoolId, String location){
 
     updateDoc.clear();
 
+    HEAP_DEBUG_MESSAGE("updateSpoolLocation end");
     return 1;
 }
 
@@ -346,6 +357,10 @@ bool updateSpoolBambuData(String payload) {
 
     String updatePayload;
     serializeJson(updateDoc, updatePayload);
+
+    doc.clear();
+    updateDoc.clear();
+
     Serial.print("Update Payload: ");
     Serial.println(updatePayload);
 
@@ -512,6 +527,7 @@ bool checkSpoolmanExtraFields() {
                     vTaskDelay(100 / portTICK_PERIOD_MS);
                 }
             }
+            doc.clear();
         }
     }
     
@@ -558,6 +574,8 @@ bool checkSpoolmanInstance(const String& url) {
                 oledShowTopRow();
                 return strcmp(status, "healthy") == 0;
             }
+
+            doc.clear();
         }
     } else {
         Serial.println("Error contacting spoolman instance! HTTP Code: " + String(httpCode));
@@ -580,6 +598,8 @@ bool saveSpoolmanUrl(const String& url, bool octoOn, const String& octo_url, con
     octoEnabled = octoOn;
     octoUrl = octo_url;
     octoToken = octoTk;
+
+    doc.clear();
 
     return true;
 }
