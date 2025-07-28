@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.7] - 2025-07-28
+### Changed
+- update platformio.ini for version v1.5.7
+- clean up unused variables and improve .gitignore entries
+
+
 ## [1.5.6] - 2025-07-28
 ### Added
 - Adds ENABLE_HEAP_DEBUGGING define as comment to the build flags
