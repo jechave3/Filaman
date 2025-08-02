@@ -24,7 +24,7 @@ void setupWebserver(AsyncWebServer &server);
 
 // WebSocket-Funktionen
 void sendAmsData(AsyncWebSocketClient *client);
-void sendNfcData(AsyncWebSocketClient *client);
+void sendNfcData();
 void foundNfcTag(AsyncWebSocketClient *client, uint8_t success);
 void sendWriteResult(AsyncWebSocketClient *client, uint8_t success);
 
