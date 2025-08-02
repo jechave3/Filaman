@@ -118,6 +118,12 @@ void loop() {
     checkWiFiConnection();
   }
 
+  // Periodic display update
+  if (intervalElapsed(currentMillis, lastWifiCheckTime, 1000)) 
+  {
+    oledShowTopRow();
+  }
+
   // Wenn Bambu auto set Spool aktiv
   if (bambuCredentials.autosend_enable && autoSetToBambuSpoolId > 0) 
   {

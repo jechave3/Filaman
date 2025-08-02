@@ -26,16 +26,11 @@ const uint8_t TTP223_PIN = 25;
 
 
 // ***** Display
-// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-// On an ESP32:   21(SDA),  22(SCL)
-const int8_t OLED_RESET = -1; // Reset pin # (or -1 if sharing Arduino reset pin)
-const uint8_t SCREEN_ADDRESS = 0x3C; ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
-const uint8_t SCREEN_WIDTH = 128; // OLED display width, in pixels
-const uint8_t SCREEN_HEIGHT = 64; // OLED display height, in pixels
 const uint8_t OLED_TOP_START = 0;
 const uint8_t OLED_TOP_END = 16;
 const uint8_t OLED_DATA_START = 17;
 const uint8_t OLED_DATA_END = SCREEN_HEIGHT;
+
 // ***** Display
 
 // ***** Webserver

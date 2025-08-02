@@ -25,6 +25,14 @@
 
 #define BAMBU_USERNAME "bblp"
 
+#define OLED_RESET                  -1      // Reset pin # (or -1 if sharing Arduino reset pin)
+#define SCREEN_ADDRESS              0x3CU   // See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+#define SCREEN_WIDTH                128U
+#define SCREEN_HEIGHT               64U
+#define SCREEN_TOP_BAR_HEIGHT       16U
+#define SCREEN_PROGRESS_BAR_HEIGHT  12U
+#define DISPLAY_BOOT_TEXT           "FilaMan"
+
 
 extern const uint8_t PN532_IRQ;
 extern const uint8_t PN532_RESET;
@@ -36,10 +44,6 @@ extern const uint16_t SCALE_LEVEL_WEIGHT;
 
 extern const uint8_t TTP223_PIN;
 
-extern const int8_t OLED_RESET;
-extern const uint8_t SCREEN_ADDRESS;
-extern const uint8_t SCREEN_WIDTH;
-extern const uint8_t SCREEN_HEIGHT;
 extern const uint8_t OLED_TOP_START;
 extern const uint8_t OLED_TOP_END;
 extern const uint8_t OLED_DATA_START;
