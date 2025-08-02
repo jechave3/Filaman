@@ -115,7 +115,7 @@ void start_scale(bool touchSensorConnected) {
     }
   }
 
-  oledShowMessage("Scale Tare Please remove all");
+  oledShowProgressBar(6, 7, DISPLAY_BOOT_TEXT, "Tare scale");
   for (uint16_t i = 0; i < 2000; i++) {
     yield();
     vTaskDelay(pdMS_TO_TICKS(1));

@@ -551,9 +551,6 @@ bool checkSpoolmanInstance(const String& url) {
 
     if (httpCode > 0) {
         if (httpCode == HTTP_CODE_OK) {
-            oledShowMessage("Spoolman available");
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
-
             String payload = http.getString();
             JsonDocument doc;
             DeserializationError error = deserializeJson(doc, payload);
@@ -617,6 +614,7 @@ String loadSpoolmanUrl() {
 }
 
 bool initSpoolman() {
+    oledShowProgressBar(3, 7, DISPLAY_BOOT_TEXT, "Spoolman init");
     spoolmanUrl = loadSpoolmanUrl();
     spoolmanUrl.trim();
     if (spoolmanUrl == "") {

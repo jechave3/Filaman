@@ -6,6 +6,7 @@
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 bool wifiOn = false;
+bool iconToggle = false;
 
 void setupDisplay() {
     if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
@@ -15,14 +16,6 @@ void setupDisplay() {
     display.setTextColor(WHITE);
     display.clearDisplay();
     display.display();
-
-    // Show initial display buffer contents on the screen --
-    // the library initializes this with an Adafruit splash screen.
-    display.setTextColor(WHITE);
-    display.display();
-    oledShowTopRow();
-    oledShowMessage("FilaMan v" + String(VERSION));
-    vTaskDelay(2000 / portTICK_PERIOD_MS);
 }
 
 void oledclearline() {
@@ -45,14 +38,14 @@ void oledcleardata() {
     //display.display();
 }
 
-int oled_center_h(String text) {
+int oled_center_h(const String &text) {
     int16_t x1, y1;
     uint16_t w, h;
     display.getTextBounds(text, 0, 0, &x1, &y1, &w, &h);
     return (SCREEN_WIDTH - w) / 2;
 }
 
-int oled_center_v(String text) {
+int oled_center_v(const String &text) {
     int16_t x1, y1;
     uint16_t w, h;
     display.getTextBounds(text, 0, OLED_DATA_START, &x1, &y1, &w, &h);
@@ -60,7 +53,7 @@ int oled_center_v(String text) {
     return OLED_DATA_START + ((OLED_DATA_END - OLED_DATA_START - h) / 2);
 }
 
-std::vector<String> splitTextIntoLines(String text, uint8_t textSize) {
+std::vector<String> splitTextIntoLines(const String &text, uint8_t textSize) {
     std::vector<String> lines;
     display.setTextSize(textSize);
     
@@ -120,7 +113,7 @@ std::vector<String> splitTextIntoLines(String text, uint8_t textSize) {
     return lines;
 }
 
-void oledShowMultilineMessage(String message, uint8_t size) {
+void oledShowMultilineMessage(const String &message, uint8_t size) {
     std::vector<String> lines;
     int maxLines = 3;  // Maximale Anzahl Zeilen für size 2
     
@@ -148,7 +141,7 @@ void oledShowMultilineMessage(String message, uint8_t size) {
     display.display();
 }
 
-void oledShowMessage(String message, uint8_t size) {
+void oledShowMessage(const String &message, uint8_t size) {
     oledcleardata();
     display.setTextSize(size);
     display.setTextWrap(false);
@@ -171,22 +164,41 @@ void oledShowMessage(String message, uint8_t size) {
 void oledShowTopRow() {
     oledclearline();
 
+    display.setTextSize(1);
+    display.setCursor(0, 4);
+    display.print("v");
+    display.print(VERSION);
+
+    iconToggle = !iconToggle;
+
     if (bambu_connected == 1) {
         display.drawBitmap(50, 0, bitmap_bambu_on , 16, 16, WHITE);
     } else {
-        display.drawBitmap(50, 0, bitmap_off , 16, 16, WHITE);
+        if(iconToggle){
+            display.drawBitmap(50, 0, bitmap_bambu_on , 16, 16, WHITE);
+            display.drawLine(50, 15, 66, 0, WHITE);
+            display.drawLine(51, 15, 67, 0, WHITE);
+        }
     }
 
     if (spoolmanApiState != API_INIT) {
         display.drawBitmap(80, 0, bitmap_spoolman_on , 16, 16, WHITE);
     } else {
-        display.drawBitmap(80, 0, bitmap_off , 16, 16, WHITE);
+        if(iconToggle){
+            display.drawBitmap(80, 0, bitmap_spoolman_on , 16, 16, WHITE);
+            display.drawLine(80, 15, 96, 0, WHITE);
+            display.drawLine(81, 15, 97, 0, WHITE);
+        }
     }
 
     if (wifiOn == 1) {
         display.drawBitmap(107, 0, wifi_on , 16, 16, WHITE);
     } else {
-        display.drawBitmap(107, 0, wifi_off , 16, 16, WHITE);
+        if(iconToggle){
+            display.drawBitmap(107, 0, wifi_on , 16, 16, WHITE);
+            display.drawLine(107, 15, 123, 0, WHITE);
+            display.drawLine(108, 15, 124, 0, WHITE);
+        }
     }
     
     display.display();
@@ -211,6 +223,27 @@ void oledShowIcon(const char* icon) {
         display.drawBitmap(iconStart, OLED_DATA_START, icon_loading , iconSize, iconSize, WHITE);
     }
 
+    display.display();
+}
+
+void oledShowProgressBar(const uint8_t step, const uint8_t numSteps, const char* largeText, const char* statusMessage){
+    assert(step <= numSteps);
+
+    // clear data and bar area
+    display.fillRect(0, OLED_DATA_START, SCREEN_WIDTH, SCREEN_HEIGHT-16, BLACK);
+
+    
+    display.setTextWrap(false);
+    display.setTextSize(2);
+    display.setCursor(0, OLED_DATA_START+4);
+    display.print(largeText);
+    display.setTextSize(1);
+    display.setCursor(0, OLED_DATA_END-SCREEN_PROGRESS_BAR_HEIGHT-10);
+    display.print(statusMessage);
+
+    const int barLength = ((SCREEN_WIDTH-2)*step)/numSteps;
+    display.drawRoundRect(0, SCREEN_HEIGHT-SCREEN_PROGRESS_BAR_HEIGHT, SCREEN_WIDTH, 12, 6, WHITE);
+    display.fillRoundRect(1, SCREEN_HEIGHT-SCREEN_PROGRESS_BAR_HEIGHT+1, barLength, 10, 6, WHITE);
     display.display();
 }
 

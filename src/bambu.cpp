@@ -627,6 +627,7 @@ bool setupMqtt() {
 
     if (bambuCredentials.ip != "" && bambuCredentials.accesscode != "" && bambuCredentials.serial != "") 
     {
+        oledShowProgressBar(4, 7, DISPLAY_BOOT_TEXT, "Bambu init");
         bambuDisabled = false;
         sslClient.setCACert(root_ca);
         sslClient.setInsecure();

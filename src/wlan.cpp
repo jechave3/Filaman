@@ -61,8 +61,7 @@ void initWiFi() {
   wm.setWiFiAutoReconnect(true);
   wm.setConnectTimeout(10);
 
-  oledShowTopRow();
-  oledShowMessage("WiFi Setup");
+  oledShowProgressBar(0, 7, DISPLAY_BOOT_TEXT, "WiFi Setup");
   
   //bool res = wm.autoConnect("FilaMan"); // anonymous ap
   if(!wm.autoConnect("FilaMan")) {
@@ -80,9 +79,6 @@ void initWiFi() {
     Serial.println(WiFi.localIP());
 
     oledShowTopRow();
-    display.display();
-
-    vTaskDelay(500 / portTICK_PERIOD_MS);
 
     // mDNS
     startMDNS();

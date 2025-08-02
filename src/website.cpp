@@ -189,6 +189,7 @@ void sendAmsData(AsyncWebSocketClient *client) {
 }
 
 void setupWebserver(AsyncWebServer &server) {
+    oledShowProgressBar(2, 7, DISPLAY_BOOT_TEXT, "Webserver init");
     // Deaktiviere alle Debug-Ausgaben
     Serial.setDebugOutput(false);
     
