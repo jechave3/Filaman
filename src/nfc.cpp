@@ -269,7 +269,7 @@ void writeJsonToTag(void *parameter) {
 
   //pauseBambuMqttTask = true;
   // aktualisieren der Website wenn sich der Status ändert
-  sendNfcData(nullptr);
+  sendNfcData();
   vTaskDelay(100 / portTICK_PERIOD_MS);
   oledShowMessage("Waiting for NFC-Tag");
   
@@ -311,7 +311,7 @@ void writeJsonToTag(void *parameter) {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
         nfcReaderState = NFC_WRITE_SUCCESS;
         // aktualisieren der Website wenn sich der Status ändert
-        sendNfcData(nullptr);
+        sendNfcData();
         pauseBambuMqttTask = false;
         
         if (updateSpoolTagId(uidString, payload)) {
@@ -343,7 +343,7 @@ void writeJsonToTag(void *parameter) {
   }
   
   sendWriteResult(nullptr, success);
-  sendNfcData(nullptr);
+  sendNfcData();
 
   vTaskResume(RfidReaderTask);
   pauseBambuMqttTask = false;
@@ -459,7 +459,7 @@ void scanRfidTask(void * parameter) {
       }
 
       // aktualisieren der Website wenn sich der Status ändert
-      sendNfcData(nullptr);
+      sendNfcData();
     }
     yield();
   }

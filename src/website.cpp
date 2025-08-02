@@ -34,7 +34,7 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
         Serial.println("Neuer Client verbunden!");
         // Sende die AMS-Daten an den neuen Client
         if (!bambuDisabled) sendAmsData(client);
-        sendNfcData(client);
+        sendNfcData();
         foundNfcTag(client, 0);
         sendWriteResult(client, 3);
 
@@ -150,11 +150,11 @@ void sendWriteResult(AsyncWebSocketClient *client, uint8_t success) {
 void foundNfcTag(AsyncWebSocketClient *client, uint8_t success) {
     if (success == lastSuccess) return;
     ws.textAll("{\"type\":\"nfcTag\", \"payload\":{\"found\": " + String(success) + "}}");
-    sendNfcData(nullptr);
+    sendNfcData();
     lastSuccess = success;
 }
 
-void sendNfcData(AsyncWebSocketClient *client) {
+void sendNfcData() {
     if (lastnfcReaderState == nfcReaderState) return;
     // TBD: Why is there no status for reading the tag?
     switch(nfcReaderState){
