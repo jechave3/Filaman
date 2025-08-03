@@ -171,17 +171,19 @@ void oledShowTopRow() {
 
     iconToggle = !iconToggle;
 
-    if (bambu_connected == 1) {
-        display.drawBitmap(50, 0, bitmap_bambu_on , 16, 16, WHITE);
-    } else {
-        if(iconToggle){
+    if(bambuDisabled == false) {
+        if (bambu_connected == 1) {
             display.drawBitmap(50, 0, bitmap_bambu_on , 16, 16, WHITE);
-            display.drawLine(50, 15, 66, 0, WHITE);
-            display.drawLine(51, 15, 67, 0, WHITE);
+        } else {
+            if(iconToggle){
+                display.drawBitmap(50, 0, bitmap_bambu_on , 16, 16, WHITE);
+                display.drawLine(50, 15, 66, 0, WHITE);
+                display.drawLine(51, 15, 67, 0, WHITE);
+            }
         }
     }
 
-    if (spoolmanApiState != API_INIT) {
+    if (spoolmanConnected) {
         display.drawBitmap(80, 0, bitmap_spoolman_on , 16, 16, WHITE);
     } else {
         if(iconToggle){
