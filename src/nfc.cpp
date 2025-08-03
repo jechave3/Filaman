@@ -18,6 +18,7 @@ JsonDocument rfidData;
 String activeSpoolId = "";
 String lastSpoolId = "";
 String nfcJsonData = "";
+bool tagProcessed = false;
 volatile bool pauseBambuMqttTask = false;
 
 volatile nfcReaderStateType nfcReaderState = NFC_IDLE;
@@ -196,6 +197,8 @@ uint8_t ntag2xx_WriteNDEF(const char *payload) {
 }
 
 bool decodeNdefAndReturnJson(const byte* encodedMessage) {
+  oledShowProgressBar(1, octoEnabled?5:4, "Reading", "Decoding data");
+
   byte typeLength = encodedMessage[3];
   byte payloadLength = encodedMessage[4];
 
@@ -219,35 +222,43 @@ bool decodeNdefAndReturnJson(const byte* encodedMessage) {
   } 
   else 
   {
-    // Sende die aktualisierten AMS-Daten an alle WebSocket-Clients
-    Serial.println("JSON-Dokument erfolgreich verarbeitet");
-    Serial.println(doc.as<String>());
-    if (doc["sm_id"].is<String>() && doc["sm_id"] != "") 
-    {
-      Serial.println("SPOOL-ID gefunden: " + doc["sm_id"].as<String>());
-      activeSpoolId = doc["sm_id"].as<String>();
-      lastSpoolId = activeSpoolId;
-    }
-    else if(doc["location"].is<String>() && doc["location"] != "")
-    {
-      Serial.println("Location Tag found!");
-      String location = doc["location"].as<String>();
-      if(lastSpoolId != ""){
-        updateSpoolLocation(lastSpoolId, location);
-      }
-      else
+    // If spoolman is unavailable, there is no point in continuing
+    if(spoolmanConnected){
+      // Sende die aktualisierten AMS-Daten an alle WebSocket-Clients
+      Serial.println("JSON-Dokument erfolgreich verarbeitet");
+      Serial.println(doc.as<String>());
+      if (doc["sm_id"].is<String>() && doc["sm_id"] != "") 
       {
-        Serial.println("Location update tag scanned without scanning spool before!");
-        oledShowMessage("No spool scanned before!");
-      }
+        oledShowProgressBar(2, octoEnabled?5:4, "Spool Tag", "Weighing");
+        Serial.println("SPOOL-ID gefunden: " + doc["sm_id"].as<String>());
+        activeSpoolId = doc["sm_id"].as<String>();
+        lastSpoolId = activeSpoolId;
 
-    }
-    else 
-    {
-      Serial.println("Keine SPOOL-ID gefunden.");
-      activeSpoolId = "";
-      oledShowMessage("Unknown Spool");
-      vTaskDelay(2000 / portTICK_PERIOD_MS);
+        Serial.println("Api state: " + String(spoolmanApiState));
+      }
+      else if(doc["location"].is<String>() && doc["location"] != "")
+      {
+        Serial.println("Location Tag found!");
+        String location = doc["location"].as<String>();
+        if(lastSpoolId != ""){
+          updateSpoolLocation(lastSpoolId, location);
+        }
+        else
+        {
+          Serial.println("Location update tag scanned without scanning spool before!");
+          oledShowProgressBar(1, 1, "Failure", "Scan spool first");
+        }
+      }
+      else 
+      {
+        Serial.println("Keine SPOOL-ID gefunden.");
+        activeSpoolId = "";
+        // TBD: this path has not been tested!
+        oledShowMessage("Unknown Spool");
+        vTaskDelay(2000 / portTICK_PERIOD_MS);
+      }
+    }else{
+      oledShowProgressBar(octoEnabled?5:4, octoEnabled?5:4, "Failure!", "Spoolman unavailable");
     }
   }
 
@@ -384,14 +395,19 @@ void scanRfidTask(void * parameter) {
 
       foundNfcTag(nullptr, success);
       
-      if (success && nfcReaderState != NFC_READ_SUCCESS)
+      // As long as there is still a tag on the reader, do not try to read it again
+      if (success && nfcReaderState != NFC_READ_SUCCESS && nfcReaderState != NFC_READ_ERROR)
       {
+        // Set the current tag as not processed
+        tagProcessed = false;
+
         // Display some basic information about the card
         Serial.println("Found an ISO14443A card");
 
         nfcReaderState = NFC_READING;
 
-        oledShowIcon("transfer");
+        oledShowProgressBar(0, octoEnabled?5:4, "Reading", "Detecting tag");
+
         vTaskDelay(500 / portTICK_PERIOD_MS);
 
         if (uidLength == 7)
@@ -425,8 +441,7 @@ void scanRfidTask(void * parameter) {
 
             if (!decodeNdefAndReturnJson(data)) 
             {
-              oledShowMessage("NFC-Tag unknown");
-              vTaskDelay(2000 / portTICK_PERIOD_MS);
+              oledShowProgressBar(1, 1, "Failure", "Unkown Tag");
               nfcReaderState = NFC_READ_ERROR;
             }
             else 
@@ -438,12 +453,13 @@ void scanRfidTask(void * parameter) {
           }
           else
           {
-            oledShowMessage("NFC-Tag read error");
+            oledShowProgressBar(1, 1, "Failure", "Tag Read Error");
             nfcReaderState = NFC_READ_ERROR;
           }
         }
         else
         {
+          //TBD: Show error here?!
           Serial.println("This doesn't seem to be an NTAG2xx tag (UUID length != 7 bytes)!");
         }
       }
@@ -474,6 +490,7 @@ void startNfc() {
     Serial.println("Kann kein RFID Board finden !");            // Sende Text "Kann kein..." an seriellen Monitor
     //delay(5000);
     //ESP.restart();
+    //TBD: rework this
     oledShowMessage("No RFID Board found");
     delay(2000);
   }

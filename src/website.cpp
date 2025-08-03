@@ -52,8 +52,6 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
         JsonDocument doc;
         deserializeJson(doc, message);
 
-        bool spoolmanConnected = (spoolmanApiState != API_INIT);
-
         if (doc["type"] == "heartbeat") {
             // Sende Heartbeat-Antwort
             ws.text(client->id(), "{"

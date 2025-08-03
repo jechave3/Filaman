@@ -162,7 +162,7 @@ uint8_t calibrate_scale() {
   {
     
     scale.set_scale();
-    oledShowMessage("Step 1 empty Scale");
+    oledShowProgressBar(0, 3, "Scale Cal.", "Empty Scale");
 
     for (uint16_t i = 0; i < 5000; i++) {
       yield();
@@ -174,7 +174,7 @@ uint8_t calibrate_scale() {
     Serial.println("Tare done...");
     Serial.print("Place a known weight on the scale...");
 
-    oledShowMessage("Step 2 Place the weight");
+    oledShowProgressBar(1, 3, "Scale Cal.", "Place the weight");
 
     for (uint16_t i = 0; i < 5000; i++) {
       yield();
@@ -207,9 +207,7 @@ uint8_t calibrate_scale() {
       Serial.print("Verified stored value: ");
       Serial.println(verifyValue);
 
-      Serial.println("End calibration, remove weight");
-
-      oledShowMessage("Remove weight");
+      oledShowProgressBar(2, 3, "Scale Cal.", "Remove weight");
 
       scale.set_scale(newCalibrationValue);
       for (uint16_t i = 0; i < 2000; i++) {
@@ -218,7 +216,7 @@ uint8_t calibrate_scale() {
         esp_task_wdt_reset();
       }
       
-      oledShowMessage("Scale calibrated");
+      oledShowProgressBar(3, 3, "Scale Cal.", "Completed");
 
       // For some reason it is not possible to re-tare the scale here, it will result in a wdt timeout. Instead let the scale loop do the taring
       //scale.tare();
@@ -232,21 +230,18 @@ uint8_t calibrate_scale() {
 
       returnState = 1;
     }
-   
     else
     {
-      {
-        Serial.println("Calibration value is invalid. Please recalibrate.");
+      Serial.println("Calibration value is invalid. Please recalibrate.");
 
-        oledShowMessage("Calibration ERROR Try again");
+      oledShowMessage("Calibration ERROR Try again");
 
-        for (uint16_t i = 0; i < 50000; i++) {
-          yield();
-          vTaskDelay(pdMS_TO_TICKS(1));
-          esp_task_wdt_reset();
-        }
-        returnState = 0;
+      for (uint16_t i = 0; i < 50000; i++) {
+        yield();
+        vTaskDelay(pdMS_TO_TICKS(1));
+        esp_task_wdt_reset();
       }
+      returnState = 0;
     } 
   }
   else 
