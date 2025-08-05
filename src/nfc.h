@@ -15,7 +15,7 @@ typedef enum{
 
 void startNfc();
 void scanRfidTask(void * parameter);
-void startWriteJsonToTag(const char* payload);
+void startWriteJsonToTag(const bool isSpoolTag, const char* payload);
 
 extern TaskHandle_t RfidReaderTask;
 extern String nfcJsonData;

@@ -2,6 +2,7 @@
 #include "api.h"
 #include <vector>
 #include "icons.h"
+#include "main.h"
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -15,7 +16,10 @@ void setupDisplay() {
     }
     display.setTextColor(WHITE);
     display.clearDisplay();
-    display.display();
+
+
+    oledShowTopRow();
+    oledShowProgressBar(0, 7, DISPLAY_BOOT_TEXT, "Display init");
 }
 
 void oledclearline() {
@@ -171,35 +175,38 @@ void oledShowTopRow() {
 
     iconToggle = !iconToggle;
 
-    if(bambuDisabled == false) {
-        if (bambu_connected == 1) {
-            display.drawBitmap(50, 0, bitmap_bambu_on , 16, 16, WHITE);
-        } else {
-            if(iconToggle){
+    // Do not show status indicators during boot
+    if(!booting){
+        if(bambuDisabled == false) {
+            if (bambu_connected == 1) {
                 display.drawBitmap(50, 0, bitmap_bambu_on , 16, 16, WHITE);
-                display.drawLine(50, 15, 66, 0, WHITE);
-                display.drawLine(51, 15, 67, 0, WHITE);
+            } else {
+                if(iconToggle){
+                    display.drawBitmap(50, 0, bitmap_bambu_on , 16, 16, WHITE);
+                    display.drawLine(50, 15, 66, 0, WHITE);
+                    display.drawLine(51, 15, 67, 0, WHITE);
+                }
             }
         }
-    }
 
-    if (spoolmanConnected) {
-        display.drawBitmap(80, 0, bitmap_spoolman_on , 16, 16, WHITE);
-    } else {
-        if(iconToggle){
+        if (spoolmanConnected) {
             display.drawBitmap(80, 0, bitmap_spoolman_on , 16, 16, WHITE);
-            display.drawLine(80, 15, 96, 0, WHITE);
-            display.drawLine(81, 15, 97, 0, WHITE);
+        } else {
+            if(iconToggle){
+                display.drawBitmap(80, 0, bitmap_spoolman_on , 16, 16, WHITE);
+                display.drawLine(80, 15, 96, 0, WHITE);
+                display.drawLine(81, 15, 97, 0, WHITE);
+            }
         }
-    }
 
-    if (wifiOn == 1) {
-        display.drawBitmap(107, 0, wifi_on , 16, 16, WHITE);
-    } else {
-        if(iconToggle){
+        if (wifiOn == 1) {
             display.drawBitmap(107, 0, wifi_on , 16, 16, WHITE);
-            display.drawLine(107, 15, 123, 0, WHITE);
-            display.drawLine(108, 15, 124, 0, WHITE);
+        } else {
+            if(iconToggle){
+                display.drawBitmap(107, 0, wifi_on , 16, 16, WHITE);
+                display.drawLine(107, 15, 123, 0, WHITE);
+                display.drawLine(108, 15, 124, 0, WHITE);
+            }
         }
     }
     
