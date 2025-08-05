@@ -258,9 +258,7 @@ bool decodeNdefAndReturnJson(const byte* encodedMessage) {
       {
         Serial.println("Keine SPOOL-ID gefunden.");
         activeSpoolId = "";
-        // TBD: this path has not been tested!
-        oledShowMessage("Unknown Spool");
-        vTaskDelay(2000 / portTICK_PERIOD_MS);
+        oledShowProgressBar(1, 1, "Failure", "Unkown tag");
       }
     }else{
       oledShowProgressBar(octoEnabled?5:4, octoEnabled?5:4, "Failure!", "Spoolman unavailable");
@@ -313,9 +311,6 @@ void writeJsonToTag(void *parameter) {
     }else{
       Serial.println("CP 3.2");
     }
-
-    //TBD: Is this required?
-    //if (i == 0) oledShowMessage("Waiting for NFC-Tag");
 
     yield();
     esp_task_wdt_reset();
@@ -468,7 +463,7 @@ void scanRfidTask(void * parameter) {
 
             if (!decodeNdefAndReturnJson(data)) 
             {
-              oledShowProgressBar(1, 1, "Failure", "Unkown Tag");
+              oledShowProgressBar(1, 1, "Failure", "Unknown tag");
               nfcReaderState = NFC_READ_ERROR;
             }
             else 
@@ -480,13 +475,14 @@ void scanRfidTask(void * parameter) {
           }
           else
           {
-            oledShowProgressBar(1, 1, "Failure", "Tag Read Error");
+            oledShowProgressBar(1, 1, "Failure", "Tag read error");
             nfcReaderState = NFC_READ_ERROR;
           }
         }
         else
         {
           //TBD: Show error here?!
+          oledShowProgressBar(1, 1, "Failure", "Unkown tag type");
           Serial.println("This doesn't seem to be an NTAG2xx tag (UUID length != 7 bytes)!");
         }
       }
@@ -515,11 +511,8 @@ void startNfc() {
   unsigned long versiondata = nfc.getFirmwareVersion();  // Lese Versionsnummer der Firmware aus
   if (! versiondata) {                                   // Wenn keine Antwort kommt
     Serial.println("Kann kein RFID Board finden !");            // Sende Text "Kann kein..." an seriellen Monitor
-    //delay(5000);
-    //ESP.restart();
-    //TBD: rework this
     oledShowMessage("No RFID Board found");
-    delay(2000);
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
   }
   else {
     Serial.print("Chip PN5 gefunden"); Serial.println((versiondata >> 24) & 0xFF, HEX); // Sende Text und Versionsinfos an seriellen
