@@ -154,9 +154,6 @@ void sendToApi(void *parameter) {
                 remainingWeight = 0;
                 break;
             }
-            
-            // TBD: really required?
-            vTaskDelay(3000 / portTICK_PERIOD_MS);
         }
         doc.clear();
     } else {
@@ -170,8 +167,7 @@ void sendToApi(void *parameter) {
             oledShowProgressBar(1, 1, "Failure!", "Octoprint update");
             break;
         case API_REQUEST_BAMBU_UPDATE:
-            // TBD: rework error
-            oledShowMessage("Spoolman update failed");
+            oledShowProgressBar(1, 1, "Failure!", "Bambu update");
             break;
         }
         Serial.println("Fehler beim Senden an Spoolman! HTTP Code: " + String(httpCode));

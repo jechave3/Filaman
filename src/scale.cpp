@@ -234,7 +234,7 @@ uint8_t calibrate_scale() {
     {
       Serial.println("Calibration value is invalid. Please recalibrate.");
 
-      oledShowMessage("Calibration ERROR Try again");
+      oledShowProgressBar(3, 3, "Failure", "Calibration error");
 
       for (uint16_t i = 0; i < 50000; i++) {
         yield();
