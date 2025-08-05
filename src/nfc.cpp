@@ -21,6 +21,11 @@ String nfcJsonData = "";
 bool tagProcessed = false;
 volatile bool pauseBambuMqttTask = false;
 
+struct NfcWriteParameterType {
+  bool tagType;
+  char* payload;
+};
+
 volatile nfcReaderStateType nfcReaderState = NFC_IDLE;
 // 0 = nicht gelesen
 // 1 = erfolgreich gelesen
@@ -268,11 +273,11 @@ bool decodeNdefAndReturnJson(const byte* encodedMessage) {
 }
 
 void writeJsonToTag(void *parameter) {
-  const char* payload = (const char*)parameter;
+  NfcWriteParameterType* params = (NfcWriteParameterType*)parameter;
 
   // Gib die erstellte NDEF-Message aus
   Serial.println("Erstelle NDEF-Message...");
-  Serial.println(payload);
+  Serial.println(params->payload);
 
   nfcReaderState = NFC_WRITING;
   vTaskSuspend(RfidReaderTask);
@@ -282,17 +287,22 @@ void writeJsonToTag(void *parameter) {
   // aktualisieren der Website wenn sich der Status ändert
   sendNfcData();
   vTaskDelay(100 / portTICK_PERIOD_MS);
-  oledShowMessage("Waiting for NFC-Tag");
-  
+  Serial.println("CP 1");
   // Wait 10sec for tag
   uint8_t success = 0;
   String uidString = "";
   for (uint16_t i = 0; i < 20; i++) {
+    Serial.println("CP 2");
     uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
     uint8_t uidLength;
-    success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 500);
+    // yield before potentially waiting for 400ms
+    yield();
+    esp_task_wdt_reset();
+    success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 400);
     if (success) {
+      Serial.println("CP 3.1");
       for (uint8_t i = 0; i < uidLength; i++) {
+        //TBD: Rework to remove all the string operations
         uidString += String(uid[i], HEX);
         if (i < uidLength - 1) {
             uidString += ":"; // Optional: Trennzeichen hinzufügen
@@ -300,9 +310,12 @@ void writeJsonToTag(void *parameter) {
       }
       foundNfcTag(nullptr, success);
       break;
+    }else{
+      Serial.println("CP 3.2");
     }
 
-    if (i == 0) oledShowMessage("Waiting for NFC-Tag");
+    //TBD: Is this required?
+    //if (i == 0) oledShowMessage("Waiting for NFC-Tag");
 
     yield();
     esp_task_wdt_reset();
@@ -311,29 +324,37 @@ void writeJsonToTag(void *parameter) {
 
   if (success)
   {
-    oledShowIcon("transfer");
+    oledShowProgressBar(1, 3, "Write Tag", "Writing");
+
     // Schreibe die NDEF-Message auf den Tag
-    success = ntag2xx_WriteNDEF(payload);
+    success = ntag2xx_WriteNDEF(params->payload);
     if (success) 
     {
         Serial.println("NDEF-Message erfolgreich auf den Tag geschrieben");
         //oledShowMessage("NFC-Tag written");
-        oledShowIcon("success");
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        //vTaskDelay(1000 / portTICK_PERIOD_MS);
         nfcReaderState = NFC_WRITE_SUCCESS;
         // aktualisieren der Website wenn sich der Status ändert
         sendNfcData();
         pauseBambuMqttTask = false;
         
-        if (updateSpoolTagId(uidString, payload)) {
-          uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
-          uint8_t uidLength;
-          oledShowIcon("success");
-          while (nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 500)) {
-            yield();
+        if(params->tagType){
+          // TBD: should this be simplified?
+          if (updateSpoolTagId(uidString, params->payload) && params->tagType) {
+            
+          }else{
+            // Potentially handle errors
           }
+        }else{
+          oledShowProgressBar(1, 1, "Write Tag", "Done!");
         }
-          
+        uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
+        uint8_t uidLength;
+        yield();
+        esp_task_wdt_reset();
+        while (nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 400)) {
+          yield();
+        } 
         vTaskResume(RfidReaderTask);
         vTaskDelay(500 / portTICK_PERIOD_MS);        
     } 
@@ -348,7 +369,7 @@ void writeJsonToTag(void *parameter) {
   else
   {
     Serial.println("Fehler: Kein Tag zu schreiben gefunden.");
-    oledShowMessage("No NFC-Tag found");
+    oledShowProgressBar(1, 1, "Failure!", "No tag found");
     vTaskDelay(2000 / portTICK_PERIOD_MS);
     nfcReaderState = NFC_IDLE;
   }
@@ -362,20 +383,26 @@ void writeJsonToTag(void *parameter) {
   vTaskDelete(NULL);
 }
 
-void startWriteJsonToTag(const char* payload) {
-  char* payloadCopy = strdup(payload);
+void startWriteJsonToTag(const bool isSpoolTag, const char* payload) {
+  NfcWriteParameterType* parameters = new NfcWriteParameterType();
+  parameters->tagType = isSpoolTag;
+  parameters->payload = strdup(payload);
   
   // Task nicht mehrfach starten
-  if (nfcReaderState != NFC_WRITING) {
+  if (nfcReaderState == NFC_IDLE) {
+    oledShowProgressBar(0, 1, "Write Tag", "Place tag now");
     // Erstelle die Task
     xTaskCreate(
         writeJsonToTag,        // Task-Funktion
         "WriteJsonToTagTask",       // Task-Name
         5115,                        // Stackgröße in Bytes
-        (void*)payloadCopy,         // Parameter
+        (void*)parameters,         // Parameter
         rfidWriteTaskPrio,           // Priorität
         NULL                         // Task-Handle (nicht benötigt)
     );
+  }else{
+    oledShowProgressBar(0, 1, "FAILURE", "NFC busy!");
+    // TBD: Add proper error handling (website)
   }
 }
 
@@ -396,7 +423,7 @@ void scanRfidTask(void * parameter) {
       foundNfcTag(nullptr, success);
       
       // As long as there is still a tag on the reader, do not try to read it again
-      if (success && nfcReaderState != NFC_READ_SUCCESS && nfcReaderState != NFC_READ_ERROR)
+      if (success && nfcReaderState == NFC_IDLE)
       {
         // Set the current tag as not processed
         tagProcessed = false;

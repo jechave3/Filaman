@@ -67,7 +67,8 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
                 // Versuche NFC-Daten zu schreiben
                 String payloadString;
                 serializeJson(doc["payload"], payloadString);
-                startWriteJsonToTag(payloadString.c_str());
+
+                startWriteJsonToTag((doc["tagType"] == "spool") ? true : false, payloadString.c_str());
             }
         }
 

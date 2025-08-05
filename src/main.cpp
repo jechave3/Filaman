@@ -16,6 +16,7 @@
 bool mainTaskWasPaused = 0;
 uint8_t scaleTareCounter = 0;
 bool touchSensorConnected = false;
+bool booting = true;
 
 // ##### SETUP #####
 void setup() {
@@ -63,6 +64,7 @@ void setup() {
   bool panic = true; // Wenn true, löst ein WDT-Timeout einen System-Panik aus
   esp_task_wdt_init(10, panic);
 
+  booting = false;
   // Aktuellen Task (loopTask) zum Watchdog hinzufügen
   esp_task_wdt_add(NULL);
 }

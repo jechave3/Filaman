@@ -135,7 +135,7 @@ void sendToApi(void *parameter) {
                 //oledShowMessage("Remaining: " + String(remaining_weight) + "g");
                 if(!octoEnabled){
                     // TBD: Do not use Strings...
-                    oledShowProgressBar(octoEnabled?5:4, octoEnabled?5:4, "Spool Tag", ("Done: " + String(remainingWeight) + " g remain").c_str());
+                    oledShowProgressBar(1, 1, "Spool Tag", ("Done: " + String(remainingWeight) + " g remain").c_str());
                     remainingWeight = 0;
                 }else{
                     // ocoto is enabled, trigger octo update
@@ -143,7 +143,10 @@ void sendToApi(void *parameter) {
                 }
                 break;
             case API_REQUEST_SPOOL_LOCATION_UPDATE:
-                oledShowProgressBar(octoEnabled?5:4, octoEnabled?5:4, "Loc. Tag", "Done!");
+                oledShowProgressBar(1, 1, "Loc. Tag", "Done!");
+                break;
+            case API_REQUEST_SPOOL_TAG_ID_UPDATE:
+                oledShowProgressBar(1, 1, "Write Tag", "Done!");
                 break;
             case API_REQUEST_OCTO_SPOOL_UPDATE:
                 // TBD: Do not use Strings...
@@ -159,19 +162,14 @@ void sendToApi(void *parameter) {
     } else {
         switch(requestType){
         case API_REQUEST_SPOOL_WEIGHT_UPDATE:
-            oledShowProgressBar(octoEnabled?5:4, octoEnabled?5:4, "Failure!", "Spoolman update");
-            break;
         case API_REQUEST_SPOOL_LOCATION_UPDATE:
-            oledShowProgressBar(octoEnabled?5:4, octoEnabled?5:4, "Failure!", "Spoolman update");
+        case API_REQUEST_SPOOL_TAG_ID_UPDATE:
+            oledShowProgressBar(1, 1, "Failure!", "Spoolman update");
             break;
         case API_REQUEST_OCTO_SPOOL_UPDATE:
-            oledShowProgressBar(octoEnabled?5:4, octoEnabled?5:4, "Failure!", "Octoprint update");
+            oledShowProgressBar(1, 1, "Failure!", "Octoprint update");
             break;
         case API_REQUEST_BAMBU_UPDATE:
-            // TBD: rework error
-            oledShowMessage("Spoolman update failed");
-            break;
-        case API_REQUEST_SPOOL_TAG_ID_UPDATE:
             // TBD: rework error
             oledShowMessage("Spoolman update failed");
             break;
@@ -193,6 +191,8 @@ void sendToApi(void *parameter) {
 }
 
 bool updateSpoolTagId(String uidString, const char* payload) {
+    oledShowProgressBar(2, 3, "Write Tag", "Update Spoolman");
+
     JsonDocument doc;
     DeserializationError error = deserializeJson(doc, payload);
     
@@ -223,7 +223,7 @@ bool updateSpoolTagId(String uidString, const char* payload) {
     Serial.print("Update Payload: ");
     Serial.println(updatePayload);
 
-    SendToApiParams* params = new SendToApiParams();
+    SendToApiParams* params = new SendToApiParams();  
     if (params == nullptr) {
         Serial.println("Fehler: Kann Speicher für Task-Parameter nicht allokieren.");
         return false;
@@ -246,7 +246,8 @@ bool updateSpoolTagId(String uidString, const char* payload) {
     updateDoc.clear();
 
     // Update Spool weight
-    if (weight > 10) updateSpoolWeight(doc["sm_id"].as<String>(), weight);
+    //TBD: how to handle this with spool and locatin tags? Also potential parallel access again
+    //if (weight > 10) updateSpoolWeight(doc["sm_id"].as<String>(), weight);
 
     return true;
 }
