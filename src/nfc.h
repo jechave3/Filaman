@@ -15,7 +15,7 @@ typedef enum{
 
 void startNfc();
 void scanRfidTask(void * parameter);
-void startWriteJsonToTag(const char* payload);
+void startWriteJsonToTag(const bool isSpoolTag, const char* payload);
 
 extern TaskHandle_t RfidReaderTask;
 extern String nfcJsonData;
@@ -23,6 +23,7 @@ extern String activeSpoolId;
 extern String lastSpoolId;
 extern volatile nfcReaderStateType nfcReaderState;
 extern volatile bool pauseBambuMqttTask;
+extern bool tagProcessed;
 
 
 

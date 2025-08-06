@@ -24,8 +24,10 @@ extern volatile spoolmanApiStateType spoolmanApiState;
 extern bool spoolman_connected;
 extern String spoolmanUrl;
 extern bool octoEnabled;
+extern bool sendOctoUpdate;
 extern String octoUrl;
 extern String octoToken;
+extern bool spoolmanConnected;
 
 bool checkSpoolmanInstance(const String& url);
 bool saveSpoolmanUrl(const String& url, bool octoOn, const String& octoWh, const String& octoTk);

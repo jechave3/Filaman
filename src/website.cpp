@@ -34,7 +34,7 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
         Serial.println("Neuer Client verbunden!");
         // Sende die AMS-Daten an den neuen Client
         if (!bambuDisabled) sendAmsData(client);
-        sendNfcData(client);
+        sendNfcData();
         foundNfcTag(client, 0);
         sendWriteResult(client, 3);
 
@@ -52,8 +52,6 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
         JsonDocument doc;
         deserializeJson(doc, message);
 
-        bool spoolmanConnected = (spoolmanApiState != API_INIT);
-
         if (doc["type"] == "heartbeat") {
             // Sende Heartbeat-Antwort
             ws.text(client->id(), "{"
@@ -69,7 +67,8 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
                 // Versuche NFC-Daten zu schreiben
                 String payloadString;
                 serializeJson(doc["payload"], payloadString);
-                startWriteJsonToTag(payloadString.c_str());
+
+                startWriteJsonToTag((doc["tagType"] == "spool") ? true : false, payloadString.c_str());
             }
         }
 
@@ -150,11 +149,11 @@ void sendWriteResult(AsyncWebSocketClient *client, uint8_t success) {
 void foundNfcTag(AsyncWebSocketClient *client, uint8_t success) {
     if (success == lastSuccess) return;
     ws.textAll("{\"type\":\"nfcTag\", \"payload\":{\"found\": " + String(success) + "}}");
-    sendNfcData(nullptr);
+    sendNfcData();
     lastSuccess = success;
 }
 
-void sendNfcData(AsyncWebSocketClient *client) {
+void sendNfcData() {
     if (lastnfcReaderState == nfcReaderState) return;
     // TBD: Why is there no status for reading the tag?
     switch(nfcReaderState){
@@ -189,6 +188,7 @@ void sendAmsData(AsyncWebSocketClient *client) {
 }
 
 void setupWebserver(AsyncWebServer &server) {
+    oledShowProgressBar(2, 7, DISPLAY_BOOT_TEXT, "Webserver init");
     // Deaktiviere alle Debug-Ausgaben
     Serial.setDebugOutput(false);
     
