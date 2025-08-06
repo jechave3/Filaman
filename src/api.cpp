@@ -9,8 +9,11 @@ volatile spoolmanApiStateType spoolmanApiState = API_INIT;
 //bool spoolman_connected = false;
 String spoolmanUrl = "";
 bool octoEnabled = false;
+bool sendOctoUpdate = false;
 String octoUrl = "";
 String octoToken = "";
+uint16_t remainingWeight = 0;
+bool spoolmanConnected = false;
 
 struct SendToApiParams {
     SpoolmanApiRequestType requestType;
@@ -124,23 +127,52 @@ void sendToApi(void *parameter) {
             Serial.print("Fehler beim Parsen der JSON-Antwort: ");
             Serial.println(error.c_str());
         } else {
-            if (requestType == API_REQUEST_SPOOL_WEIGHT_UPDATE) {
-                uint16_t remaining_weight = doc["remaining_weight"].as<float>();
+            switch(requestType){
+            case API_REQUEST_SPOOL_WEIGHT_UPDATE:
+                remainingWeight = doc["remaining_weight"].as<uint16_t>();
                 Serial.print("Aktuelles Gewicht: ");
-                Serial.println(remaining_weight);
-                oledShowMessage("Remaining: " + String(remaining_weight) + "g");
+                Serial.println(remainingWeight);
+                //oledShowMessage("Remaining: " + String(remaining_weight) + "g");
+                if(!octoEnabled){
+                    // TBD: Do not use Strings...
+                    oledShowProgressBar(1, 1, "Spool Tag", ("Done: " + String(remainingWeight) + " g remain").c_str());
+                    remainingWeight = 0;
+                }else{
+                    // ocoto is enabled, trigger octo update
+                    sendOctoUpdate = true;
+                }
+                break;
+            case API_REQUEST_SPOOL_LOCATION_UPDATE:
+                oledShowProgressBar(1, 1, "Loc. Tag", "Done!");
+                break;
+            case API_REQUEST_SPOOL_TAG_ID_UPDATE:
+                oledShowProgressBar(1, 1, "Write Tag", "Done!");
+                break;
+            case API_REQUEST_OCTO_SPOOL_UPDATE:
+                // TBD: Do not use Strings...
+                oledShowProgressBar(5, 5, "Spool Tag", ("Done: " + String(remainingWeight) + " g remain").c_str());
+                remainingWeight = 0;
+                break;
             }
-            else if ( requestType == API_REQUEST_SPOOL_LOCATION_UPDATE) {
-                oledShowMessage("Location updated!");
-            }
-            
-            vTaskDelay(3000 / portTICK_PERIOD_MS);
         }
         doc.clear();
-
     } else {
+        switch(requestType){
+        case API_REQUEST_SPOOL_WEIGHT_UPDATE:
+        case API_REQUEST_SPOOL_LOCATION_UPDATE:
+        case API_REQUEST_SPOOL_TAG_ID_UPDATE:
+            oledShowProgressBar(1, 1, "Failure!", "Spoolman update");
+            break;
+        case API_REQUEST_OCTO_SPOOL_UPDATE:
+            oledShowProgressBar(1, 1, "Failure!", "Octoprint update");
+            break;
+        case API_REQUEST_BAMBU_UPDATE:
+            oledShowProgressBar(1, 1, "Failure!", "Bambu update");
+            break;
+        }
         Serial.println("Fehler beim Senden an Spoolman! HTTP Code: " + String(httpCode));
-        oledShowMessage("Spoolman update failed");
+
+        // TBD: really required?
         vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
 
@@ -155,6 +187,8 @@ void sendToApi(void *parameter) {
 }
 
 bool updateSpoolTagId(String uidString, const char* payload) {
+    oledShowProgressBar(2, 3, "Write Tag", "Update Spoolman");
+
     JsonDocument doc;
     DeserializationError error = deserializeJson(doc, payload);
     
@@ -185,7 +219,7 @@ bool updateSpoolTagId(String uidString, const char* payload) {
     Serial.print("Update Payload: ");
     Serial.println(updatePayload);
 
-    SendToApiParams* params = new SendToApiParams();
+    SendToApiParams* params = new SendToApiParams();  
     if (params == nullptr) {
         Serial.println("Fehler: Kann Speicher für Task-Parameter nicht allokieren.");
         return false;
@@ -208,13 +242,15 @@ bool updateSpoolTagId(String uidString, const char* payload) {
     updateDoc.clear();
 
     // Update Spool weight
-    if (weight > 10) updateSpoolWeight(doc["sm_id"].as<String>(), weight);
+    //TBD: how to handle this with spool and locatin tags? Also potential parallel access again
+    //if (weight > 10) updateSpoolWeight(doc["sm_id"].as<String>(), weight);
 
     return true;
 }
 
 uint8_t updateSpoolWeight(String spoolId, uint16_t weight) {
     HEAP_DEBUG_MESSAGE("updateSpoolWeight begin");
+    oledShowProgressBar(3, octoEnabled?5:4, "Spool Tag", "Spoolman update");
     String spoolsUrl = spoolmanUrl + apiUrl + "/spool/" + spoolId + "/measure";
     Serial.print("Update Spule mit URL: ");
     Serial.println(spoolsUrl);
@@ -230,6 +266,7 @@ uint8_t updateSpoolWeight(String spoolId, uint16_t weight) {
 
     SendToApiParams* params = new SendToApiParams();
     if (params == nullptr) {
+        // TBD: reset ESP instead of showing a message
         Serial.println("Fehler: Kann Speicher für Task-Parameter nicht allokieren.");
         return 0;
     }
@@ -257,6 +294,8 @@ uint8_t updateSpoolWeight(String spoolId, uint16_t weight) {
 uint8_t updateSpoolLocation(String spoolId, String location){
     HEAP_DEBUG_MESSAGE("updateSpoolLocation begin");
 
+    oledShowProgressBar(3, octoEnabled?5:4, "Loc. Tag", "Spoolman update");
+
     String spoolsUrl = spoolmanUrl + apiUrl + "/spool/" + spoolId;
     Serial.print("Update Spule mit URL: ");
     Serial.println(spoolsUrl);
@@ -280,6 +319,7 @@ uint8_t updateSpoolLocation(String spoolId, String location){
     params->spoolsUrl = spoolsUrl;
     params->updatePayload = updatePayload;
 
+    if(spoolmanApiState == API_IDLE){
     // Erstelle die Task
     BaseType_t result = xTaskCreate(
         sendToApi,                // Task-Funktion
@@ -290,6 +330,10 @@ uint8_t updateSpoolLocation(String spoolId, String location){
         NULL                      // Task-Handle (nicht benötigt)
     );
 
+    }else{
+        Serial.println("Not spawning new task, API still active!");
+    }
+
     updateDoc.clear();
 
     HEAP_DEBUG_MESSAGE("updateSpoolLocation end");
@@ -297,6 +341,8 @@ uint8_t updateSpoolLocation(String spoolId, String location){
 }
 
 bool updateSpoolOcto(int spoolId) {
+    oledShowProgressBar(4, octoEnabled?5:4, "Spool Tag", "Octoprint update");
+
     String spoolsUrl = octoUrl + "/plugin/Spoolman/selectSpool";
     Serial.print("Update Spule in Octoprint mit URL: ");
     Serial.println(spoolsUrl);
@@ -551,9 +597,6 @@ bool checkSpoolmanInstance(const String& url) {
 
     if (httpCode > 0) {
         if (httpCode == HTTP_CODE_OK) {
-            oledShowMessage("Spoolman available");
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
-
             String payload = http.getString();
             JsonDocument doc;
             DeserializationError error = deserializeJson(doc, payload);
@@ -564,6 +607,7 @@ bool checkSpoolmanInstance(const String& url) {
                 if (!checkSpoolmanExtraFields()) {
                     Serial.println("Fehler beim Überprüfen der Extrafelder.");
 
+                    // TBD
                     oledShowMessage("Spoolman Error creating Extrafields");
                     vTaskDelay(2000 / portTICK_PERIOD_MS);
                     
@@ -572,6 +616,7 @@ bool checkSpoolmanInstance(const String& url) {
 
                 spoolmanApiState = API_IDLE;
                 oledShowTopRow();
+                spoolmanConnected = true;
                 return strcmp(status, "healthy") == 0;
             }
 
@@ -617,6 +662,7 @@ String loadSpoolmanUrl() {
 }
 
 bool initSpoolman() {
+    oledShowProgressBar(3, 7, DISPLAY_BOOT_TEXT, "Spoolman init");
     spoolmanUrl = loadSpoolmanUrl();
     spoolmanUrl.trim();
     if (spoolmanUrl == "") {

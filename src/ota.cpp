@@ -224,7 +224,7 @@ void handleUpdate(AsyncWebServer &server) {
             static int lastProgress = -1;
             if (currentProgress != lastProgress && (currentProgress % 10 == 0 || final)) {
                 sendUpdateProgress(currentProgress, "uploading");
-                oledShowMessage("Update: " + String(currentProgress) + "%");
+                oledShowProgressBar(currentProgress, 100, "Update", "Download");
                 vTaskDelay(50 / portTICK_PERIOD_MS);
                 lastProgress = currentProgress;
             }

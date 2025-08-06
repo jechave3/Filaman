@@ -16,6 +16,7 @@
 bool mainTaskWasPaused = 0;
 uint8_t scaleTareCounter = 0;
 bool touchSensorConnected = false;
+bool booting = true;
 
 // ##### SETUP #####
 void setup() {
@@ -63,6 +64,7 @@ void setup() {
   bool panic = true; // Wenn true, löst ein WDT-Timeout einen System-Panik aus
   esp_task_wdt_init(10, panic);
 
+  booting = false;
   // Aktuellen Task (loopTask) zum Watchdog hinzufügen
   esp_task_wdt_add(NULL);
 }
@@ -116,6 +118,12 @@ void loop() {
   if (intervalElapsed(currentMillis, lastWifiCheckTime, wifiCheckInterval)) 
   {
     checkWiFiConnection();
+  }
+
+  // Periodic display update
+  if (intervalElapsed(currentMillis, lastWifiCheckTime, 1000)) 
+  {
+    oledShowTopRow();
   }
 
   // Wenn Bambu auto set Spool aktiv
@@ -212,25 +220,30 @@ void loop() {
   lastWeight = weight;
 
   // Wenn ein Tag mit SM id erkannte wurde und der Waage Counter anspricht an SM Senden
-  if (activeSpoolId != "" && weigthCouterToApi > 3 && weightSend == 0 && nfcReaderState == NFC_READ_SUCCESS) {
-    oledShowIcon("loading");
+  if (activeSpoolId != "" && weigthCouterToApi > 3 && weightSend == 0 && nfcReaderState == NFC_READ_SUCCESS && tagProcessed == false && spoolmanApiState == API_IDLE) {
+    // set the current tag as processed to prevent it beeing processed again
+    tagProcessed = true;
+
     if (updateSpoolWeight(activeSpoolId, weight)) 
     {
-      oledShowIcon("success");
-      vTaskDelay(2000 / portTICK_PERIOD_MS);
       weightSend = 1;
-      autoSetToBambuSpoolId = activeSpoolId.toInt();
-
-      if (octoEnabled) 
-      {
-        updateSpoolOcto(autoSetToBambuSpoolId);
-      }
+      
     }
     else
     {
       oledShowIcon("failed");
       vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
+  }
+
+  if(sendOctoUpdate && spoolmanApiState == API_IDLE){
+    autoSetToBambuSpoolId = activeSpoolId.toInt();
+
+    if(octoEnabled) 
+    {
+      updateSpoolOcto(autoSetToBambuSpoolId);
+    }
+    sendOctoUpdate = false;
   }
   
   esp_task_wdt_reset();

@@ -7,6 +7,6 @@
     #define HEAP_DEBUG_MESSAGE(location) 
 #endif
 
-inline void printHeapDebugData(String location){
+inline void printHeapDebugData(const char *location){
     Serial.println("Heap: " + String(ESP.getMinFreeHeap()/1024) + "\t" + String(ESP.getFreeHeap()/1024) + "\t" + String(ESP.getMaxAllocHeap()/1024) + "\t" + location);
 }

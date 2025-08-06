@@ -660,6 +660,7 @@ function writeNfcTag() {
         writeButton.textContent = "Writing";
         socket.send(JSON.stringify({
             type: 'writeNfcTag',
+            tagType: 'spool',
             payload: nfcData
         }));
     } else {
@@ -684,6 +685,7 @@ function writeLocationNfcTag() {
         writeButton.textContent = "Writing";
         socket.send(JSON.stringify({
             type: 'writeNfcTag',
+            tagType: 'location',
             payload: nfcData
         }));
     } else {
