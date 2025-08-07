@@ -20,6 +20,7 @@ String lastSpoolId = "";
 String nfcJsonData = "";
 bool tagProcessed = false;
 volatile bool pauseBambuMqttTask = false;
+volatile bool suspendNfcReading = false;
 
 struct NfcWriteParameterType {
   bool tagType;
@@ -278,8 +279,10 @@ void writeJsonToTag(void *parameter) {
   Serial.println(params->payload);
 
   nfcReaderState = NFC_WRITING;
-  vTaskSuspend(RfidReaderTask);
-  vTaskDelay(50 / portTICK_PERIOD_MS);
+  suspendNfcReading = true;
+  //vTaskSuspend(RfidReaderTask);
+  // make sure to wait 600ms, after that the reading task should be waiting
+  vTaskDelay(1000 / portTICK_PERIOD_MS);
 
   //pauseBambuMqttTask = true;
   // aktualisieren der Website wenn sich der Status ändert
@@ -372,7 +375,8 @@ void writeJsonToTag(void *parameter) {
   sendWriteResult(nullptr, success);
   sendNfcData();
 
-  vTaskResume(RfidReaderTask);
+  suspendNfcReading = false;
+  //vTaskResume(RfidReaderTask);
   pauseBambuMqttTask = false;
 
   vTaskDelete(NULL);
@@ -384,7 +388,7 @@ void startWriteJsonToTag(const bool isSpoolTag, const char* payload) {
   parameters->payload = strdup(payload);
   
   // Task nicht mehrfach starten
-  if (nfcReaderState == NFC_IDLE) {
+  if (nfcReaderState == NFC_IDLE || nfcReaderState == NFC_READ_ERROR || nfcReaderState == NFC_READ_SUCCESS) {
     oledShowProgressBar(0, 1, "Write Tag", "Place tag now");
     // Erstelle die Task
     xTaskCreate(
@@ -405,7 +409,7 @@ void scanRfidTask(void * parameter) {
   Serial.println("RFID Task gestartet");
   for(;;) {
     // Wenn geschrieben wird Schleife aussetzen
-    if (nfcReaderState != NFC_WRITING)
+    if (nfcReaderState != NFC_WRITING && !suspendNfcReading)
     {
       yield();
 
@@ -413,7 +417,7 @@ void scanRfidTask(void * parameter) {
       uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
       uint8_t uidLength;
 
-      success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 1000);
+      success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 500);
 
       foundNfcTag(nullptr, success);
       
@@ -430,8 +434,8 @@ void scanRfidTask(void * parameter) {
 
         oledShowProgressBar(0, octoEnabled?5:4, "Reading", "Detecting tag");
 
-        vTaskDelay(500 / portTICK_PERIOD_MS);
-
+        //vTaskDelay(500 / portTICK_PERIOD_MS);
+        
         if (uidLength == 7)
         {
           uint16_t tagSize = readTagSize();
@@ -487,7 +491,7 @@ void scanRfidTask(void * parameter) {
         }
       }
 
-      if (!success && nfcReaderState != NFC_IDLE)
+      if (!success && nfcReaderState != NFC_IDLE && !suspendNfcReading)
       {
         nfcReaderState = NFC_IDLE;
         //uidString = "";
@@ -499,6 +503,12 @@ void scanRfidTask(void * parameter) {
 
       // aktualisieren der Website wenn sich der Status ändert
       sendNfcData();
+    }
+    else
+    {
+      // TBD: Debug only:
+      Serial.println("NFC Reading disabled");
+      vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
     yield();
   }
