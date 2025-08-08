@@ -8,6 +8,7 @@
 #include "esp_task_wdt.h"
 #include "scale.h"
 #include "bambu.h"
+#include "main.h"
 
 //Adafruit_PN532 nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS);
 Adafruit_PN532 nfc(PN532_IRQ, PN532_RESET);
@@ -406,7 +407,7 @@ void scanRfidTask(void * parameter) {
   Serial.println("RFID Task gestartet");
   for(;;) {
     // Wenn geschrieben wird Schleife aussetzen
-    if (nfcReaderState != NFC_WRITING && !nfcReadingTaskSuspendRequest)
+    if (nfcReaderState != NFC_WRITING && !nfcReadingTaskSuspendRequest && !booting)
     {
       nfcReadingTaskSuspendState = false;
       yield();
