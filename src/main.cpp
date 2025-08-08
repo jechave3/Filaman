@@ -97,7 +97,8 @@ int16_t lastWeight = 0;
 
 // WIFI check variables
 unsigned long lastWifiCheckTime = 0;
-const unsigned long wifiCheckInterval = 60000; // Überprüfe alle 60 Sekunden (60000 ms)
+unsigned long lastTopRowUpdateTime = 0;
+unsigned long lastSpoolmanHealcheckTime = 0;
 
 // Button debounce variables
 unsigned long lastButtonPress = 0;
@@ -115,15 +116,21 @@ void loop() {
   }
 
   // Überprüfe regelmäßig die WLAN-Verbindung
-  if (intervalElapsed(currentMillis, lastWifiCheckTime, wifiCheckInterval)) 
+  if (intervalElapsed(currentMillis, lastWifiCheckTime, WIFI_CHECK_INTERVAL)) 
   {
     checkWiFiConnection();
   }
 
   // Periodic display update
-  if (intervalElapsed(currentMillis, lastWifiCheckTime, 1000)) 
+  if (intervalElapsed(currentMillis, lastTopRowUpdateTime, DISPLAY_UPDATE_INTERVAL)) 
   {
     oledShowTopRow();
+  }
+
+  // Periodic spoolman health check
+  if (intervalElapsed(currentMillis, lastSpoolmanHealcheckTime, SPOOLMAN_HEALTHCHECK_INTERVAL)) 
+  {
+    checkSpoolmanInstance();
   }
 
   // Wenn Bambu auto set Spool aktiv
