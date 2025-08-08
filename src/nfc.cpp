@@ -241,8 +241,6 @@ bool decodeNdefAndReturnJson(const byte* encodedMessage) {
         Serial.println("SPOOL-ID gefunden: " + doc["sm_id"].as<String>());
         activeSpoolId = doc["sm_id"].as<String>();
         lastSpoolId = activeSpoolId;
-
-        Serial.println("Api state: " + String(spoolmanApiState));
       }
       else if(doc["location"].is<String>() && doc["location"] != "")
       {
