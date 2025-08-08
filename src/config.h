@@ -22,6 +22,7 @@
 #define NVS_NAMESPACE_SCALE "scale"
 #define NVS_KEY_CALIBRATION "cal_value"
 #define NVS_KEY_AUTOTARE "auto_tare"
+#define SCALE_DEFAULT_CALIBRATION_VALUE 430.0f;
 
 #define BAMBU_USERNAME "bblp"
 
