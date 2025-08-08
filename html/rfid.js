@@ -578,7 +578,7 @@ function updateNfcData(data) {
         `;
 
         // Spoolman ID anzeigen
-        html += `<p><strong>Spoolman ID:</strong> ${data.sm_id || 'No Spoolman ID'}</p>`;
+        html += `<p><strong>Spoolman ID:</strong> ${data.sm_id} (<a href="${spoolmanUrl}/spool/show/${data.sm_id}">Open in Spoolman</a>)</p>`;
      }
      else if(data.location)
      {
