@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.5.8] - 2025-08-10
+### Added
+- Adds a link to the spool in spoolman when reading a spool tag
+- Fixes types and some issues in the new graphics
+
+### Changed
+- update platformio.ini for version v1.5.8
+- Merge pull request #45 from janecker/nfc_write_improvements
+- Introduces periodic Spoolman Healthcheck
+- Improves init - NFC reading now only starts after boot is finished
+- Further improvements on NFC writing
+- Merge pull request #44 from janecker/graphics_rework
+- Graphic rework of the NFC writing process
+- Remove unused parameter of sendNfcData()
+- Reworks startup graphics and timings
+
+### Fixed
+- Fixes issue that scale not calibrated message was not shown
+- Improves NFC writing workaround and removes debug output
+- Fixes typos in upgrade page
+- Reworks graphics of tag reading and some api fixes
+- Replaces usage of String with const char* in heap debug function
+
+
 ## [1.5.7] - 2025-07-28
 ### Changed
 - update platformio.ini for version v1.5.7
