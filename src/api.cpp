@@ -5,7 +5,7 @@
 #include <Preferences.h>
 #include "debug.h"
 
-volatile spoolmanApiStateType spoolmanApiState = API_INIT;
+volatile spoolmanApiStateType spoolmanApiState = API_IDLE;
 //bool spoolman_connected = false;
 String spoolmanUrl = "";
 bool octoEnabled = false;
@@ -14,6 +14,8 @@ String octoUrl = "";
 String octoToken = "";
 uint16_t remainingWeight = 0;
 bool spoolmanConnected = false;
+bool spoolmanExtraFieldsChecked = false;
+TaskHandle_t* apiTask;
 
 struct SendToApiParams {
     SpoolmanApiRequestType requestType;
@@ -94,6 +96,11 @@ JsonDocument fetchSingleSpoolInfo(int spoolId) {
 void sendToApi(void *parameter) {
     HEAP_DEBUG_MESSAGE("sendToApi begin");
 
+    // Wait until API is IDLE
+    while(spoolmanApiState != API_IDLE){
+        Serial.println("Waiting!");
+        yield();
+    }
     spoolmanApiState = API_TRANSMITTING;
     SendToApiParams* params = (SendToApiParams*)parameter;
 
@@ -236,7 +243,7 @@ bool updateSpoolTagId(String uidString, const char* payload) {
         6144,                     // Stackgröße in Bytes
         (void*)params,            // Parameter
         0,                        // Priorität
-        NULL                      // Task-Handle (nicht benötigt)
+        apiTask                      // Task-Handle (nicht benötigt)
     );
 
     updateDoc.clear();
@@ -282,7 +289,7 @@ uint8_t updateSpoolWeight(String spoolId, uint16_t weight) {
         6144,                     // Stackgröße in Bytes
         (void*)params,            // Parameter
         0,                        // Priorität
-        NULL                      // Task-Handle (nicht benötigt)
+        apiTask                      // Task-Handle (nicht benötigt)
     );
 
     updateDoc.clear();
@@ -319,17 +326,17 @@ uint8_t updateSpoolLocation(String spoolId, String location){
     params->spoolsUrl = spoolsUrl;
     params->updatePayload = updatePayload;
 
-    if(spoolmanApiState == API_IDLE){
-    // Erstelle die Task
-    BaseType_t result = xTaskCreate(
-        sendToApi,                // Task-Funktion
-        "SendToApiTask",          // Task-Name
-        6144,                     // Stackgröße in Bytes
-        (void*)params,            // Parameter
-        0,                        // Priorität
-        NULL                      // Task-Handle (nicht benötigt)
-    );
 
+    if(apiTask == nullptr){
+        // Erstelle die Task
+        BaseType_t result = xTaskCreate(
+            sendToApi,                // Task-Funktion
+            "SendToApiTask",          // Task-Name
+            6144,                     // Stackgröße in Bytes
+            (void*)params,            // Parameter
+            0,                        // Priorität
+            apiTask                   // Task-Handle
+        );
     }else{
         Serial.println("Not spawning new task, API still active!");
     }
@@ -374,7 +381,7 @@ bool updateSpoolOcto(int spoolId) {
         6144,                     // Stackgröße in Bytes
         (void*)params,            // Parameter
         0,                        // Priorität
-        NULL                      // Task-Handle (nicht benötigt)
+        apiTask                      // Task-Handle (nicht benötigt)
     );
 
     updateDoc.clear();
@@ -427,7 +434,7 @@ bool updateSpoolBambuData(String payload) {
         6144,                     // Stackgröße in Bytes
         (void*)params,            // Parameter
         0,                        // Priorität
-        NULL                      // Task-Handle (nicht benötigt)
+        apiTask                      // Task-Handle (nicht benötigt)
     );
 
     return true;
@@ -435,198 +442,222 @@ bool updateSpoolBambuData(String payload) {
 
 // #### Spoolman init
 bool checkSpoolmanExtraFields() {
-    HTTPClient http;
-    String checkUrls[] = {
-        spoolmanUrl + apiUrl + "/field/spool",
-        spoolmanUrl + apiUrl + "/field/filament"
-    };
+    // Only check extra fields if they have not been checked before
+    if(!spoolmanExtraFieldsChecked){
+        HTTPClient http;
+        String checkUrls[] = {
+            spoolmanUrl + apiUrl + "/field/spool",
+            spoolmanUrl + apiUrl + "/field/filament"
+        };
 
-    String spoolExtra[] = {
-        "nfc_id"
-    };
+        String spoolExtra[] = {
+            "nfc_id"
+        };
 
-    String filamentExtra[] = {
-        "nozzle_temperature",
-        "price_meter",
-        "price_gramm",
-        "bambu_setting_id",
-        "bambu_cali_id",
-        "bambu_idx",
-        "bambu_k",
-        "bambu_flow_ratio",
-        "bambu_max_volspeed"
-    };
+        String filamentExtra[] = {
+            "nozzle_temperature",
+            "price_meter",
+            "price_gramm",
+            "bambu_setting_id",
+            "bambu_cali_id",
+            "bambu_idx",
+            "bambu_k",
+            "bambu_flow_ratio",
+            "bambu_max_volspeed"
+        };
 
-    String spoolExtraFields[] = {
-        "{\"name\": \"NFC ID\","
-        "\"key\": \"nfc_id\","
-        "\"field_type\": \"text\"}"
-    };
+        String spoolExtraFields[] = {
+            "{\"name\": \"NFC ID\","
+            "\"key\": \"nfc_id\","
+            "\"field_type\": \"text\"}"
+        };
 
-    String filamentExtraFields[] = {
-        "{\"name\": \"Nozzle Temp\","
-        "\"unit\": \"°C\","
-        "\"field_type\": \"integer_range\","
-        "\"default_value\": \"[190,230]\","
-        "\"key\": \"nozzle_temperature\"}",
+        String filamentExtraFields[] = {
+            "{\"name\": \"Nozzle Temp\","
+            "\"unit\": \"°C\","
+            "\"field_type\": \"integer_range\","
+            "\"default_value\": \"[190,230]\","
+            "\"key\": \"nozzle_temperature\"}",
 
-        "{\"name\": \"Price/m\","
-        "\"unit\": \"€\","
-        "\"field_type\": \"float\","
-        "\"key\": \"price_meter\"}",
+            "{\"name\": \"Price/m\","
+            "\"unit\": \"€\","
+            "\"field_type\": \"float\","
+            "\"key\": \"price_meter\"}",
+            
+            "{\"name\": \"Price/g\","
+            "\"unit\": \"€\","
+            "\"field_type\": \"float\","
+            "\"key\": \"price_gramm\"}",
+
+            "{\"name\": \"Bambu Setting ID\","
+            "\"field_type\": \"text\","
+            "\"key\": \"bambu_setting_id\"}",
+
+            "{\"name\": \"Bambu Cali ID\","
+            "\"field_type\": \"text\","
+            "\"key\": \"bambu_cali_id\"}",
+
+            "{\"name\": \"Bambu Filament IDX\","
+            "\"field_type\": \"text\","
+            "\"key\": \"bambu_idx\"}",
+
+            "{\"name\": \"Bambu k\","
+            "\"field_type\": \"float\","
+            "\"key\": \"bambu_k\"}",
+
+            "{\"name\": \"Bambu Flow Ratio\","
+            "\"field_type\": \"float\","
+            "\"key\": \"bambu_flow_ratio\"}",
+
+            "{\"name\": \"Bambu Max Vol. Speed\","
+            "\"unit\": \"mm3/s\","
+            "\"field_type\": \"integer\","
+            "\"default_value\": \"12\","
+            "\"key\": \"bambu_max_volspeed\"}"
+        };
+
+        Serial.println("Überprüfe Extrafelder...");
+
+        int urlLength = sizeof(checkUrls) / sizeof(checkUrls[0]);
+
+        for (uint8_t i = 0; i < urlLength; i++) {
+            Serial.println();
+            Serial.println("-------- Prüfe Felder für "+checkUrls[i]+" --------");
+            http.begin(checkUrls[i]);
+            int httpCode = http.GET();
         
-        "{\"name\": \"Price/g\","
-        "\"unit\": \"€\","
-        "\"field_type\": \"float\","
-        "\"key\": \"price_gramm\"}",
+            if (httpCode == HTTP_CODE_OK) {
+                String payload = http.getString();
+                JsonDocument doc;
+                DeserializationError error = deserializeJson(doc, payload);
+                if (!error) {
+                    String* extraFields;
+                    String* extraFieldData;
+                    u16_t extraLength;
 
-        "{\"name\": \"Bambu Setting ID\","
-        "\"field_type\": \"text\","
-        "\"key\": \"bambu_setting_id\"}",
-
-        "{\"name\": \"Bambu Cali ID\","
-        "\"field_type\": \"text\","
-        "\"key\": \"bambu_cali_id\"}",
-
-        "{\"name\": \"Bambu Filament IDX\","
-        "\"field_type\": \"text\","
-        "\"key\": \"bambu_idx\"}",
-
-        "{\"name\": \"Bambu k\","
-        "\"field_type\": \"float\","
-        "\"key\": \"bambu_k\"}",
-
-        "{\"name\": \"Bambu Flow Ratio\","
-        "\"field_type\": \"float\","
-        "\"key\": \"bambu_flow_ratio\"}",
-
-        "{\"name\": \"Bambu Max Vol. Speed\","
-        "\"unit\": \"mm3/s\","
-        "\"field_type\": \"integer\","
-        "\"default_value\": \"12\","
-        "\"key\": \"bambu_max_volspeed\"}"
-    };
-
-    Serial.println("Überprüfe Extrafelder...");
-
-    int urlLength = sizeof(checkUrls) / sizeof(checkUrls[0]);
-
-    for (uint8_t i = 0; i < urlLength; i++) {
-        Serial.println();
-        Serial.println("-------- Prüfe Felder für "+checkUrls[i]+" --------");
-        http.begin(checkUrls[i]);
-        int httpCode = http.GET();
-    
-        if (httpCode == HTTP_CODE_OK) {
-            String payload = http.getString();
-            JsonDocument doc;
-            DeserializationError error = deserializeJson(doc, payload);
-            if (!error) {
-                String* extraFields;
-                String* extraFieldData;
-                u16_t extraLength;
-
-                if (i == 0) {
-                    extraFields = spoolExtra;
-                    extraFieldData = spoolExtraFields;
-                    extraLength = sizeof(spoolExtra) / sizeof(spoolExtra[0]);
-                } else {
-                    extraFields = filamentExtra;
-                    extraFieldData = filamentExtraFields;
-                    extraLength = sizeof(filamentExtra) / sizeof(filamentExtra[0]);
-                }
-
-                for (uint8_t s = 0; s < extraLength; s++) {
-                    bool found = false;
-                    for (JsonObject field : doc.as<JsonArray>()) {
-                        if (field["key"].is<String>() && field["key"] == extraFields[s]) {
-                            Serial.println("Feld gefunden: " + extraFields[s]);
-                            found = true;
-                            break;
-                        }
+                    if (i == 0) {
+                        extraFields = spoolExtra;
+                        extraFieldData = spoolExtraFields;
+                        extraLength = sizeof(spoolExtra) / sizeof(spoolExtra[0]);
+                    } else {
+                        extraFields = filamentExtra;
+                        extraFieldData = filamentExtraFields;
+                        extraLength = sizeof(filamentExtra) / sizeof(filamentExtra[0]);
                     }
-                    if (!found) {
-                        Serial.println("Feld nicht gefunden: " + extraFields[s]);
 
-                        // Extrafeld hinzufügen
-                        http.begin(checkUrls[i] + "/" + extraFields[s]);
-                        http.addHeader("Content-Type", "application/json");
-                        int httpCode = http.POST(extraFieldData[s]);
+                    for (uint8_t s = 0; s < extraLength; s++) {
+                        bool found = false;
+                        for (JsonObject field : doc.as<JsonArray>()) {
+                            if (field["key"].is<String>() && field["key"] == extraFields[s]) {
+                                Serial.println("Feld gefunden: " + extraFields[s]);
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            Serial.println("Feld nicht gefunden: " + extraFields[s]);
 
-                         if (httpCode > 0) {
-                            // Antwortscode und -nachricht abrufen
-                            String response = http.getString();
-                            //Serial.println("HTTP-Code: " + String(httpCode));
-                            //Serial.println("Antwort: " + response);
-                            if (httpCode != HTTP_CODE_OK) {
+                            // Extrafeld hinzufügen
+                            http.begin(checkUrls[i] + "/" + extraFields[s]);
+                            http.addHeader("Content-Type", "application/json");
+                            int httpCode = http.POST(extraFieldData[s]);
 
+                            if (httpCode > 0) {
+                                // Antwortscode und -nachricht abrufen
+                                String response = http.getString();
+                                //Serial.println("HTTP-Code: " + String(httpCode));
+                                //Serial.println("Antwort: " + response);
+                                if (httpCode != HTTP_CODE_OK) {
+
+                                    return false;
+                                }
+                            } else {
+                                // Fehler beim Senden der Anfrage
+                                Serial.println("Fehler beim Senden der Anfrage: " + String(http.errorToString(httpCode)));
                                 return false;
                             }
-                        } else {
-                            // Fehler beim Senden der Anfrage
-                            Serial.println("Fehler beim Senden der Anfrage: " + String(http.errorToString(httpCode)));
-                            return false;
+                            //http.end();
                         }
-                        //http.end();
+                        yield();
+                        vTaskDelay(100 / portTICK_PERIOD_MS);
                     }
-                    yield();
-                    vTaskDelay(100 / portTICK_PERIOD_MS);
                 }
+                doc.clear();
             }
-            doc.clear();
         }
+        
+        Serial.println("-------- ENDE Prüfe Felder --------");
+        Serial.println();
+
+        http.end();
+
+        spoolmanExtraFieldsChecked = true;
+        return true;
+    }else{
+        return true;
     }
-    
-    Serial.println("-------- ENDE Prüfe Felder --------");
-    Serial.println();
-
-    http.end();
-
-    return true;
 }
 
-bool checkSpoolmanInstance(const String& url) {
+bool checkSpoolmanInstance() {
     HTTPClient http;
-    String healthUrl = url + apiUrl + "/health";
+    bool returnValue = false;
 
-    Serial.print("Überprüfe Spoolman-Instanz unter: ");
-    Serial.println(healthUrl);
+    // Only do the spoolman instance check if there is no active API request going on
+    if(spoolmanApiState == API_IDLE){
+        spoolmanApiState = API_TRANSMITTING;
+        String healthUrl = spoolmanUrl + apiUrl + "/health";
 
-    http.begin(healthUrl);
-    int httpCode = http.GET();
+        Serial.print("Checking spoolman instance: ");
+        Serial.println(healthUrl);
 
-    if (httpCode > 0) {
-        if (httpCode == HTTP_CODE_OK) {
-            String payload = http.getString();
-            JsonDocument doc;
-            DeserializationError error = deserializeJson(doc, payload);
-            if (!error && doc["status"].is<String>()) {
-                const char* status = doc["status"];
-                http.end();
+        http.begin(healthUrl);
+        int httpCode = http.GET();
 
-                if (!checkSpoolmanExtraFields()) {
-                    Serial.println("Fehler beim Überprüfen der Extrafelder.");
+        if (httpCode > 0) {
+            if (httpCode == HTTP_CODE_OK) {
+                String payload = http.getString();
+                JsonDocument doc;
+                DeserializationError error = deserializeJson(doc, payload);
+                if (!error && doc["status"].is<String>()) {
+                    const char* status = doc["status"];
+                    http.end();
 
-                    // TBD
-                    oledShowMessage("Spoolman Error creating Extrafields");
-                    vTaskDelay(2000 / portTICK_PERIOD_MS);
-                    
-                    return false;
+                    if (!checkSpoolmanExtraFields()) {
+                        Serial.println("Fehler beim Überprüfen der Extrafelder.");
+
+                        // TBD
+                        oledShowMessage("Spoolman Error creating Extrafields");
+                        vTaskDelay(2000 / portTICK_PERIOD_MS);
+                        
+                        return false;
+                    }
+
+                    spoolmanApiState = API_IDLE;
+                    oledShowTopRow();
+                    spoolmanConnected = true;
+                    returnValue = strcmp(status, "healthy") == 0;
+                }else{
+                    spoolmanConnected = false;
                 }
 
-                spoolmanApiState = API_IDLE;
-                oledShowTopRow();
-                spoolmanConnected = true;
-                return strcmp(status, "healthy") == 0;
+                doc.clear();
+            }else{
+                spoolmanConnected = false;
             }
-
-            doc.clear();
+        } else {
+            spoolmanConnected = false;
+            Serial.println("Error contacting spoolman instance! HTTP Code: " + String(httpCode));
         }
-    } else {
-        Serial.println("Error contacting spoolman instance! HTTP Code: " + String(httpCode));
+        http.end();
+        returnValue = false;
+        spoolmanApiState = API_IDLE;
+    }else{
+        // If the check is skipped, return the previous status
+        Serial.println("Skipping spoolman healthcheck, API is active.");
+        returnValue = spoolmanConnected;
     }
-    http.end();
-    return false;
+    Serial.println("Healthcheck completed!");
+    return returnValue;
 }
 
 bool saveSpoolmanUrl(const String& url, bool octoOn, const String& octo_url, const String& octoTk) {
@@ -639,12 +670,13 @@ bool saveSpoolmanUrl(const String& url, bool octoOn, const String& octo_url, con
     preferences.end();
 
     //TBD: This could be handled nicer in the future
+    spoolmanExtraFieldsChecked = false;
     spoolmanUrl = url;
     octoEnabled = octoOn;
     octoUrl = octo_url;
     octoToken = octoTk;
 
-    return true;
+    return checkSpoolmanInstance();
 }
 
 String loadSpoolmanUrl() {
@@ -664,15 +696,10 @@ String loadSpoolmanUrl() {
 bool initSpoolman() {
     oledShowProgressBar(3, 7, DISPLAY_BOOT_TEXT, "Spoolman init");
     spoolmanUrl = loadSpoolmanUrl();
-    spoolmanUrl.trim();
-    if (spoolmanUrl == "") {
-        Serial.println("Keine Spoolman-URL gefunden.");
-        return false;
-    }
-
-    bool success = checkSpoolmanInstance(spoolmanUrl);
+    
+    bool success = checkSpoolmanInstance();
     if (!success) {
-        Serial.println("Spoolman nicht erreichbar.");
+        Serial.println("Spoolman not available");
         return false;
     }
 
