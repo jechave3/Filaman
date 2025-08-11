@@ -4,6 +4,7 @@
 #include "commonFS.h"
 #include <Preferences.h>
 #include "debug.h"
+#include "scale.h"
 
 volatile spoolmanApiStateType spoolmanApiState = API_IDLE;
 //bool spoolman_connected = false;
@@ -23,6 +24,10 @@ struct SendToApiParams {
     String spoolsUrl;
     String updatePayload;
     String octoToken;
+    // Weight update parameters for sequential execution
+    bool triggerWeightUpdate;
+    String spoolIdForWeight;
+    uint16_t weightValue;
 };
 
 JsonDocument fetchSingleSpoolInfo(int spoolId) {
@@ -104,12 +109,15 @@ void sendToApi(void *parameter) {
     spoolmanApiState = API_TRANSMITTING;
     SendToApiParams* params = (SendToApiParams*)parameter;
 
-    // Extrahiere die Werte
+    // Extract values including weight update parameters
     SpoolmanApiRequestType requestType = params->requestType;
     String httpType = params->httpType;
     String spoolsUrl = params->spoolsUrl;
     String updatePayload = params->updatePayload;
-    String octoToken = params->octoToken;    
+    String octoToken = params->octoToken;
+    bool triggerWeightUpdate = params->triggerWeightUpdate;
+    String spoolIdForWeight = params->spoolIdForWeight;
+    uint16_t weightValue = params->weightValue;    
 
     HTTPClient http;
     http.setReuse(false);
@@ -163,6 +171,57 @@ void sendToApi(void *parameter) {
             }
         }
         doc.clear();
+
+        // Execute weight update if requested and tag update was successful
+        if (triggerWeightUpdate && requestType == API_REQUEST_SPOOL_TAG_ID_UPDATE && weightValue > 10) {
+            Serial.println("Executing weight update after successful tag update");
+            
+            // Prepare weight update request
+            String weightUrl = spoolmanUrl + apiUrl + "/spool/" + spoolIdForWeight + "/measure";
+            JsonDocument weightDoc;
+            weightDoc["weight"] = weightValue;
+            
+            String weightPayload;
+            serializeJson(weightDoc, weightPayload);
+            
+            Serial.print("Weight update URL: ");
+            Serial.println(weightUrl);
+            Serial.print("Weight update payload: ");
+            Serial.println(weightPayload);
+
+            // Execute weight update
+            http.begin(weightUrl);
+            http.addHeader("Content-Type", "application/json");
+            
+            int weightHttpCode = http.PUT(weightPayload);
+            
+            if (weightHttpCode == HTTP_CODE_OK) {
+                Serial.println("Weight update successful");
+                String weightResponse = http.getString();
+                JsonDocument weightResponseDoc;
+                DeserializationError weightError = deserializeJson(weightResponseDoc, weightResponse);
+                
+                if (!weightError) {
+                    remainingWeight = weightResponseDoc["remaining_weight"].as<uint16_t>();
+                    Serial.print("Updated weight: ");
+                    Serial.println(remainingWeight);
+                    
+                    if (!octoEnabled) {
+                        oledShowProgressBar(1, 1, "Spool Tag", ("Done: " + String(remainingWeight) + " g remain").c_str());
+                        remainingWeight = 0;
+                    } else {
+                        sendOctoUpdate = true;
+                    }
+                }
+                weightResponseDoc.clear();
+            } else {
+                Serial.print("Weight update failed with HTTP code: ");
+                Serial.println(weightHttpCode);
+                oledShowProgressBar(1, 1, "Failure!", "Weight update");
+            }
+            
+            weightDoc.clear();
+        }
     } else {
         switch(requestType){
         case API_REQUEST_SPOOL_WEIGHT_UPDATE:
@@ -211,7 +270,8 @@ bool updateSpoolTagId(String uidString, const char* payload) {
         return false;
     }
 
-    String spoolsUrl = spoolmanUrl + apiUrl + "/spool/" + doc["sm_id"].as<String>();
+    String spoolId = doc["sm_id"].as<String>();
+    String spoolsUrl = spoolmanUrl + apiUrl + "/spool/" + spoolId;
     Serial.print("Update Spule mit URL: ");
     Serial.println(spoolsUrl);
     
@@ -235,22 +295,26 @@ bool updateSpoolTagId(String uidString, const char* payload) {
     params->httpType = "PATCH";
     params->spoolsUrl = spoolsUrl;
     params->updatePayload = updatePayload;
+    
+    // Add weight update parameters for sequential execution
+    params->triggerWeightUpdate = (weight > 10);
+    params->spoolIdForWeight = spoolId;
+    params->weightValue = weight;
 
-    // Erstelle die Task
+    // Erstelle die Task mit erhöhter Stackgröße für zusätzliche HTTP-Anfrage
     BaseType_t result = xTaskCreate(
         sendToApi,                // Task-Funktion
         "SendToApiTask",          // Task-Name
-        6144,                     // Stackgröße in Bytes
+        8192,                     // Erhöhte Stackgröße für zusätzliche HTTP-Anfrage
         (void*)params,            // Parameter
         0,                        // Priorität
-        apiTask                      // Task-Handle (nicht benötigt)
+        apiTask                   // Task-Handle (nicht benötigt)
     );
 
     updateDoc.clear();
 
-    // Update Spool weight
-    //TBD: how to handle this with spool and locatin tags? Also potential parallel access again
-    //if (weight > 10) updateSpoolWeight(doc["sm_id"].as<String>(), weight);
+    // Update Spool weight now handled sequentially in sendToApi task
+    // to prevent parallel API access issues
 
     return true;
 }
