@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.9] - 2025-08-11
+### Changed
+- update platformio.ini for version v1.5.9
+- Enhance API to support weight updates after successful spool tag updates
+
+
 ## [1.5.8] - 2025-08-10
 ### Added
 - Adds a link to the spool in spoolman when reading a spool tag
