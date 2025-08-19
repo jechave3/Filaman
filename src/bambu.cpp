@@ -248,6 +248,11 @@ bool setBambuSpool(String payload) {
     int maxTemp = doc["nozzle_temp_max"];
     String type = doc["type"].as<String>();
     (type == "PLA+") ? type = "PLA" : type;
+    // Normalize PLA variants only for Bambu AMS
+    type.toUpperCase(); // optional, ensures "pla", "Pla+" also match
+    if (type.startsWith("PLA")) {
+        type = "PLA";
+    }
     String brand = doc["brand"].as<String>();
     String tray_info_idx = (doc["tray_info_idx"].as<String>() != "-1") ? doc["tray_info_idx"].as<String>() : "";
     if (tray_info_idx == "") {
