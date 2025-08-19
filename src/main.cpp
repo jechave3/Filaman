@@ -233,6 +233,9 @@ void loop() {
       {
         weightSend = 1;
         
+        // <-- Set auto-send to Bambu here
+        autoSetToBambuSpoolId = activeSpoolId.toInt();
+        autoAmsCounter = 0; // reset counter
       }
       else
       {
