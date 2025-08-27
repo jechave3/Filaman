@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.5.11] - 2025-08-27
+### Changed
+- update platformio.ini for version v1.5.11
+
+
 ## [1.5.10] - 2025-08-27
 ### Added
 - improve weight processing logic and add auto-send feature for Bambu spool ID
