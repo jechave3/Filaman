@@ -225,7 +225,8 @@ void loop() {
     lastWeight = weight;
 
     // Wenn ein Tag mit SM id erkannte wurde und der Waage Counter anspricht an SM Senden
-    if (activeSpoolId != "" && weigthCouterToApi > 3 && weightSend == 0 && nfcReaderState == NFC_READ_SUCCESS && tagProcessed == false && spoolmanApiState == API_IDLE) {
+    if (activeSpoolId != "" && weigthCouterToApi > 3 && weightSend == 0 && nfcReaderState == NFC_READ_SUCCESS && tagProcessed == false && spoolmanApiState == API_IDLE) 
+    {
       // set the current tag as processed to prevent it beeing processed again
       tagProcessed = true;
 
@@ -233,6 +234,11 @@ void loop() {
       {
         weightSend = 1;
         
+        // Set Bambu spool ID for auto-send if enabled
+        if (bambuCredentials.autosend_enable) 
+        {
+          autoSetToBambuSpoolId = activeSpoolId.toInt();
+        }
       }
       else
       {
@@ -241,13 +247,9 @@ void loop() {
       }
     }
 
-    if(sendOctoUpdate && spoolmanApiState == API_IDLE){
-      autoSetToBambuSpoolId = activeSpoolId.toInt();
-
-      if(octoEnabled) 
-      {
-        updateSpoolOcto(autoSetToBambuSpoolId);
-      }
+    if(octoEnabled && sendOctoUpdate && spoolmanApiState == API_IDLE)
+    {
+      updateSpoolOcto(autoSetToBambuSpoolId);
       sendOctoUpdate = false;
     }
   }
