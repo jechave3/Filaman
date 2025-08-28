@@ -235,7 +235,7 @@ void loop() {
         
         // <-- Set auto-send to Bambu here
         autoSetToBambuSpoolId = activeSpoolId.toInt();
-        autoAmsCounter = 0; // reset counter
+        // autoAmsCounter = 0; // reset counter
       }
       else
       {
@@ -245,7 +245,7 @@ void loop() {
     }
 
     if(sendOctoUpdate && spoolmanApiState == API_IDLE){
-      autoSetToBambuSpoolId = activeSpoolId.toInt();
+      // autoSetToBambuSpoolId = activeSpoolId.toInt();
 
       if(octoEnabled) 
       {
