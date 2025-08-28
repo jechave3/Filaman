@@ -31,7 +31,7 @@ function populateVendorDropdown(data, selectedSmId = null) {
     const allVendors = {};
     const filteredVendors = {};
 
-    vendorSelect.innerHTML = '<option value="">Bitte wählen...</option>';
+    vendorSelect.innerHTML = '<option value="">Please choose...</option>';
 
     let vendorIdToSelect = null;
     let totalSpools = 0;
@@ -142,7 +142,7 @@ function populateLocationDropdown(data) {
         return;
     }
 
-    locationSelect.innerHTML = '<option value="">Bitte wählen...</option>';
+    locationSelect.innerHTML = '<option value="">Please choose...</option>';
     // Dropdown mit gefilterten Herstellern befüllen - alphabetisch sortiert
     Object.entries(data)
         .sort(([, nameA], [, nameB]) => nameA.localeCompare(nameB)) // Sort vendors alphabetically by name
@@ -163,7 +163,7 @@ function updateFilamentDropdown(selectedSmId = null) {
     const selectedColor = document.getElementById("selected-color");
 
     dropdownContentInner.innerHTML = '';
-    selectedText.textContent = "Bitte wählen...";
+    selectedText.textContent = "Please choose...";
     selectedColor.style.backgroundColor = '#FFFFFF';
 
     if (vendorId) {
