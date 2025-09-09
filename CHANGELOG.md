@@ -1,5 +1,1536 @@
 # Changelog
 
+## [2.0.6] - 2025-09-03
+### Fixed
+- correct progress bar message and update tare function description
+
+
+## [2.0.5] - 2025-09-03
+### Changed
+- adjust auto tare counter threshold and reposition tare check in scale loop
+- improve auto tare logic and reset conditions in scale handling
+
+### Fixed
+- update progress bar message from 'Tare scale' to 'Searching scale' 
+- Scale tare function after boot
+
+
+## [2.0.4-beta2] - 2025-09-03
+### Changed
+- adjust auto tare counter threshold and reposition tare check in scale loop
+- improve auto tare logic and reset conditions in scale handling
+
+
+## [2.0.4-beta1] - 2025-09-03
+### Changed
+- improve auto tare logic and reset conditions in scale handling
+
+
+## [2.0.4] - 2025-09-02
+### Changed
+- filter out automatic release documentation commits in changelog categorization
+- disable auto tare and weight filter reset in scale loop
+
+
+## [2.0.3] - 2025-09-02
+### Added
+- add updateOctoSpoolId for OctoPrint integration and change autoSetToBambuSpoolId type to uint16_t
+
+### Changed
+- update platformio.ini for version v2.0.3
+- update changelog and header for version v2.0.2-beta6
+- update platformio.ini for beta version v2.0.2-beta6
+- update changelog and header for version v2.0.2-beta5
+- update platformio.ini for beta version v2.0.2-beta5
+- update changelog and header for version v2.0.2-beta4
+- update platformio.ini for beta version v2.0.2-beta4
+- update changelog and header for version v2.0.2-beta3
+- update platformio.ini for beta version v2.0.2-beta3
+- update changelog and header for version v2.0.2-beta2
+- update platformio.ini for beta version v2.0.2-beta2
+- update changelog and header for version v2.0.2-beta1
+- update platformio.ini for beta version v2.0.2-beta1
+
+### Fixed
+- set scale tare request to true in setup function
+- correct assignment operator in scale tare request handling
+- correct tare scale request handling in tareScale function
+- reset weight filter after tare scale operation
+- correct tare scale function to set scaleTareRequest flag
+- reset weight counter logic and update spool ID in loop function
+- reduce delay in start_scale function and reset weight after tare
+
+
+## [2.0.2-beta6] - 2025-09-02
+### Added
+- add updateOctoSpoolId for OctoPrint integration and change autoSetToBambuSpoolId type to uint16_t
+
+### Changed
+- update platformio.ini for beta version v2.0.2-beta6
+- update changelog and header for version v2.0.2-beta5
+- update platformio.ini for beta version v2.0.2-beta5
+- update changelog and header for version v2.0.2-beta4
+- update platformio.ini for beta version v2.0.2-beta4
+- update changelog and header for version v2.0.2-beta3
+- update platformio.ini for beta version v2.0.2-beta3
+- update changelog and header for version v2.0.2-beta2
+- update platformio.ini for beta version v2.0.2-beta2
+- update changelog and header for version v2.0.2-beta1
+- update platformio.ini for beta version v2.0.2-beta1
+
+### Fixed
+- set scale tare request to true in setup function
+- correct assignment operator in scale tare request handling
+- correct tare scale request handling in tareScale function
+- reset weight filter after tare scale operation
+- correct tare scale function to set scaleTareRequest flag
+- reset weight counter logic and update spool ID in loop function
+- reduce delay in start_scale function and reset weight after tare
+
+
+## [2.0.2-beta5] - 2025-09-02
+### Added
+- add updateOctoSpoolId for OctoPrint integration and change autoSetToBambuSpoolId type to uint16_t
+
+### Changed
+- update platformio.ini for beta version v2.0.2-beta5
+- update changelog and header for version v2.0.2-beta4
+- update platformio.ini for beta version v2.0.2-beta4
+- update changelog and header for version v2.0.2-beta3
+- update platformio.ini for beta version v2.0.2-beta3
+- update changelog and header for version v2.0.2-beta2
+- update platformio.ini for beta version v2.0.2-beta2
+- update changelog and header for version v2.0.2-beta1
+- update platformio.ini for beta version v2.0.2-beta1
+
+### Fixed
+- correct tare scale request handling in tareScale function
+- reset weight filter after tare scale operation
+- correct tare scale function to set scaleTareRequest flag
+- reset weight counter logic and update spool ID in loop function
+- reduce delay in start_scale function and reset weight after tare
+
+
+## [2.0.2-beta4] - 2025-09-02
+### Added
+- add updateOctoSpoolId for OctoPrint integration and change autoSetToBambuSpoolId type to uint16_t
+
+### Changed
+- update platformio.ini for beta version v2.0.2-beta4
+- update changelog and header for version v2.0.2-beta3
+- update platformio.ini for beta version v2.0.2-beta3
+- update changelog and header for version v2.0.2-beta2
+- update platformio.ini for beta version v2.0.2-beta2
+- update changelog and header for version v2.0.2-beta1
+- update platformio.ini for beta version v2.0.2-beta1
+
+### Fixed
+- reset weight filter after tare scale operation
+- correct tare scale function to set scaleTareRequest flag
+- reset weight counter logic and update spool ID in loop function
+- reduce delay in start_scale function and reset weight after tare
+
+
+## [2.0.2-beta3] - 2025-09-02
+### Added
+- add updateOctoSpoolId for OctoPrint integration and change autoSetToBambuSpoolId type to uint16_t
+
+### Changed
+- update platformio.ini for beta version v2.0.2-beta3
+- update changelog and header for version v2.0.2-beta2
+- update platformio.ini for beta version v2.0.2-beta2
+- update changelog and header for version v2.0.2-beta1
+- update platformio.ini for beta version v2.0.2-beta1
+
+### Fixed
+- correct tare scale function to set scaleTareRequest flag
+- reset weight counter logic and update spool ID in loop function
+- reduce delay in start_scale function and reset weight after tare
+
+
+## [2.0.2-beta2] - 2025-09-02
+### Added
+- add updateOctoSpoolId for OctoPrint integration and change autoSetToBambuSpoolId type to uint16_t
+
+### Changed
+- update platformio.ini for beta version v2.0.2-beta2
+- update changelog and header for version v2.0.2-beta1
+- update platformio.ini for beta version v2.0.2-beta1
+
+### Fixed
+- reset weight counter logic and update spool ID in loop function
+- reduce delay in start_scale function and reset weight after tare
+
+
+## [2.0.2-beta1] - 2025-09-02
+### Changed
+- update platformio.ini for beta version v2.0.2-beta1
+
+### Fixed
+- reset weight counter logic and update spool ID in loop function
+- reduce delay in start_scale function and reset weight after tare
+
+
+## [2.0.2] - 2025-09-01
+### Added
+- add weight check and update spool weight in writeJsonToTag function
+- add German and English wiki documentation
+
+### Changed
+- update platformio.ini for version v2.0.2
+- remove redundant tare calls in setup and start_scale functions
+
+
+## [2.0.1] - 2025-08-30
+### Breaking Changes
+- enhance commit categorization for breaking changes
+- Handling of Spools with Tags from Vendors. fix: improve get_last_tag function to handle non-beta tags and fallback to newest tag
+
+### Added
+- implement retry mechanism and timeout handling for API requests
+- add timeout handling and error states for vendor and filament operations
+- enhance weight processing with filtered display and API stability checks
+- implement weight stabilization functions and improve tare handling
+- add fast-path JSON reading for web interface display
+- add handling for successful NFC tag writes to send weight to Spoolman without auto-sending to Bambu
+- implement robust page reading with error recovery for NFC tags
+- enhance NFC tag reading with robust error recovery and JSON optimization for fast-path detection
+- implement robust page reading and safe tag detection with error recovery
+- add Manufacturer Tags support documentation in German and English
+- add display delay for vendor, filament, and spool creation processes
+- add progress bar updates for vendor and filament creation processes
+- update vendor and filament ID handling to use NULL and add delays for stability
+- add delay to ensure proper setting of vendor and filament IDs after API state changes
+- enhance NDEF decoding with detailed validation and debugging output
+- enhance NDEF decoding to validate structure and extract JSON payload
+- add logging for decoded JSON data in NFC processing
+- implement filament and spool creation in Spoolman API
+- Add JSON structure comments for filament and spool creation
+- Add vendor and filament management to API; implement recycling factory handling in NFC
+
+### Changed
+- update platformio.ini for version v2.0.1
+- update changelog and header for version v2.0.0-beta14
+- update platformio.ini for beta version v2.0.0-beta14
+- update changelog and header for version v2.0.0-beta13
+- update platformio.ini for beta version v2.0.0-beta13
+- optimize weight stabilization parameters for improved responsiveness
+- update changelog and header for version v2.0.0-beta12
+- update platformio.ini for beta version v2.0.0-beta12
+- update changelog and header for version v2.0.0-beta11
+- update changelog and header for version v2.0.0-beta11
+- update platformio.ini for beta version v2.0.0-beta11
+- update changelog and header for version v2.0.0-beta10
+- update platformio.ini for beta version v2.0.0-beta10
+- update changelog and header for version v2.0.0-beta9
+- update platformio.ini for beta version v2.0.0-beta9
+- update changelog and header for version v2.0.0-beta8
+- update platformio.ini for beta version v2.0.0-beta8
+- update changelog and header for version v2.0.0-beta7
+- update platformio.ini for beta version v2.0.0-beta7
+- update changelog and header for version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta6
+- update platformio.ini for beta version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta5
+- update platformio.ini for beta version v2.0.0-beta5
+- update changelog and header for version v2.0.0-beta4
+- update platformio.ini for beta version v2.0.0-beta4
+- update changelog and header for version v2.0.0-beta3
+- update platformio.ini for beta version v2.0.0-beta3
+- update createVendor and checkVendor functions to accept JsonDocument payload
+- update changelog and header for version v2.0.0-beta2
+- update platformio.ini for beta version v2.0.0-beta2
+- clarify product URL description for Manufacturer Tags in German and English documentation
+- update changelog and header for version v2.0.0-beta1
+- update platformio.ini for beta version v2.0.0-beta1
+- update version to 2.0.0 in platformio.ini
+- update changelog and header for version v1.5.12-beta18
+- update platformio.ini for beta version v1.5.12-beta18
+- update changelog and header for version v1.5.12-beta17
+- update platformio.ini for beta version v1.5.12-beta17
+- optimize page limit detection and remove redundant verification code
+- update changelog and header for version v1.5.12-beta16
+- update platformio.ini for beta version v1.5.12-beta16
+- Refactor NFC interface handling and improve error diagnostics
+- update changelog and header for version v1.5.12-beta15
+- update platformio.ini for beta version v1.5.12-beta15
+- enhance NFC write operation diagnostics and improve error handling
+- enhance NFC write operation handling and prevent tag operations during write
+- update changelog and header for version v1.5.12-beta14
+- update platformio.ini for beta version v1.5.12-beta14
+- optimize JSON payload structure and enhance NFC tag validation process
+- update changelog and header for version v1.5.12-beta13
+- update platformio.ini for beta version v1.5.12-beta13
+- reorganize clearUserDataArea function for improved clarity and safety
+- update changelog and header for version v1.5.12-beta12
+- update platformio.ini for beta version v1.5.12-beta12
+- update changelog and header for version v1.5.12-beta11
+- update platformio.ini for beta version v1.5.12-beta11
+- update changelog and header for version v1.5.12-beta10
+- update platformio.ini for beta version v1.5.12-beta10
+- streamline task creation in checkVendor and checkFilament functions
+- update changelog and header for version v1.5.12-beta9
+- update platformio.ini for beta version v1.5.12-beta9
+- update changelog and header for version v1.5.12-beta8
+- update platformio.ini for beta version v1.5.12-beta8
+- update changelog and header for version v1.5.12-beta7
+- update platformio.ini for beta version v1.5.12-beta7
+- update changelog and header for version v1.5.12-beta6
+- update platformio.ini for beta version v1.5.12-beta6
+- improve task synchronization in vendor, filament, and spool creation functions
+- update changelog and header for version v1.5.12-beta5
+- update platformio.ini for beta version v1.5.12-beta5
+- update changelog and header for version v1.5.12-beta4
+- update platformio.ini for beta version v1.5.12-beta4
+- update changelog and header for version v1.5.12-beta3
+- update platformio.ini for beta version v1.5.12-beta3
+- update changelog and header for version v1.5.12-beta2
+- update platformio.ini for beta version v1.5.12-beta2
+- update changelog and header for version v1.5.12-beta1
+- update platformio.ini for beta version v1.5.12-beta1
+- Merge branch 'main' into recyclingfabrik
+- Merge branch 'main' into recyclingfabrik
+
+### Fixed
+- call scale.tare() in setup after starting scale
+- update createVendor function to use external_id as comment instead of static text
+- update to_old_version in platformio.ini to reflect correct previous version
+- increase delay in start_scale function for improved stability
+- replace progress bar with message display for remaining weight in sendToApi function
+- update vendor check to use shorthand key in payload
+- reset NFC state on API send failure to allow retry
+- update createdFilamentId reset value to 65535 for better task handling
+- update createdVendorId reset value to 65535 for improved API handling
+- update spoolman ID reset values to 65535 for better API response detection
+- correct color_hex key usage and comment out unused date fields in spool creation
+- improve API state handling and vendor name formatting
+- enhance filament creation logic to include dynamic comments based on payload
+
+
+## [2.0.0-beta14] - 2025-08-30
+### Breaking Changes
+- enhance commit categorization for breaking changes
+- Handling of Spools with Tags from Vendors. fix: improve get_last_tag function to handle non-beta tags and fallback to newest tag
+
+### Added
+- implement retry mechanism and timeout handling for API requests
+- add timeout handling and error states for vendor and filament operations
+- enhance weight processing with filtered display and API stability checks
+- implement weight stabilization functions and improve tare handling
+- add fast-path JSON reading for web interface display
+- add handling for successful NFC tag writes to send weight to Spoolman without auto-sending to Bambu
+- implement robust page reading with error recovery for NFC tags
+- enhance NFC tag reading with robust error recovery and JSON optimization for fast-path detection
+- implement robust page reading and safe tag detection with error recovery
+- add Manufacturer Tags support documentation in German and English
+- add display delay for vendor, filament, and spool creation processes
+- add progress bar updates for vendor and filament creation processes
+- update vendor and filament ID handling to use NULL and add delays for stability
+- add delay to ensure proper setting of vendor and filament IDs after API state changes
+- enhance NDEF decoding with detailed validation and debugging output
+- enhance NDEF decoding to validate structure and extract JSON payload
+- add logging for decoded JSON data in NFC processing
+- implement filament and spool creation in Spoolman API
+- Add JSON structure comments for filament and spool creation
+- Add vendor and filament management to API; implement recycling factory handling in NFC
+
+### Changed
+- update platformio.ini for beta version v2.0.0-beta14
+- update changelog and header for version v2.0.0-beta13
+- update platformio.ini for beta version v2.0.0-beta13
+- optimize weight stabilization parameters for improved responsiveness
+- update changelog and header for version v2.0.0-beta12
+- update platformio.ini for beta version v2.0.0-beta12
+- update changelog and header for version v2.0.0-beta11
+- update changelog and header for version v2.0.0-beta11
+- update platformio.ini for beta version v2.0.0-beta11
+- update changelog and header for version v2.0.0-beta10
+- update platformio.ini for beta version v2.0.0-beta10
+- update changelog and header for version v2.0.0-beta9
+- update platformio.ini for beta version v2.0.0-beta9
+- update changelog and header for version v2.0.0-beta8
+- update platformio.ini for beta version v2.0.0-beta8
+- update changelog and header for version v2.0.0-beta7
+- update platformio.ini for beta version v2.0.0-beta7
+- update changelog and header for version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta6
+- update platformio.ini for beta version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta5
+- update platformio.ini for beta version v2.0.0-beta5
+- update changelog and header for version v2.0.0-beta4
+- update platformio.ini for beta version v2.0.0-beta4
+- update changelog and header for version v2.0.0-beta3
+- update platformio.ini for beta version v2.0.0-beta3
+- update createVendor and checkVendor functions to accept JsonDocument payload
+- update changelog and header for version v2.0.0-beta2
+- update platformio.ini for beta version v2.0.0-beta2
+- clarify product URL description for Manufacturer Tags in German and English documentation
+- update changelog and header for version v2.0.0-beta1
+- update platformio.ini for beta version v2.0.0-beta1
+- update version to 2.0.0 in platformio.ini
+- update changelog and header for version v1.5.12-beta18
+- update platformio.ini for beta version v1.5.12-beta18
+- update changelog and header for version v1.5.12-beta17
+- update platformio.ini for beta version v1.5.12-beta17
+- optimize page limit detection and remove redundant verification code
+- update changelog and header for version v1.5.12-beta16
+- update platformio.ini for beta version v1.5.12-beta16
+- Refactor NFC interface handling and improve error diagnostics
+- update changelog and header for version v1.5.12-beta15
+- update platformio.ini for beta version v1.5.12-beta15
+- enhance NFC write operation diagnostics and improve error handling
+- enhance NFC write operation handling and prevent tag operations during write
+- update changelog and header for version v1.5.12-beta14
+- update platformio.ini for beta version v1.5.12-beta14
+- optimize JSON payload structure and enhance NFC tag validation process
+- update changelog and header for version v1.5.12-beta13
+- update platformio.ini for beta version v1.5.12-beta13
+- reorganize clearUserDataArea function for improved clarity and safety
+- update changelog and header for version v1.5.12-beta12
+- update platformio.ini for beta version v1.5.12-beta12
+- update changelog and header for version v1.5.12-beta11
+- update platformio.ini for beta version v1.5.12-beta11
+- update changelog and header for version v1.5.12-beta10
+- update platformio.ini for beta version v1.5.12-beta10
+- streamline task creation in checkVendor and checkFilament functions
+- update changelog and header for version v1.5.12-beta9
+- update platformio.ini for beta version v1.5.12-beta9
+- update changelog and header for version v1.5.12-beta8
+- update platformio.ini for beta version v1.5.12-beta8
+- update changelog and header for version v1.5.12-beta7
+- update platformio.ini for beta version v1.5.12-beta7
+- update changelog and header for version v1.5.12-beta6
+- update platformio.ini for beta version v1.5.12-beta6
+- improve task synchronization in vendor, filament, and spool creation functions
+- update changelog and header for version v1.5.12-beta5
+- update platformio.ini for beta version v1.5.12-beta5
+- update changelog and header for version v1.5.12-beta4
+- update platformio.ini for beta version v1.5.12-beta4
+- update changelog and header for version v1.5.12-beta3
+- update platformio.ini for beta version v1.5.12-beta3
+- update changelog and header for version v1.5.12-beta2
+- update platformio.ini for beta version v1.5.12-beta2
+- update changelog and header for version v1.5.12-beta1
+- update platformio.ini for beta version v1.5.12-beta1
+- Merge branch 'main' into recyclingfabrik
+- Merge branch 'main' into recyclingfabrik
+
+### Fixed
+- call scale.tare() in setup after starting scale
+- update createVendor function to use external_id as comment instead of static text
+- update to_old_version in platformio.ini to reflect correct previous version
+- increase delay in start_scale function for improved stability
+- replace progress bar with message display for remaining weight in sendToApi function
+- update vendor check to use shorthand key in payload
+- reset NFC state on API send failure to allow retry
+- update createdFilamentId reset value to 65535 for better task handling
+- update createdVendorId reset value to 65535 for improved API handling
+- update spoolman ID reset values to 65535 for better API response detection
+- correct color_hex key usage and comment out unused date fields in spool creation
+- improve API state handling and vendor name formatting
+- enhance filament creation logic to include dynamic comments based on payload
+
+
+## [2.0.0-beta13] - 2025-08-30
+### Breaking Changes
+- enhance commit categorization for breaking changes
+- Handling of Spools with Tags from Vendors. fix: improve get_last_tag function to handle non-beta tags and fallback to newest tag
+
+### Added
+- enhance weight processing with filtered display and API stability checks
+- implement weight stabilization functions and improve tare handling
+- add fast-path JSON reading for web interface display
+- add handling for successful NFC tag writes to send weight to Spoolman without auto-sending to Bambu
+- implement robust page reading with error recovery for NFC tags
+- enhance NFC tag reading with robust error recovery and JSON optimization for fast-path detection
+- implement robust page reading and safe tag detection with error recovery
+- add Manufacturer Tags support documentation in German and English
+- add display delay for vendor, filament, and spool creation processes
+- add progress bar updates for vendor and filament creation processes
+- update vendor and filament ID handling to use NULL and add delays for stability
+- add delay to ensure proper setting of vendor and filament IDs after API state changes
+- enhance NDEF decoding with detailed validation and debugging output
+- enhance NDEF decoding to validate structure and extract JSON payload
+- add logging for decoded JSON data in NFC processing
+- implement filament and spool creation in Spoolman API
+- Add JSON structure comments for filament and spool creation
+- Add vendor and filament management to API; implement recycling factory handling in NFC
+
+### Changed
+- update platformio.ini for beta version v2.0.0-beta13
+- optimize weight stabilization parameters for improved responsiveness
+- update changelog and header for version v2.0.0-beta12
+- update platformio.ini for beta version v2.0.0-beta12
+- update changelog and header for version v2.0.0-beta11
+- update changelog and header for version v2.0.0-beta11
+- update platformio.ini for beta version v2.0.0-beta11
+- update changelog and header for version v2.0.0-beta10
+- update platformio.ini for beta version v2.0.0-beta10
+- update changelog and header for version v2.0.0-beta9
+- update platformio.ini for beta version v2.0.0-beta9
+- update changelog and header for version v2.0.0-beta8
+- update platformio.ini for beta version v2.0.0-beta8
+- update changelog and header for version v2.0.0-beta7
+- update platformio.ini for beta version v2.0.0-beta7
+- update changelog and header for version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta6
+- update platformio.ini for beta version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta5
+- update platformio.ini for beta version v2.0.0-beta5
+- update changelog and header for version v2.0.0-beta4
+- update platformio.ini for beta version v2.0.0-beta4
+- update changelog and header for version v2.0.0-beta3
+- update platformio.ini for beta version v2.0.0-beta3
+- update createVendor and checkVendor functions to accept JsonDocument payload
+- update changelog and header for version v2.0.0-beta2
+- update platformio.ini for beta version v2.0.0-beta2
+- clarify product URL description for Manufacturer Tags in German and English documentation
+- update changelog and header for version v2.0.0-beta1
+- update platformio.ini for beta version v2.0.0-beta1
+- update version to 2.0.0 in platformio.ini
+- update changelog and header for version v1.5.12-beta18
+- update platformio.ini for beta version v1.5.12-beta18
+- update changelog and header for version v1.5.12-beta17
+- update platformio.ini for beta version v1.5.12-beta17
+- optimize page limit detection and remove redundant verification code
+- update changelog and header for version v1.5.12-beta16
+- update platformio.ini for beta version v1.5.12-beta16
+- Refactor NFC interface handling and improve error diagnostics
+- update changelog and header for version v1.5.12-beta15
+- update platformio.ini for beta version v1.5.12-beta15
+- enhance NFC write operation diagnostics and improve error handling
+- enhance NFC write operation handling and prevent tag operations during write
+- update changelog and header for version v1.5.12-beta14
+- update platformio.ini for beta version v1.5.12-beta14
+- optimize JSON payload structure and enhance NFC tag validation process
+- update changelog and header for version v1.5.12-beta13
+- update platformio.ini for beta version v1.5.12-beta13
+- reorganize clearUserDataArea function for improved clarity and safety
+- update changelog and header for version v1.5.12-beta12
+- update platformio.ini for beta version v1.5.12-beta12
+- update changelog and header for version v1.5.12-beta11
+- update platformio.ini for beta version v1.5.12-beta11
+- update changelog and header for version v1.5.12-beta10
+- update platformio.ini for beta version v1.5.12-beta10
+- streamline task creation in checkVendor and checkFilament functions
+- update changelog and header for version v1.5.12-beta9
+- update platformio.ini for beta version v1.5.12-beta9
+- update changelog and header for version v1.5.12-beta8
+- update platformio.ini for beta version v1.5.12-beta8
+- update changelog and header for version v1.5.12-beta7
+- update platformio.ini for beta version v1.5.12-beta7
+- update changelog and header for version v1.5.12-beta6
+- update platformio.ini for beta version v1.5.12-beta6
+- improve task synchronization in vendor, filament, and spool creation functions
+- update changelog and header for version v1.5.12-beta5
+- update platformio.ini for beta version v1.5.12-beta5
+- update changelog and header for version v1.5.12-beta4
+- update platformio.ini for beta version v1.5.12-beta4
+- update changelog and header for version v1.5.12-beta3
+- update platformio.ini for beta version v1.5.12-beta3
+- update changelog and header for version v1.5.12-beta2
+- update platformio.ini for beta version v1.5.12-beta2
+- update changelog and header for version v1.5.12-beta1
+- update platformio.ini for beta version v1.5.12-beta1
+- Merge branch 'main' into recyclingfabrik
+- Merge branch 'main' into recyclingfabrik
+
+### Fixed
+- call scale.tare() in setup after starting scale
+- update createVendor function to use external_id as comment instead of static text
+- update to_old_version in platformio.ini to reflect correct previous version
+- increase delay in start_scale function for improved stability
+- replace progress bar with message display for remaining weight in sendToApi function
+- update vendor check to use shorthand key in payload
+- reset NFC state on API send failure to allow retry
+- update createdFilamentId reset value to 65535 for better task handling
+- update createdVendorId reset value to 65535 for improved API handling
+- update spoolman ID reset values to 65535 for better API response detection
+- correct color_hex key usage and comment out unused date fields in spool creation
+- improve API state handling and vendor name formatting
+- enhance filament creation logic to include dynamic comments based on payload
+
+
+## [2.0.0-beta12] - 2025-08-30
+### Breaking Changes
+- enhance commit categorization for breaking changes
+- Handling of Spools with Tags from Vendors. fix: improve get_last_tag function to handle non-beta tags and fallback to newest tag
+
+### Added
+- enhance weight processing with filtered display and API stability checks
+- implement weight stabilization functions and improve tare handling
+- add fast-path JSON reading for web interface display
+- add handling for successful NFC tag writes to send weight to Spoolman without auto-sending to Bambu
+- implement robust page reading with error recovery for NFC tags
+- enhance NFC tag reading with robust error recovery and JSON optimization for fast-path detection
+- implement robust page reading and safe tag detection with error recovery
+- add Manufacturer Tags support documentation in German and English
+- add display delay for vendor, filament, and spool creation processes
+- add progress bar updates for vendor and filament creation processes
+- update vendor and filament ID handling to use NULL and add delays for stability
+- add delay to ensure proper setting of vendor and filament IDs after API state changes
+- enhance NDEF decoding with detailed validation and debugging output
+- enhance NDEF decoding to validate structure and extract JSON payload
+- add logging for decoded JSON data in NFC processing
+- implement filament and spool creation in Spoolman API
+- Add JSON structure comments for filament and spool creation
+- Add vendor and filament management to API; implement recycling factory handling in NFC
+
+### Changed
+- update platformio.ini for beta version v2.0.0-beta12
+- update changelog and header for version v2.0.0-beta11
+- update changelog and header for version v2.0.0-beta11
+- update platformio.ini for beta version v2.0.0-beta11
+- update changelog and header for version v2.0.0-beta10
+- update platformio.ini for beta version v2.0.0-beta10
+- update changelog and header for version v2.0.0-beta9
+- update platformio.ini for beta version v2.0.0-beta9
+- update changelog and header for version v2.0.0-beta8
+- update platformio.ini for beta version v2.0.0-beta8
+- update changelog and header for version v2.0.0-beta7
+- update platformio.ini for beta version v2.0.0-beta7
+- update changelog and header for version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta6
+- update platformio.ini for beta version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta5
+- update platformio.ini for beta version v2.0.0-beta5
+- update changelog and header for version v2.0.0-beta4
+- update platformio.ini for beta version v2.0.0-beta4
+- update changelog and header for version v2.0.0-beta3
+- update platformio.ini for beta version v2.0.0-beta3
+- update createVendor and checkVendor functions to accept JsonDocument payload
+- update changelog and header for version v2.0.0-beta2
+- update platformio.ini for beta version v2.0.0-beta2
+- clarify product URL description for Manufacturer Tags in German and English documentation
+- update changelog and header for version v2.0.0-beta1
+- update platformio.ini for beta version v2.0.0-beta1
+- update version to 2.0.0 in platformio.ini
+- update changelog and header for version v1.5.12-beta18
+- update platformio.ini for beta version v1.5.12-beta18
+- update changelog and header for version v1.5.12-beta17
+- update platformio.ini for beta version v1.5.12-beta17
+- optimize page limit detection and remove redundant verification code
+- update changelog and header for version v1.5.12-beta16
+- update platformio.ini for beta version v1.5.12-beta16
+- Refactor NFC interface handling and improve error diagnostics
+- update changelog and header for version v1.5.12-beta15
+- update platformio.ini for beta version v1.5.12-beta15
+- enhance NFC write operation diagnostics and improve error handling
+- enhance NFC write operation handling and prevent tag operations during write
+- update changelog and header for version v1.5.12-beta14
+- update platformio.ini for beta version v1.5.12-beta14
+- optimize JSON payload structure and enhance NFC tag validation process
+- update changelog and header for version v1.5.12-beta13
+- update platformio.ini for beta version v1.5.12-beta13
+- reorganize clearUserDataArea function for improved clarity and safety
+- update changelog and header for version v1.5.12-beta12
+- update platformio.ini for beta version v1.5.12-beta12
+- update changelog and header for version v1.5.12-beta11
+- update platformio.ini for beta version v1.5.12-beta11
+- update changelog and header for version v1.5.12-beta10
+- update platformio.ini for beta version v1.5.12-beta10
+- streamline task creation in checkVendor and checkFilament functions
+- update changelog and header for version v1.5.12-beta9
+- update platformio.ini for beta version v1.5.12-beta9
+- update changelog and header for version v1.5.12-beta8
+- update platformio.ini for beta version v1.5.12-beta8
+- update changelog and header for version v1.5.12-beta7
+- update platformio.ini for beta version v1.5.12-beta7
+- update changelog and header for version v1.5.12-beta6
+- update platformio.ini for beta version v1.5.12-beta6
+- improve task synchronization in vendor, filament, and spool creation functions
+- update changelog and header for version v1.5.12-beta5
+- update platformio.ini for beta version v1.5.12-beta5
+- update changelog and header for version v1.5.12-beta4
+- update platformio.ini for beta version v1.5.12-beta4
+- update changelog and header for version v1.5.12-beta3
+- update platformio.ini for beta version v1.5.12-beta3
+- update changelog and header for version v1.5.12-beta2
+- update platformio.ini for beta version v1.5.12-beta2
+- update changelog and header for version v1.5.12-beta1
+- update platformio.ini for beta version v1.5.12-beta1
+- Merge branch 'main' into recyclingfabrik
+- Merge branch 'main' into recyclingfabrik
+
+### Fixed
+- call scale.tare() in setup after starting scale
+- update createVendor function to use external_id as comment instead of static text
+- update to_old_version in platformio.ini to reflect correct previous version
+- increase delay in start_scale function for improved stability
+- replace progress bar with message display for remaining weight in sendToApi function
+- update vendor check to use shorthand key in payload
+- reset NFC state on API send failure to allow retry
+- update createdFilamentId reset value to 65535 for better task handling
+- update createdVendorId reset value to 65535 for improved API handling
+- update spoolman ID reset values to 65535 for better API response detection
+- correct color_hex key usage and comment out unused date fields in spool creation
+- improve API state handling and vendor name formatting
+- enhance filament creation logic to include dynamic comments based on payload
+
+
+## [2.0.0-beta11] - 2025-08-30
+### Breaking Changes
+- enhance commit categorization for breaking changes
+- Handling of Spools with Tags from Vendors. fix: improve get_last_tag function to handle non-beta tags and fallback to newest tag
+
+### Added
+- implement weight stabilization functions and improve tare handling
+- add fast-path JSON reading for web interface display
+- add handling for successful NFC tag writes to send weight to Spoolman without auto-sending to Bambu
+- implement robust page reading with error recovery for NFC tags
+- enhance NFC tag reading with robust error recovery and JSON optimization for fast-path detection
+- implement robust page reading and safe tag detection with error recovery
+- add Manufacturer Tags support documentation in German and English
+- add display delay for vendor, filament, and spool creation processes
+- add progress bar updates for vendor and filament creation processes
+- update vendor and filament ID handling to use NULL and add delays for stability
+- add delay to ensure proper setting of vendor and filament IDs after API state changes
+- enhance NDEF decoding with detailed validation and debugging output
+- enhance NDEF decoding to validate structure and extract JSON payload
+- add logging for decoded JSON data in NFC processing
+- implement filament and spool creation in Spoolman API
+- Add JSON structure comments for filament and spool creation
+- Add vendor and filament management to API; implement recycling factory handling in NFC
+
+### Changed
+- update changelog and header for version v2.0.0-beta11
+- update platformio.ini for beta version v2.0.0-beta11
+- update changelog and header for version v2.0.0-beta10
+- update platformio.ini for beta version v2.0.0-beta10
+- update changelog and header for version v2.0.0-beta9
+- update platformio.ini for beta version v2.0.0-beta9
+- update changelog and header for version v2.0.0-beta8
+- update platformio.ini for beta version v2.0.0-beta8
+- update changelog and header for version v2.0.0-beta7
+- update platformio.ini for beta version v2.0.0-beta7
+- update changelog and header for version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta6
+- update platformio.ini for beta version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta5
+- update platformio.ini for beta version v2.0.0-beta5
+- update changelog and header for version v2.0.0-beta4
+- update platformio.ini for beta version v2.0.0-beta4
+- update changelog and header for version v2.0.0-beta3
+- update platformio.ini for beta version v2.0.0-beta3
+- update createVendor and checkVendor functions to accept JsonDocument payload
+- update changelog and header for version v2.0.0-beta2
+- update platformio.ini for beta version v2.0.0-beta2
+- clarify product URL description for Manufacturer Tags in German and English documentation
+- update changelog and header for version v2.0.0-beta1
+- update platformio.ini for beta version v2.0.0-beta1
+- update version to 2.0.0 in platformio.ini
+- update changelog and header for version v1.5.12-beta18
+- update platformio.ini for beta version v1.5.12-beta18
+- update changelog and header for version v1.5.12-beta17
+- update platformio.ini for beta version v1.5.12-beta17
+- optimize page limit detection and remove redundant verification code
+- update changelog and header for version v1.5.12-beta16
+- update platformio.ini for beta version v1.5.12-beta16
+- Refactor NFC interface handling and improve error diagnostics
+- update changelog and header for version v1.5.12-beta15
+- update platformio.ini for beta version v1.5.12-beta15
+- enhance NFC write operation diagnostics and improve error handling
+- enhance NFC write operation handling and prevent tag operations during write
+- update changelog and header for version v1.5.12-beta14
+- update platformio.ini for beta version v1.5.12-beta14
+- optimize JSON payload structure and enhance NFC tag validation process
+- update changelog and header for version v1.5.12-beta13
+- update platformio.ini for beta version v1.5.12-beta13
+- reorganize clearUserDataArea function for improved clarity and safety
+- update changelog and header for version v1.5.12-beta12
+- update platformio.ini for beta version v1.5.12-beta12
+- update changelog and header for version v1.5.12-beta11
+- update platformio.ini for beta version v1.5.12-beta11
+- update changelog and header for version v1.5.12-beta10
+- update platformio.ini for beta version v1.5.12-beta10
+- streamline task creation in checkVendor and checkFilament functions
+- update changelog and header for version v1.5.12-beta9
+- update platformio.ini for beta version v1.5.12-beta9
+- update changelog and header for version v1.5.12-beta8
+- update platformio.ini for beta version v1.5.12-beta8
+- update changelog and header for version v1.5.12-beta7
+- update platformio.ini for beta version v1.5.12-beta7
+- update changelog and header for version v1.5.12-beta6
+- update platformio.ini for beta version v1.5.12-beta6
+- improve task synchronization in vendor, filament, and spool creation functions
+- update changelog and header for version v1.5.12-beta5
+- update platformio.ini for beta version v1.5.12-beta5
+- update changelog and header for version v1.5.12-beta4
+- update platformio.ini for beta version v1.5.12-beta4
+- update changelog and header for version v1.5.12-beta3
+- update platformio.ini for beta version v1.5.12-beta3
+- update changelog and header for version v1.5.12-beta2
+- update platformio.ini for beta version v1.5.12-beta2
+- update changelog and header for version v1.5.12-beta1
+- update platformio.ini for beta version v1.5.12-beta1
+- Merge branch 'main' into recyclingfabrik
+- Merge branch 'main' into recyclingfabrik
+
+### Fixed
+- call scale.tare() in setup after starting scale
+- update createVendor function to use external_id as comment instead of static text
+- update to_old_version in platformio.ini to reflect correct previous version
+- increase delay in start_scale function for improved stability
+- replace progress bar with message display for remaining weight in sendToApi function
+- update vendor check to use shorthand key in payload
+- reset NFC state on API send failure to allow retry
+- update createdFilamentId reset value to 65535 for better task handling
+- update createdVendorId reset value to 65535 for improved API handling
+- update spoolman ID reset values to 65535 for better API response detection
+- correct color_hex key usage and comment out unused date fields in spool creation
+- improve API state handling and vendor name formatting
+- enhance filament creation logic to include dynamic comments based on payload
+
+## [2.0.0-beta10] - 2025-08-30
+### Breaking Changes
+- enhance commit categorization for breaking changes
+- Handling of Spools with Tags from Vendors. fix: improve get_last_tag function to handle non-beta tags and fallback to newest tag
+
+### Added
+- add fast-path JSON reading for web interface display
+- add handling for successful NFC tag writes to send weight to Spoolman without auto-sending to Bambu
+- implement robust page reading with error recovery for NFC tags
+- enhance NFC tag reading with robust error recovery and JSON optimization for fast-path detection
+- implement robust page reading and safe tag detection with error recovery
+- add Manufacturer Tags support documentation in German and English
+- add display delay for vendor, filament, and spool creation processes
+- add progress bar updates for vendor and filament creation processes
+- update vendor and filament ID handling to use NULL and add delays for stability
+- add delay to ensure proper setting of vendor and filament IDs after API state changes
+- enhance NDEF decoding with detailed validation and debugging output
+- enhance NDEF decoding to validate structure and extract JSON payload
+- add logging for decoded JSON data in NFC processing
+- implement filament and spool creation in Spoolman API
+- Add JSON structure comments for filament and spool creation
+- Add vendor and filament management to API; implement recycling factory handling in NFC
+
+### Changed
+- update platformio.ini for beta version v2.0.0-beta10
+- update changelog and header for version v2.0.0-beta9
+- update platformio.ini for beta version v2.0.0-beta9
+- update changelog and header for version v2.0.0-beta8
+- update platformio.ini for beta version v2.0.0-beta8
+- update changelog and header for version v2.0.0-beta7
+- update platformio.ini for beta version v2.0.0-beta7
+- update changelog and header for version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta6
+- update platformio.ini for beta version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta5
+- update platformio.ini for beta version v2.0.0-beta5
+- update changelog and header for version v2.0.0-beta4
+- update platformio.ini for beta version v2.0.0-beta4
+- update changelog and header for version v2.0.0-beta3
+- update platformio.ini for beta version v2.0.0-beta3
+- update createVendor and checkVendor functions to accept JsonDocument payload
+- update changelog and header for version v2.0.0-beta2
+- update platformio.ini for beta version v2.0.0-beta2
+- clarify product URL description for Manufacturer Tags in German and English documentation
+- update changelog and header for version v2.0.0-beta1
+- update platformio.ini for beta version v2.0.0-beta1
+- update version to 2.0.0 in platformio.ini
+- update changelog and header for version v1.5.12-beta18
+- update platformio.ini for beta version v1.5.12-beta18
+- update changelog and header for version v1.5.12-beta17
+- update platformio.ini for beta version v1.5.12-beta17
+- optimize page limit detection and remove redundant verification code
+- update changelog and header for version v1.5.12-beta16
+- update platformio.ini for beta version v1.5.12-beta16
+- Refactor NFC interface handling and improve error diagnostics
+- update changelog and header for version v1.5.12-beta15
+- update platformio.ini for beta version v1.5.12-beta15
+- enhance NFC write operation diagnostics and improve error handling
+- enhance NFC write operation handling and prevent tag operations during write
+- update changelog and header for version v1.5.12-beta14
+- update platformio.ini for beta version v1.5.12-beta14
+- optimize JSON payload structure and enhance NFC tag validation process
+- update changelog and header for version v1.5.12-beta13
+- update platformio.ini for beta version v1.5.12-beta13
+- reorganize clearUserDataArea function for improved clarity and safety
+- update changelog and header for version v1.5.12-beta12
+- update platformio.ini for beta version v1.5.12-beta12
+- update changelog and header for version v1.5.12-beta11
+- update platformio.ini for beta version v1.5.12-beta11
+- update changelog and header for version v1.5.12-beta10
+- update platformio.ini for beta version v1.5.12-beta10
+- streamline task creation in checkVendor and checkFilament functions
+- update changelog and header for version v1.5.12-beta9
+- update platformio.ini for beta version v1.5.12-beta9
+- update changelog and header for version v1.5.12-beta8
+- update platformio.ini for beta version v1.5.12-beta8
+- update changelog and header for version v1.5.12-beta7
+- update platformio.ini for beta version v1.5.12-beta7
+- update changelog and header for version v1.5.12-beta6
+- update platformio.ini for beta version v1.5.12-beta6
+- improve task synchronization in vendor, filament, and spool creation functions
+- update changelog and header for version v1.5.12-beta5
+- update platformio.ini for beta version v1.5.12-beta5
+- update changelog and header for version v1.5.12-beta4
+- update platformio.ini for beta version v1.5.12-beta4
+- update changelog and header for version v1.5.12-beta3
+- update platformio.ini for beta version v1.5.12-beta3
+- update changelog and header for version v1.5.12-beta2
+- update platformio.ini for beta version v1.5.12-beta2
+- update changelog and header for version v1.5.12-beta1
+- update platformio.ini for beta version v1.5.12-beta1
+- Merge branch 'main' into recyclingfabrik
+- Merge branch 'main' into recyclingfabrik
+
+### Fixed
+- call scale.tare() in setup after starting scale
+- update createVendor function to use external_id as comment instead of static text
+- update to_old_version in platformio.ini to reflect correct previous version
+- increase delay in start_scale function for improved stability
+- replace progress bar with message display for remaining weight in sendToApi function
+- update vendor check to use shorthand key in payload
+- reset NFC state on API send failure to allow retry
+- update createdFilamentId reset value to 65535 for better task handling
+- update createdVendorId reset value to 65535 for improved API handling
+- update spoolman ID reset values to 65535 for better API response detection
+- correct color_hex key usage and comment out unused date fields in spool creation
+- improve API state handling and vendor name formatting
+- enhance filament creation logic to include dynamic comments based on payload
+
+
+## [2.0.0-beta9] - 2025-08-30
+### Breaking Changes
+- enhance commit categorization for breaking changes
+- Handling of Spools with Tags from Vendors. fix: improve get_last_tag function to handle non-beta tags and fallback to newest tag
+
+### Added
+- add handling for successful NFC tag writes to send weight to Spoolman without auto-sending to Bambu
+- implement robust page reading with error recovery for NFC tags
+- enhance NFC tag reading with robust error recovery and JSON optimization for fast-path detection
+- implement robust page reading and safe tag detection with error recovery
+- add Manufacturer Tags support documentation in German and English
+- add display delay for vendor, filament, and spool creation processes
+- add progress bar updates for vendor and filament creation processes
+- update vendor and filament ID handling to use NULL and add delays for stability
+- add delay to ensure proper setting of vendor and filament IDs after API state changes
+- enhance NDEF decoding with detailed validation and debugging output
+- enhance NDEF decoding to validate structure and extract JSON payload
+- add logging for decoded JSON data in NFC processing
+- implement filament and spool creation in Spoolman API
+- Add JSON structure comments for filament and spool creation
+- Add vendor and filament management to API; implement recycling factory handling in NFC
+
+### Changed
+- update platformio.ini for beta version v2.0.0-beta9
+- update changelog and header for version v2.0.0-beta8
+- update platformio.ini for beta version v2.0.0-beta8
+- update changelog and header for version v2.0.0-beta7
+- update platformio.ini for beta version v2.0.0-beta7
+- update changelog and header for version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta6
+- update platformio.ini for beta version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta5
+- update platformio.ini for beta version v2.0.0-beta5
+- update changelog and header for version v2.0.0-beta4
+- update platformio.ini for beta version v2.0.0-beta4
+- update changelog and header for version v2.0.0-beta3
+- update platformio.ini for beta version v2.0.0-beta3
+- update createVendor and checkVendor functions to accept JsonDocument payload
+- update changelog and header for version v2.0.0-beta2
+- update platformio.ini for beta version v2.0.0-beta2
+- clarify product URL description for Manufacturer Tags in German and English documentation
+- update changelog and header for version v2.0.0-beta1
+- update platformio.ini for beta version v2.0.0-beta1
+- update version to 2.0.0 in platformio.ini
+- update changelog and header for version v1.5.12-beta18
+- update platformio.ini for beta version v1.5.12-beta18
+- update changelog and header for version v1.5.12-beta17
+- update platformio.ini for beta version v1.5.12-beta17
+- optimize page limit detection and remove redundant verification code
+- update changelog and header for version v1.5.12-beta16
+- update platformio.ini for beta version v1.5.12-beta16
+- Refactor NFC interface handling and improve error diagnostics
+- update changelog and header for version v1.5.12-beta15
+- update platformio.ini for beta version v1.5.12-beta15
+- enhance NFC write operation diagnostics and improve error handling
+- enhance NFC write operation handling and prevent tag operations during write
+- update changelog and header for version v1.5.12-beta14
+- update platformio.ini for beta version v1.5.12-beta14
+- optimize JSON payload structure and enhance NFC tag validation process
+- update changelog and header for version v1.5.12-beta13
+- update platformio.ini for beta version v1.5.12-beta13
+- reorganize clearUserDataArea function for improved clarity and safety
+- update changelog and header for version v1.5.12-beta12
+- update platformio.ini for beta version v1.5.12-beta12
+- update changelog and header for version v1.5.12-beta11
+- update platformio.ini for beta version v1.5.12-beta11
+- update changelog and header for version v1.5.12-beta10
+- update platformio.ini for beta version v1.5.12-beta10
+- streamline task creation in checkVendor and checkFilament functions
+- update changelog and header for version v1.5.12-beta9
+- update platformio.ini for beta version v1.5.12-beta9
+- update changelog and header for version v1.5.12-beta8
+- update platformio.ini for beta version v1.5.12-beta8
+- update changelog and header for version v1.5.12-beta7
+- update platformio.ini for beta version v1.5.12-beta7
+- update changelog and header for version v1.5.12-beta6
+- update platformio.ini for beta version v1.5.12-beta6
+- improve task synchronization in vendor, filament, and spool creation functions
+- update changelog and header for version v1.5.12-beta5
+- update platformio.ini for beta version v1.5.12-beta5
+- update changelog and header for version v1.5.12-beta4
+- update platformio.ini for beta version v1.5.12-beta4
+- update changelog and header for version v1.5.12-beta3
+- update platformio.ini for beta version v1.5.12-beta3
+- update changelog and header for version v1.5.12-beta2
+- update platformio.ini for beta version v1.5.12-beta2
+- update changelog and header for version v1.5.12-beta1
+- update platformio.ini for beta version v1.5.12-beta1
+- Merge branch 'main' into recyclingfabrik
+- Merge branch 'main' into recyclingfabrik
+
+### Fixed
+- call scale.tare() in setup after starting scale
+- update createVendor function to use external_id as comment instead of static text
+- update to_old_version in platformio.ini to reflect correct previous version
+- increase delay in start_scale function for improved stability
+- replace progress bar with message display for remaining weight in sendToApi function
+- update vendor check to use shorthand key in payload
+- reset NFC state on API send failure to allow retry
+- update createdFilamentId reset value to 65535 for better task handling
+- update createdVendorId reset value to 65535 for improved API handling
+- update spoolman ID reset values to 65535 for better API response detection
+- correct color_hex key usage and comment out unused date fields in spool creation
+- improve API state handling and vendor name formatting
+- enhance filament creation logic to include dynamic comments based on payload
+
+
+## [2.0.0-beta8] - 2025-08-30
+### Breaking Changes
+- enhance commit categorization for breaking changes
+- Handling of Spools with Tags from Vendors. fix: improve get_last_tag function to handle non-beta tags and fallback to newest tag
+
+### Added
+- implement robust page reading with error recovery for NFC tags
+- enhance NFC tag reading with robust error recovery and JSON optimization for fast-path detection
+- implement robust page reading and safe tag detection with error recovery
+- add Manufacturer Tags support documentation in German and English
+- add display delay for vendor, filament, and spool creation processes
+- add progress bar updates for vendor and filament creation processes
+- update vendor and filament ID handling to use NULL and add delays for stability
+- add delay to ensure proper setting of vendor and filament IDs after API state changes
+- enhance NDEF decoding with detailed validation and debugging output
+- enhance NDEF decoding to validate structure and extract JSON payload
+- add logging for decoded JSON data in NFC processing
+- implement filament and spool creation in Spoolman API
+- Add JSON structure comments for filament and spool creation
+- Add vendor and filament management to API; implement recycling factory handling in NFC
+
+### Changed
+- update platformio.ini for beta version v2.0.0-beta8
+- update changelog and header for version v2.0.0-beta7
+- update platformio.ini for beta version v2.0.0-beta7
+- update changelog and header for version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta6
+- update platformio.ini for beta version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta5
+- update platformio.ini for beta version v2.0.0-beta5
+- update changelog and header for version v2.0.0-beta4
+- update platformio.ini for beta version v2.0.0-beta4
+- update changelog and header for version v2.0.0-beta3
+- update platformio.ini for beta version v2.0.0-beta3
+- update createVendor and checkVendor functions to accept JsonDocument payload
+- update changelog and header for version v2.0.0-beta2
+- update platformio.ini for beta version v2.0.0-beta2
+- clarify product URL description for Manufacturer Tags in German and English documentation
+- update changelog and header for version v2.0.0-beta1
+- update platformio.ini for beta version v2.0.0-beta1
+- update version to 2.0.0 in platformio.ini
+- update changelog and header for version v1.5.12-beta18
+- update platformio.ini for beta version v1.5.12-beta18
+- update changelog and header for version v1.5.12-beta17
+- update platformio.ini for beta version v1.5.12-beta17
+- optimize page limit detection and remove redundant verification code
+- update changelog and header for version v1.5.12-beta16
+- update platformio.ini for beta version v1.5.12-beta16
+- Refactor NFC interface handling and improve error diagnostics
+- update changelog and header for version v1.5.12-beta15
+- update platformio.ini for beta version v1.5.12-beta15
+- enhance NFC write operation diagnostics and improve error handling
+- enhance NFC write operation handling and prevent tag operations during write
+- update changelog and header for version v1.5.12-beta14
+- update platformio.ini for beta version v1.5.12-beta14
+- optimize JSON payload structure and enhance NFC tag validation process
+- update changelog and header for version v1.5.12-beta13
+- update platformio.ini for beta version v1.5.12-beta13
+- reorganize clearUserDataArea function for improved clarity and safety
+- update changelog and header for version v1.5.12-beta12
+- update platformio.ini for beta version v1.5.12-beta12
+- update changelog and header for version v1.5.12-beta11
+- update platformio.ini for beta version v1.5.12-beta11
+- update changelog and header for version v1.5.12-beta10
+- update platformio.ini for beta version v1.5.12-beta10
+- streamline task creation in checkVendor and checkFilament functions
+- update changelog and header for version v1.5.12-beta9
+- update platformio.ini for beta version v1.5.12-beta9
+- update changelog and header for version v1.5.12-beta8
+- update platformio.ini for beta version v1.5.12-beta8
+- update changelog and header for version v1.5.12-beta7
+- update platformio.ini for beta version v1.5.12-beta7
+- update changelog and header for version v1.5.12-beta6
+- update platformio.ini for beta version v1.5.12-beta6
+- improve task synchronization in vendor, filament, and spool creation functions
+- update changelog and header for version v1.5.12-beta5
+- update platformio.ini for beta version v1.5.12-beta5
+- update changelog and header for version v1.5.12-beta4
+- update platformio.ini for beta version v1.5.12-beta4
+- update changelog and header for version v1.5.12-beta3
+- update platformio.ini for beta version v1.5.12-beta3
+- update changelog and header for version v1.5.12-beta2
+- update platformio.ini for beta version v1.5.12-beta2
+- update changelog and header for version v1.5.12-beta1
+- update platformio.ini for beta version v1.5.12-beta1
+- Merge branch 'main' into recyclingfabrik
+- Merge branch 'main' into recyclingfabrik
+
+### Fixed
+- call scale.tare() in setup after starting scale
+- update createVendor function to use external_id as comment instead of static text
+- update to_old_version in platformio.ini to reflect correct previous version
+- increase delay in start_scale function for improved stability
+- replace progress bar with message display for remaining weight in sendToApi function
+- update vendor check to use shorthand key in payload
+- reset NFC state on API send failure to allow retry
+- update createdFilamentId reset value to 65535 for better task handling
+- update createdVendorId reset value to 65535 for improved API handling
+- update spoolman ID reset values to 65535 for better API response detection
+- correct color_hex key usage and comment out unused date fields in spool creation
+- improve API state handling and vendor name formatting
+- enhance filament creation logic to include dynamic comments based on payload
+
+
+## [2.0.0-beta7] - 2025-08-30
+### Breaking Changes
+- enhance commit categorization for breaking changes
+- Handling of Spools with Tags from Vendors. fix: improve get_last_tag function to handle non-beta tags and fallback to newest tag
+
+### Added
+- enhance NFC tag reading with robust error recovery and JSON optimization for fast-path detection
+- implement robust page reading and safe tag detection with error recovery
+- add Manufacturer Tags support documentation in German and English
+- add display delay for vendor, filament, and spool creation processes
+- add progress bar updates for vendor and filament creation processes
+- update vendor and filament ID handling to use NULL and add delays for stability
+- add delay to ensure proper setting of vendor and filament IDs after API state changes
+- enhance NDEF decoding with detailed validation and debugging output
+- enhance NDEF decoding to validate structure and extract JSON payload
+- add logging for decoded JSON data in NFC processing
+- implement filament and spool creation in Spoolman API
+- Add JSON structure comments for filament and spool creation
+- Add vendor and filament management to API; implement recycling factory handling in NFC
+
+### Changed
+- update platformio.ini for beta version v2.0.0-beta7
+- update changelog and header for version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta6
+- update platformio.ini for beta version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta5
+- update platformio.ini for beta version v2.0.0-beta5
+- update changelog and header for version v2.0.0-beta4
+- update platformio.ini for beta version v2.0.0-beta4
+- update changelog and header for version v2.0.0-beta3
+- update platformio.ini for beta version v2.0.0-beta3
+- update createVendor and checkVendor functions to accept JsonDocument payload
+- update changelog and header for version v2.0.0-beta2
+- update platformio.ini for beta version v2.0.0-beta2
+- clarify product URL description for Manufacturer Tags in German and English documentation
+- update changelog and header for version v2.0.0-beta1
+- update platformio.ini for beta version v2.0.0-beta1
+- update version to 2.0.0 in platformio.ini
+- update changelog and header for version v1.5.12-beta18
+- update platformio.ini for beta version v1.5.12-beta18
+- update changelog and header for version v1.5.12-beta17
+- update platformio.ini for beta version v1.5.12-beta17
+- optimize page limit detection and remove redundant verification code
+- update changelog and header for version v1.5.12-beta16
+- update platformio.ini for beta version v1.5.12-beta16
+- Refactor NFC interface handling and improve error diagnostics
+- update changelog and header for version v1.5.12-beta15
+- update platformio.ini for beta version v1.5.12-beta15
+- enhance NFC write operation diagnostics and improve error handling
+- enhance NFC write operation handling and prevent tag operations during write
+- update changelog and header for version v1.5.12-beta14
+- update platformio.ini for beta version v1.5.12-beta14
+- optimize JSON payload structure and enhance NFC tag validation process
+- update changelog and header for version v1.5.12-beta13
+- update platformio.ini for beta version v1.5.12-beta13
+- reorganize clearUserDataArea function for improved clarity and safety
+- update changelog and header for version v1.5.12-beta12
+- update platformio.ini for beta version v1.5.12-beta12
+- update changelog and header for version v1.5.12-beta11
+- update platformio.ini for beta version v1.5.12-beta11
+- update changelog and header for version v1.5.12-beta10
+- update platformio.ini for beta version v1.5.12-beta10
+- streamline task creation in checkVendor and checkFilament functions
+- update changelog and header for version v1.5.12-beta9
+- update platformio.ini for beta version v1.5.12-beta9
+- update changelog and header for version v1.5.12-beta8
+- update platformio.ini for beta version v1.5.12-beta8
+- update changelog and header for version v1.5.12-beta7
+- update platformio.ini for beta version v1.5.12-beta7
+- update changelog and header for version v1.5.12-beta6
+- update platformio.ini for beta version v1.5.12-beta6
+- improve task synchronization in vendor, filament, and spool creation functions
+- update changelog and header for version v1.5.12-beta5
+- update platformio.ini for beta version v1.5.12-beta5
+- update changelog and header for version v1.5.12-beta4
+- update platformio.ini for beta version v1.5.12-beta4
+- update changelog and header for version v1.5.12-beta3
+- update platformio.ini for beta version v1.5.12-beta3
+- update changelog and header for version v1.5.12-beta2
+- update platformio.ini for beta version v1.5.12-beta2
+- update changelog and header for version v1.5.12-beta1
+- update platformio.ini for beta version v1.5.12-beta1
+- Merge branch 'main' into recyclingfabrik
+- Merge branch 'main' into recyclingfabrik
+
+### Fixed
+- call scale.tare() in setup after starting scale
+- update createVendor function to use external_id as comment instead of static text
+- update to_old_version in platformio.ini to reflect correct previous version
+- increase delay in start_scale function for improved stability
+- replace progress bar with message display for remaining weight in sendToApi function
+- update vendor check to use shorthand key in payload
+- reset NFC state on API send failure to allow retry
+- update createdFilamentId reset value to 65535 for better task handling
+- update createdVendorId reset value to 65535 for improved API handling
+- update spoolman ID reset values to 65535 for better API response detection
+- correct color_hex key usage and comment out unused date fields in spool creation
+- improve API state handling and vendor name formatting
+- enhance filament creation logic to include dynamic comments based on payload
+
+
+## [2.0.0-beta6] - 2025-08-30
+### Breaking Changes
+- enhance commit categorization for breaking changes
+- Handling of Spools with Tags from Vendors. fix: improve get_last_tag function to handle non-beta tags and fallback to newest tag
+
+### Added
+- implement robust page reading and safe tag detection with error recovery
+- add Manufacturer Tags support documentation in German and English
+- add display delay for vendor, filament, and spool creation processes
+- add progress bar updates for vendor and filament creation processes
+- update vendor and filament ID handling to use NULL and add delays for stability
+- add delay to ensure proper setting of vendor and filament IDs after API state changes
+- enhance NDEF decoding with detailed validation and debugging output
+- enhance NDEF decoding to validate structure and extract JSON payload
+- add logging for decoded JSON data in NFC processing
+- implement filament and spool creation in Spoolman API
+- Add JSON structure comments for filament and spool creation
+- Add vendor and filament management to API; implement recycling factory handling in NFC
+
+### Changed
+- update changelog and header for version v2.0.0-beta6
+- update platformio.ini for beta version v2.0.0-beta6
+- update changelog and header for version v2.0.0-beta5
+- update platformio.ini for beta version v2.0.0-beta5
+- update changelog and header for version v2.0.0-beta4
+- update platformio.ini for beta version v2.0.0-beta4
+- update changelog and header for version v2.0.0-beta3
+- update platformio.ini for beta version v2.0.0-beta3
+- update createVendor and checkVendor functions to accept JsonDocument payload
+- update changelog and header for version v2.0.0-beta2
+- update platformio.ini for beta version v2.0.0-beta2
+- clarify product URL description for Manufacturer Tags in German and English documentation
+- update changelog and header for version v2.0.0-beta1
+- update platformio.ini for beta version v2.0.0-beta1
+- update version to 2.0.0 in platformio.ini
+- update changelog and header for version v1.5.12-beta18
+- update platformio.ini for beta version v1.5.12-beta18
+- update changelog and header for version v1.5.12-beta17
+- update platformio.ini for beta version v1.5.12-beta17
+- optimize page limit detection and remove redundant verification code
+- update changelog and header for version v1.5.12-beta16
+- update platformio.ini for beta version v1.5.12-beta16
+- Refactor NFC interface handling and improve error diagnostics
+- update changelog and header for version v1.5.12-beta15
+- update platformio.ini for beta version v1.5.12-beta15
+- enhance NFC write operation diagnostics and improve error handling
+- enhance NFC write operation handling and prevent tag operations during write
+- update changelog and header for version v1.5.12-beta14
+- update platformio.ini for beta version v1.5.12-beta14
+- optimize JSON payload structure and enhance NFC tag validation process
+- update changelog and header for version v1.5.12-beta13
+- update platformio.ini for beta version v1.5.12-beta13
+- reorganize clearUserDataArea function for improved clarity and safety
+- update changelog and header for version v1.5.12-beta12
+- update platformio.ini for beta version v1.5.12-beta12
+- update changelog and header for version v1.5.12-beta11
+- update platformio.ini for beta version v1.5.12-beta11
+- update changelog and header for version v1.5.12-beta10
+- update platformio.ini for beta version v1.5.12-beta10
+- streamline task creation in checkVendor and checkFilament functions
+- update changelog and header for version v1.5.12-beta9
+- update platformio.ini for beta version v1.5.12-beta9
+- update changelog and header for version v1.5.12-beta8
+- update platformio.ini for beta version v1.5.12-beta8
+- update changelog and header for version v1.5.12-beta7
+- update platformio.ini for beta version v1.5.12-beta7
+- update changelog and header for version v1.5.12-beta6
+- update platformio.ini for beta version v1.5.12-beta6
+- improve task synchronization in vendor, filament, and spool creation functions
+- update changelog and header for version v1.5.12-beta5
+- update platformio.ini for beta version v1.5.12-beta5
+- update changelog and header for version v1.5.12-beta4
+- update platformio.ini for beta version v1.5.12-beta4
+- update changelog and header for version v1.5.12-beta3
+- update platformio.ini for beta version v1.5.12-beta3
+- update changelog and header for version v1.5.12-beta2
+- update platformio.ini for beta version v1.5.12-beta2
+- update changelog and header for version v1.5.12-beta1
+- update platformio.ini for beta version v1.5.12-beta1
+- Merge branch 'main' into recyclingfabrik
+- Merge branch 'main' into recyclingfabrik
+
+### Fixed
+- call scale.tare() in setup after starting scale
+- update createVendor function to use external_id as comment instead of static text
+- update to_old_version in platformio.ini to reflect correct previous version
+- increase delay in start_scale function for improved stability
+- replace progress bar with message display for remaining weight in sendToApi function
+- update vendor check to use shorthand key in payload
+- reset NFC state on API send failure to allow retry
+- update createdFilamentId reset value to 65535 for better task handling
+- update createdVendorId reset value to 65535 for improved API handling
+- update spoolman ID reset values to 65535 for better API response detection
+- correct color_hex key usage and comment out unused date fields in spool creation
+- improve API state handling and vendor name formatting
+- enhance filament creation logic to include dynamic comments based on payload
+
+## [2.0.0-beta5] - 2025-08-30
+### Changed
+- update platformio.ini for beta version v2.0.0-beta5
+
+### Fixed
+- call scale.tare() in setup after starting scale
+
+
+## [2.0.0-beta4] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v2.0.0-beta4
+
+### Fixed
+- update createVendor function to use external_id as comment instead of static text
+- update to_old_version in platformio.ini to reflect correct previous version
+
+
+## [2.0.0-beta3] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v2.0.0-beta3
+- update createVendor and checkVendor functions to accept JsonDocument payload
+
+
+## [2.0.0-beta2] - 2025-08-29
+### Added
+- add Manufacturer Tags support documentation in German and English
+
+### Changed
+- update platformio.ini for beta version v2.0.0-beta2
+- clarify product URL description for Manufacturer Tags in German and English documentation
+
+### Fixed
+- increase delay in start_scale function for improved stability
+
+
+## [2.0.0-beta1] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v2.0.0-beta1
+- update version to 2.0.0 in platformio.ini
+
+
+## [1.5.12-beta18] - 2025-08-29
+### Added
+- add display delay for vendor, filament, and spool creation processes
+
+### Changed
+- update platformio.ini for beta version v1.5.12-beta18
+
+### Fixed
+- replace progress bar with message display for remaining weight in sendToApi function
+
+
+## [1.5.12-beta17] - 2025-08-29
+### Added
+- add progress bar updates for vendor and filament creation processes
+
+### Changed
+- update platformio.ini for beta version v1.5.12-beta17
+- optimize page limit detection and remove redundant verification code
+
+### Fixed
+- update vendor check to use shorthand key in payload
+
+
+## [1.5.12-beta16] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v1.5.12-beta16
+- Refactor NFC interface handling and improve error diagnostics
+
+
+## [1.5.12-beta15] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v1.5.12-beta15
+- enhance NFC write operation diagnostics and improve error handling
+- enhance NFC write operation handling and prevent tag operations during write
+
+
+## [1.5.12-beta14] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v1.5.12-beta14
+- optimize JSON payload structure and enhance NFC tag validation process
+
+
+## [1.5.12-beta13] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v1.5.12-beta13
+- reorganize clearUserDataArea function for improved clarity and safety
+
+
+## [1.5.12-beta12] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v1.5.12-beta12
+
+### Fixed
+- reset NFC state on API send failure to allow retry
+- update createdFilamentId reset value to 65535 for better task handling
+- update createdVendorId reset value to 65535 for improved API handling
+
+
+## [1.5.12-beta11] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v1.5.12-beta11
+
+### Fixed
+- update spoolman ID reset values to 65535 for better API response detection
+
+
+## [1.5.12-beta10] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v1.5.12-beta10
+- streamline task creation in checkVendor and checkFilament functions
+
+
+## [1.5.12-beta9] - 2025-08-29
+### Added
+- update vendor and filament ID handling to use NULL and add delays for stability
+
+### Changed
+- update platformio.ini for beta version v1.5.12-beta9
+
+
+## [1.5.12-beta8] - 2025-08-29
+### Added
+- add delay to ensure proper setting of vendor and filament IDs after API state changes
+
+### Changed
+- update platformio.ini for beta version v1.5.12-beta8
+
+### Fixed
+- correct color_hex key usage and comment out unused date fields in spool creation
+
+
+## [1.5.12-beta7] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v1.5.12-beta7
+
+### Fixed
+- improve API state handling and vendor name formatting
+
+
+## [1.5.12-beta6] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v1.5.12-beta6
+- improve task synchronization in vendor, filament, and spool creation functions
+
+
+## [1.5.12-beta5] - 2025-08-29
+### Added
+- enhance NDEF decoding with detailed validation and debugging output
+
+### Changed
+- update platformio.ini for beta version v1.5.12-beta5
+
+
+## [1.5.12-beta4] - 2025-08-29
+### Added
+- enhance NDEF decoding to validate structure and extract JSON payload
+
+### Changed
+- update platformio.ini for beta version v1.5.12-beta4
+
+
+## [1.5.12-beta3] - 2025-08-29
+### Added
+- add logging for decoded JSON data in NFC processing
+
+### Changed
+- update platformio.ini for beta version v1.5.12-beta3
+
+
+## [1.5.12-beta2] - 2025-08-29
+### Changed
+- update platformio.ini for beta version v1.5.12-beta2
+
+### Fixed
+- enhance filament creation logic to include dynamic comments based on payload
+
+
+## [1.5.12-beta1] - 2025-08-28
+### Added
+- implement filament and spool creation in Spoolman API
+- Add JSON structure comments for filament and spool creation
+- Add vendor and filament management to API; implement recycling factory handling in NFC
+
+### Changed
+- update platformio.ini for beta version v1.5.12-beta1
+- Merge branch 'main' into recyclingfabrik
+- Merge branch 'main' into recyclingfabrik
+
+
+## [1.5.12] - 2025-08-28
+### Added
+- add numbering to update sections in upgrade.html refactor: improve readability of checkSpoolmanInstance function
+
+### Changed
+- update platformio.ini for version v1.5.12
+- clean up library dependencies in platformio.ini
+
+
+## [1.5.11-beta4] - 2025-08-28
+### Changed
+- update platformio.ini for beta version v1.5.11-beta4
+
+### Fixed
+- remove debug logging from checkSpoolmanInstance function
+
+
+## [1.5.11-beta3] - 2025-08-28
+### Added
+- add logging for spoolman status in checkSpoolmanInstance function
+
+### Changed
+- update platformio.ini for beta version v1.5.11-beta3
+
+
+## [1.5.11-beta2] - 2025-08-28
+### Added
+- add logging for healthy spoolman instance check
+
+### Changed
+- update platformio.ini for beta version v1.5.11-beta2
+
+
+## [1.5.11-beta1] - 2025-08-28
+### Changed
+- update platformio.ini for beta version v1.5.11-beta1
+
+### Fixed
+- adjust spacing in loop structure and enable tare function in scale loop
+
+
 ## [1.5.11] - 2025-08-27
 ### Changed
 - update platformio.ini for version v1.5.11

@@ -59,6 +59,7 @@ void setup() {
 
   // Scale
   start_scale(touchSensorConnected);
+  scaleTareRequest = true;
 
   // WDT initialisieren mit 10 Sekunden Timeout
   bool panic = true; // Wenn true, löst ein WDT-Timeout einen System-Panik aus
@@ -171,13 +172,17 @@ void loop() {
       oledShowMessage("Scale not calibrated");
       vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
-  }else{
+  } 
+  else 
+  {
     // Ausgabe der Waage auf Display
     if(pauseMainTask == 0)
     {
+      // Use filtered weight for smooth display, but still check API weight for significant changes
+      int16_t displayWeight = getFilteredDisplayWeight();
       if (mainTaskWasPaused || (weight != lastWeight && nfcReaderState == NFC_IDLE && (!bambuCredentials.autosend_enable || autoSetToBambuSpoolId == 0)))
       {
-        (weight < 2) ? ((weight < -2) ? oledShowMessage("!! -0") : oledShowWeight(0)) : oledShowWeight(weight);
+        (displayWeight < 2) ? ((displayWeight < -2) ? oledShowMessage("!! -0") : oledShowWeight(0)) : oledShowWeight(displayWeight);
       }
       mainTaskWasPaused = false;
     }
@@ -192,17 +197,6 @@ void loop() {
     {
       lastWeightReadTime = currentMillis;
 
-      // Prüfen ob die Waage korrekt genullt ist
-      // Abweichung von 2g ignorieren
-      if (autoTare && (weight > 2 && weight < 7) || weight < -2)
-      {
-        scale_tare_counter++;
-      }
-      else
-      {
-        scale_tare_counter = 0;
-      }
-
       // Prüfen ob das Gewicht gleich bleibt und dann senden
       if (abs(weight - lastWeight) <= 2 && weight > 5)
       {
@@ -216,7 +210,6 @@ void loop() {
     }
 
     // reset weight counter after writing tag
-    // TBD: what exactly is the logic behind this?
     if (currentMillis - lastWeightReadTime >= weightReadInterval && nfcReaderState != NFC_IDLE && nfcReaderState != NFC_READ_SUCCESS)
     {
       weigthCouterToApi = 0;
@@ -239,6 +232,29 @@ void loop() {
         {
           autoSetToBambuSpoolId = activeSpoolId.toInt();
         }
+        if (octoEnabled) 
+        {
+          updateOctoSpoolId = activeSpoolId.toInt();
+        }
+      }
+      else
+      {
+        oledShowIcon("failed");
+        vTaskDelay(2000 / portTICK_PERIOD_MS);
+      }
+    }
+
+    // Handle successful tag write: Send weight to Spoolman but NEVER auto-send to Bambu
+    if (activeSpoolId != "" && weigthCouterToApi > 3 && weightSend == 0 && nfcReaderState == NFC_WRITE_SUCCESS && tagProcessed == false && spoolmanApiState == API_IDLE) 
+    {
+      // set the current tag as processed to prevent it beeing processed again
+      tagProcessed = true;
+
+      if (updateSpoolWeight(activeSpoolId, weight)) 
+      {
+        weightSend = 1;
+        Serial.println("Tag written: Weight sent to Spoolman, but NO auto-send to Bambu");
+        // INTENTIONALLY do NOT set autoSetToBambuSpoolId here to prevent Bambu auto-send
       }
       else
       {
@@ -249,7 +265,7 @@ void loop() {
 
     if(octoEnabled && sendOctoUpdate && spoolmanApiState == API_IDLE)
     {
-      updateSpoolOcto(autoSetToBambuSpoolId);
+      updateSpoolOcto(updateOctoSpoolId);
       sendOctoUpdate = false;
     }
   }
